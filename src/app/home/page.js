@@ -6,8 +6,14 @@ import { useRouter } from "next/navigation";
 import { auth } from "@/lib/firebase";
 import Header from "@/components/Header";
 import axios from "axios";
+import { Dropdown } from "primereact/dropdown";
+import { nifty50 } from "@/data/nifty50";
 import { niftySmallCap250 } from "@/data/niftySmallcap250";
-// import { nifty50 } from "@/data/nifty50";
+
+const indices = [
+  { name: "Nifty 50", code: "N50" },
+  { name: "Nifty Smallcap 250", code: "NS250" }
+];
 
 export default function HomePage() {
   const [user, setUser] = useState(null);
@@ -15,7 +21,8 @@ export default function HomePage() {
   const [loading, setLoading] = useState(true);
   const [errorCount, setErrorCount] = useState(0);
   const [errorIds, setErrorIds] = useState([]);
-  // const [activeCompanyList, setActiveCompanyList] = useState([]);
+  const [activeIndex, setActiveIndex] = useState(nifty50);
+  const [selectedIndex, setSelectedIndex] = useState(indices[0]);
 
   const router = useRouter();
 
@@ -38,7 +45,7 @@ export default function HomePage() {
       try {
         const results = [];
 
-        for (const company of niftySmallCap250) {
+        for (const company of activeIndex) {
           try {
             const res = await axios.get(
               `https://priceapi.moneycontrol.com/pricefeed/nse/equitycash/${company.moneycontrolId}`
@@ -72,7 +79,7 @@ export default function HomePage() {
     };
 
     fetchAll();
-  }, [user]);
+  }, [user, activeIndex]);
 
   const handleLogout = async () => {
     await signOut(auth);
@@ -92,6 +99,22 @@ export default function HomePage() {
       <span className={`text-white ${valueClass}`}>{value ?? "N/A"}</span>
     </div>
   );
+
+  const handleChangeIndex = (value) => {
+    setSelectedIndex(value);
+
+    if (value.code === "N50") {
+      setActiveIndex(nifty50);
+
+      setErrorCount(0);
+      setErrorIds([]);
+    } else if (value.code === "NS250") {
+      setActiveIndex(niftySmallCap250);
+
+      setErrorCount(0);
+      setErrorIds([]);
+    }
+  };
 
   return (
     <div className="p-4">
@@ -139,6 +162,17 @@ export default function HomePage() {
           <span className="font-mono text-red-700">{errorIds.join(", ")}</span>
         </div>
       )}
+
+      <div className="card flex justify-content-center">
+        <Dropdown
+          value={selectedIndex}
+          onChange={(e) => handleChangeIndex(e.value)}
+          options={indices}
+          optionLabel="name"
+          placeholder="Select an index"
+          className="w-full md:w-14rem"
+        />
+      </div>
 
       <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
         {dataList.map((item, index) => (

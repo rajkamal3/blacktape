@@ -11,7 +11,7 @@ export const nifty50 = [
   },
   {
     name: "Invalid company",
-    moneycontrolId: "YUYUY67",
+    moneycontrolId: "INV",
     tickertapeId: "HUEHUE"
   },
   {
