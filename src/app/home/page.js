@@ -6,25 +6,17 @@ import { useRouter } from "next/navigation";
 import { auth } from "@/lib/firebase";
 import Header from "@/components/Header";
 import axios from "axios";
-
-const ids = [
-  "YUYUY67",
-  "SL23",
-  "AW01",
-  "AHFL",
-  "AI",
-  "RI",
-  "SL23",
-  "AW01",
-  "AHFL",
-  "AI"
-];
+import { niftySmallCap250 } from "@/data/niftySmallcap250";
+// import { nifty50 } from "@/data/nifty50";
 
 export default function HomePage() {
   const [user, setUser] = useState(null);
   const [dataList, setDataList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [errorCount, setErrorCount] = useState(0);
+  const [errorIds, setErrorIds] = useState([]);
+  // const [activeCompanyList, setActiveCompanyList] = useState([]);
+
   const router = useRouter();
 
   useEffect(() => {
@@ -46,21 +38,28 @@ export default function HomePage() {
       try {
         const results = [];
 
-        for (const id of ids) {
+        for (const company of niftySmallCap250) {
           try {
             const res = await axios.get(
-              `https://priceapi.moneycontrol.com/pricefeed/nse/equitycash/${id}`
+              `https://priceapi.moneycontrol.com/pricefeed/nse/equitycash/${company.moneycontrolId}`
             );
+
             if (res?.data?.data && typeof res.data.data === "object") {
               results.push(res.data.data);
-              console.log(results);
             } else {
-              console.warn(`🟡 No usable data for ID: ${id}`);
+              console.warn(
+                `🟡 No usable data for ID: ${company.moneycontrolId}`
+              );
               setErrorCount((prev) => prev + 1);
+              setErrorIds((prev) => [...prev, company.moneycontrolId]);
             }
           } catch (err) {
-            console.warn(`❌ Failed for ID: ${id}`, err.message);
+            console.warn(
+              `❌ Failed for ID: ${company.moneycontrolId}`,
+              err.message
+            );
             setErrorCount((prev) => prev + 1);
+            setErrorIds((prev) => [...prev, company.moneycontrolId]);
           }
         }
 
@@ -80,7 +79,19 @@ export default function HomePage() {
     router.push("/login");
   };
 
-  if (!user || loading) return <p>Loading...</p>;
+  if (!user || loading)
+    return (
+      <div>
+        <h1>Huelling...</h1>
+      </div>
+    );
+
+  const Stat = ({ label, value, valueClass = "" }) => (
+    <div className="grid grid-cols-[140px_1fr]">
+      <span className="text-gray-400">{label}</span>
+      <span className={`text-white ${valueClass}`}>{value ?? "N/A"}</span>
+    </div>
+  );
 
   return (
     <div className="p-4">
@@ -124,22 +135,39 @@ export default function HomePage() {
         <div className="text-yellow-700 bg-yellow-100 p-2 rounded mb-4">
           ⚠️ {errorCount} response{errorCount > 1 ? "s were" : " was"} invalid
           or failed to load.
+          <br />❗ Failed IDs:{" "}
+          <span className="font-mono text-red-700">{errorIds.join(", ")}</span>
         </div>
       )}
 
       <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
         {dataList.map((item, index) => (
-          <div key={index} className="border p-4 rounded-lg shadow-md">
-            <h2 className="text-lg font-bold mb-1">
+          <div
+            key={index}
+            className="bg-zinc-900 text-white p-4 rounded-lg shadow-md"
+          >
+            <h2 className="text-lg font-semibold mb-4 border-b border-zinc-700 pb-2">
               {item.SC_FULLNM || "Unnamed Entity"}
             </h2>
-            <p>{item.pricecurrent || "No description provided."}</p>
-            {/* Add more fields defensively */}
-            {item.updatedAt && (
-              <p className="text-sm text-gray-600 mt-2">
-                Last updated: {new Date(item.updatedAt).toLocaleDateString()}
-              </p>
-            )}
+
+            <div className="grid gap-y-2 text-sm">
+              <Stat label="Share Price" value={`₹ ${item.pricecurrent}`} />
+              <Stat label="52 Week Low" value={`₹ ${item["52L"]}`} />
+              <Stat label="52 Week High" value={`₹ ${item["52H"]}`} />
+              <Stat label="Market Cap" value={`₹ ${item.MKTCAP}`} />
+              <Stat label="PE Ratio" value={item.PE} />
+              <Stat label="Industry PE" value={item.IND_PE} />
+              <Stat
+                label="Day's Change"
+                value={`${item.pricepercentchange}%`}
+                valueClass={
+                  parseFloat(item.pricepercentchange) < 0
+                    ? "text-red-500"
+                    : "text-green-500"
+                }
+              />
+              <Stat label="Sector" value={item.SC_SUBSEC} />
+            </div>
           </div>
         ))}
       </div>
