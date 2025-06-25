@@ -1,12 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { signOut, onAuthStateChanged } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import { auth } from "@/lib/firebase";
 import Header from "@/components/Header";
 import axios from "axios";
 import { Dropdown } from "primereact/dropdown";
+import { Toast } from "primereact/toast";
 import { nifty50 } from "@/data/nifty50";
 import { niftySmallCap250 } from "@/data/niftySmallcap250";
 
@@ -19,12 +20,11 @@ export default function HomePage() {
   const [user, setUser] = useState(null);
   const [dataList, setDataList] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [errorCount, setErrorCount] = useState(0);
-  const [errorIds, setErrorIds] = useState([]);
   const [activeIndex, setActiveIndex] = useState(nifty50);
   const [selectedIndex, setSelectedIndex] = useState(indices[0]);
 
   const router = useRouter();
+  const toast = useRef(null);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -42,9 +42,10 @@ export default function HomePage() {
     if (!user) return;
 
     const fetchAll = async () => {
-      try {
-        const results = [];
+      const results = [];
+      let failedIds = [];
 
+      try {
         for (const company of activeIndex) {
           try {
             const res = await axios.get(
@@ -57,22 +58,40 @@ export default function HomePage() {
               console.warn(
                 `🟡 No usable data for ID: ${company.moneycontrolId}`
               );
-              setErrorCount((prev) => prev + 1);
-              setErrorIds((prev) => [...prev, company.moneycontrolId]);
+              failedIds.push(company.moneycontrolId);
             }
           } catch (err) {
             console.warn(
               `❌ Failed for ID: ${company.moneycontrolId}`,
               err.message
             );
-            setErrorCount((prev) => prev + 1);
-            setErrorIds((prev) => [...prev, company.moneycontrolId]);
+            failedIds.push(company.moneycontrolId);
           }
         }
 
         setDataList(results);
-      } catch (err) {
-        console.error("🔥 Critical API Fetch Error:", err);
+        setLoading(false);
+
+        if (failedIds.length > 0 && toast.current) {
+          toast.current.show({
+            severity: "warn",
+            summary: "Some IDs failed",
+            detail: `Failed for ${failedIds.length} compan${
+              failedIds.length === 1 ? "y" : "ies"
+            }:\n${failedIds.join(", ")}`,
+            life: 5000
+          });
+        }
+      } catch (critical) {
+        console.error("🔥 CRITICAL failure in fetchAll:", critical.message);
+        if (toast.current) {
+          toast.current.show({
+            severity: "error",
+            summary: "Unexpected Crash",
+            detail: "Something went terribly wrong while fetching data.",
+            life: 5000
+          });
+        }
       } finally {
         setLoading(false);
       }
@@ -106,18 +125,18 @@ export default function HomePage() {
     if (value.code === "N50") {
       setActiveIndex(nifty50);
 
-      setErrorCount(0);
-      setErrorIds([]);
+      // setErrorIds([]);
     } else if (value.code === "NS250") {
       setActiveIndex(niftySmallCap250);
 
-      setErrorCount(0);
-      setErrorIds([]);
+      // setErrorIds([]);
     }
   };
 
   return (
     <div className="p-4">
+      <Toast ref={toast} position="top-right" />
+
       <Header />
 
       <h1 className="text-2xl mb-2">
@@ -153,15 +172,6 @@ export default function HomePage() {
       >
         Logout
       </button>
-
-      {errorCount > 0 && (
-        <div className="text-yellow-700 bg-yellow-100 p-2 rounded mb-4">
-          ⚠️ {errorCount} response{errorCount > 1 ? "s were" : " was"} invalid
-          or failed to load.
-          <br />❗ Failed IDs:{" "}
-          <span className="font-mono text-red-700">{errorIds.join(", ")}</span>
-        </div>
-      )}
 
       <div className="card flex justify-content-center">
         <Dropdown
