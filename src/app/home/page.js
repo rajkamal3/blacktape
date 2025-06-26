@@ -13,7 +13,8 @@ import { niftySmallCap250 } from "@/data/niftySmallcap250";
 
 const indices = [
   { name: "Nifty 50", code: "N50" },
-  { name: "Nifty Smallcap 250", code: "NS250" }
+  { name: "Nifty Smallcap 250", code: "NS250" },
+  { name: "Watchlist 1", code: "WL1" }
 ];
 
 export default function HomePage() {
@@ -121,6 +122,8 @@ export default function HomePage() {
       setActiveIndex(nifty50);
     } else if (value.code === "NS250") {
       setActiveIndex(niftySmallCap250);
+    } else if (value.code === "WL1") {
+      setActiveIndex([]);
     }
   };
 
