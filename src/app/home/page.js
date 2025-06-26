@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
-import { signOut, onAuthStateChanged } from "firebase/auth";
+import { onAuthStateChanged } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import { auth } from "@/lib/firebase";
 import Header from "@/components/Header";
@@ -100,11 +100,6 @@ export default function HomePage() {
     fetchAll();
   }, [user, activeIndex]);
 
-  const handleLogout = async () => {
-    await signOut(auth);
-    router.push("/login");
-  };
-
   if (!user || loading)
     return (
       <div>
@@ -124,12 +119,8 @@ export default function HomePage() {
 
     if (value.code === "N50") {
       setActiveIndex(nifty50);
-
-      // setErrorIds([]);
     } else if (value.code === "NS250") {
       setActiveIndex(niftySmallCap250);
-
-      // setErrorIds([]);
     }
   };
 
@@ -137,41 +128,7 @@ export default function HomePage() {
     <div className="p-4">
       <Toast ref={toast} position="top-right" />
 
-      <Header />
-
-      <h1 className="text-2xl mb-2">
-        Welcome, {user.displayName || user.email}
-      </h1>
-
-      {user.photoURL && (
-        <img
-          src={user.photoURL}
-          alt="User Profile"
-          style={{
-            borderRadius: "50%",
-            width: "100px",
-            height: "100px",
-            objectFit: "cover",
-            marginBottom: "1rem"
-          }}
-        />
-      )}
-
-      <button
-        onClick={handleLogout}
-        style={{
-          padding: "0.75rem 1.5rem",
-          fontSize: "1rem",
-          cursor: "pointer",
-          border: "none",
-          borderRadius: "6px",
-          backgroundColor: "#e63946",
-          color: "white",
-          marginBottom: "2rem"
-        }}
-      >
-        Logout
-      </button>
+      <Header user={user} />
 
       <div className="card flex justify-content-center">
         <Dropdown
