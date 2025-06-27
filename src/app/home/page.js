@@ -10,6 +10,8 @@ import { Dropdown } from "primereact/dropdown";
 import { Toast } from "primereact/toast";
 import { nifty50 } from "@/data/nifty50";
 import { niftySmallCap250 } from "@/data/niftySmallcap250";
+import { Button } from "primereact/button";
+import { Dialog } from "primereact/dialog";
 
 const indices = [
   { name: "Nifty 50", code: "N50" },
@@ -23,6 +25,7 @@ export default function HomePage() {
   const [loading, setLoading] = useState(true);
   const [activeIndex, setActiveIndex] = useState(nifty50);
   const [selectedIndex, setSelectedIndex] = useState(indices[0]);
+  const [visible, setVisible] = useState(false);
 
   const router = useRouter();
   const toast = useRef(null);
@@ -128,52 +131,87 @@ export default function HomePage() {
   };
 
   return (
-    <div className="p-4">
+    <div>
       <Toast ref={toast} position="top-right" />
+
+      <div className="card flex justify-content-center">
+        <Dialog
+          header="Header"
+          visible={visible}
+          onHide={() => {
+            if (!visible) return;
+            setVisible(false);
+          }}
+          style={{ width: "50vw" }}
+          breakpoints={{ "960px": "75vw", "641px": "90vw" }}
+        >
+          <p className="m-0">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
+            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+            aliquip ex ea commodo consequat. Duis aute irure dolor in
+            reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+            pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
+            culpa qui officia deserunt mollit anim id est laborum.
+          </p>
+        </Dialog>
+      </div>
 
       <Header user={user} />
 
-      <div className="card flex justify-content-center">
-        <Dropdown
-          value={selectedIndex}
-          onChange={(e) => handleChangeIndex(e.value)}
-          options={indices}
-          optionLabel="name"
-          placeholder="Select an index"
-          className="w-full md:w-14rem"
-        />
-      </div>
+      <div className="p-4">
+        <div className="card flex justify-content-center mb-3">
+          <Dropdown
+            value={selectedIndex}
+            onChange={(e) => handleChangeIndex(e.value)}
+            options={indices}
+            optionLabel="name"
+            placeholder="Select an index"
+            className="w-full md:w-14rem"
+          />
 
-      <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
-        {dataList.map((item, index) => (
-          <div
-            key={index}
-            className="bg-zinc-900 text-white p-4 rounded-lg shadow-md"
-          >
-            <h2 className="text-lg font-semibold mb-4 border-b border-zinc-700 pb-2">
-              {item.SC_FULLNM || "Unnamed Entity"}
-            </h2>
+          {selectedIndex.code === "WL1" && (
+            <Button
+              label="+"
+              onClick={() => setVisible(true)}
+              style={{
+                marginLeft: "10px"
+              }}
+            />
+          )}
+        </div>
 
-            <div className="grid gap-y-2 text-sm">
-              <Stat label="Share Price" value={`₹ ${item.pricecurrent}`} />
-              <Stat label="52 Week Low" value={`₹ ${item["52L"]}`} />
-              <Stat label="52 Week High" value={`₹ ${item["52H"]}`} />
-              <Stat label="Market Cap" value={`₹ ${item.MKTCAP}`} />
-              <Stat label="PE Ratio" value={item.PE} />
-              <Stat label="Industry PE" value={item.IND_PE} />
-              <Stat
-                label="Day's Change"
-                value={`${item.pricepercentchange}%`}
-                valueClass={
-                  parseFloat(item.pricepercentchange) < 0
-                    ? "text-red-500"
-                    : "text-green-500"
-                }
-              />
-              <Stat label="Sector" value={item.SC_SUBSEC} />
+        <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
+          {dataList.map((item, index) => (
+            <div
+              key={index}
+              className="bg-zinc-900 text-white p-4 rounded-lg shadow-md"
+            >
+              <h2 className="text-lg font-semibold mb-4 border-b border-zinc-700 pb-2">
+                {item.SC_FULLNM || "Unnamed Entity"}
+              </h2>
+
+              <div className="grid gap-y-2 text-sm">
+                <Stat label="Share Price" value={`₹ ${item.pricecurrent}`} />
+                <Stat label="52 Week Low" value={`₹ ${item["52L"]}`} />
+                <Stat label="52 Week High" value={`₹ ${item["52H"]}`} />
+                <Stat label="Market Cap" value={`₹ ${item.MKTCAP}`} />
+                <Stat label="PE Ratio" value={item.PE} />
+                <Stat label="Industry PE" value={item.IND_PE} />
+                <Stat
+                  label="Day's Change"
+                  value={`${item.pricepercentchange}%`}
+                  valueClass={
+                    parseFloat(item.pricepercentchange) < 0
+                      ? "text-red-500"
+                      : "text-green-500"
+                  }
+                />
+                <Stat label="Sector" value={item.SC_SUBSEC} />
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </div>
   );
