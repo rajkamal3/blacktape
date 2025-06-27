@@ -5,13 +5,13 @@ import { onAuthStateChanged } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import { auth } from "@/lib/firebase";
 import Header from "@/components/Header";
+import AddCompanyDialog from "@/components/AddCompanyDialog";
 import axios from "axios";
 import { Dropdown } from "primereact/dropdown";
 import { Toast } from "primereact/toast";
 import { nifty50 } from "@/data/nifty50";
 import { niftySmallCap250 } from "@/data/niftySmallcap250";
 import { Button } from "primereact/button";
-import { Dialog } from "primereact/dialog";
 
 const indices = [
   { name: "Nifty 50", code: "N50" },
@@ -132,32 +132,15 @@ export default function HomePage() {
 
   return (
     <div>
+      <Header user={user} />
+
       <Toast ref={toast} position="top-right" />
 
-      <div className="card flex justify-content-center">
-        <Dialog
-          header="Header"
-          visible={visible}
-          onHide={() => {
-            if (!visible) return;
-            setVisible(false);
-          }}
-          style={{ width: "50vw" }}
-          breakpoints={{ "960px": "75vw", "641px": "90vw" }}
-        >
-          <p className="m-0">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-            aliquip ex ea commodo consequat. Duis aute irure dolor in
-            reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-            pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-            culpa qui officia deserunt mollit anim id est laborum.
-          </p>
-        </Dialog>
-      </div>
-
-      <Header user={user} />
+      <AddCompanyDialog
+        visible={visible}
+        selectedIndex={selectedIndex}
+        setVisible={setVisible}
+      />
 
       <div className="p-4">
         <div className="card flex justify-content-center mb-3">
