@@ -177,13 +177,20 @@ export default function HomePage() {
               <div className="grid gap-y-2 text-sm">
                 <Stat label="Share Price" value={`₹ ${item.pricecurrent}`} />
                 <Stat label="52 Week Low" value={`₹ ${item["52L"]}`} />
+                <Stat
+                  label="From 52W Low"
+                  value={`${(
+                    ((item.pricecurrent - item["52L"]) / item["52L"]) *
+                    100
+                  ).toFixed(2)}%`}
+                ></Stat>
                 <Stat label="52 Week High" value={`₹ ${item["52H"]}`} />
                 <Stat label="Market Cap" value={`₹ ${item.MKTCAP}`} />
                 <Stat label="PE Ratio" value={item.PE} />
                 <Stat label="Industry PE" value={item.IND_PE} />
                 <Stat
                   label="Day's Change"
-                  value={`${item.pricepercentchange}%`}
+                  value={`${Number(item.pricepercentchange).toFixed(2)}%`}
                   valueClass={
                     parseFloat(item.pricepercentchange) < 0
                       ? "text-red-500"
