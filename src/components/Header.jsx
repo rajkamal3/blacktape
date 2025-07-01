@@ -14,26 +14,12 @@ const Header = ({ user }) => {
   };
 
   return (
-    <div className="header-container flex justify-center items-center">
+    <div className="header-container flex justify-between items-center">
       <div className="card flex justify-content-center">
         <Sidebar visible={visible} onHide={() => setVisible(false)}>
           <h1 className="text-2xl mb-2">
             Welcome, {user.displayName || user.email}
           </h1>
-
-          {user.photoURL && (
-            <img
-              src={user.photoURL}
-              alt="User Profile"
-              style={{
-                borderRadius: "50%",
-                width: "100px",
-                height: "100px",
-                objectFit: "cover",
-                marginBottom: "1rem"
-              }}
-            />
-          )}
 
           <button
             onClick={handleLogout}
@@ -44,8 +30,7 @@ const Header = ({ user }) => {
               border: "none",
               borderRadius: "6px",
               backgroundColor: "#e63946",
-              color: "white",
-              marginBottom: "2rem"
+              color: "white"
             }}
           >
             Logout
@@ -54,7 +39,22 @@ const Header = ({ user }) => {
         <Button icon="pi pi-arrow-right" onClick={() => setVisible(true)} />
       </div>
 
-      <h1>Blacktape</h1>
+      <h1 className="font-bold">Blacktape</h1>
+
+      <div>
+        {user.photoURL && (
+          <img
+            src={user.photoURL}
+            alt="User Profile"
+            style={{
+              borderRadius: "50%",
+              width: "35px",
+              height: "35px",
+              objectFit: "cover"
+            }}
+          />
+        )}
+      </div>
     </div>
   );
 };
