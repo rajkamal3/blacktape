@@ -142,7 +142,12 @@ export default function HomePage() {
         setVisible={setVisible}
       />
 
-      <div className="p-4">
+      <div
+        className="p-4"
+        style={{
+          backgroundColor: "#1f1f1f"
+        }}
+      >
         <div className="card flex justify-content-center mb-3">
           <Dropdown
             value={selectedIndex}
@@ -151,6 +156,12 @@ export default function HomePage() {
             optionLabel="name"
             placeholder="Select an index"
             className="w-full md:w-14rem"
+            style={{
+              backgroundColor: "#232323",
+              border: "none",
+              color: "#ffffff",
+              fontWeight: "bold"
+            }}
           />
 
           {selectedIndex.code === "WL1" && (
@@ -158,7 +169,9 @@ export default function HomePage() {
               label="+"
               onClick={() => setVisible(true)}
               style={{
-                marginLeft: "10px"
+                marginLeft: "10px",
+                backgroundColor: "#d60017",
+                border: "none"
               }}
             />
           )}
@@ -168,7 +181,11 @@ export default function HomePage() {
           {dataList.map((item, index) => (
             <div
               key={index}
-              className="bg-zinc-900 text-white p-4 rounded-lg shadow-md"
+              className="bg-zinc-900 text-white p-4 rounded-lg"
+              style={{
+                backgroundColor: "#232323",
+                color: "#ffffff"
+              }}
             >
               <h2 className="text-lg font-semibold mb-4 border-b border-zinc-700 pb-2">
                 {item.SC_FULLNM || "Unnamed Entity"}

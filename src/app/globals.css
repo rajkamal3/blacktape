@@ -27,3 +27,12 @@ body {
   color: var(--foreground);
   font-family: variable(--font-inter), Arial, Helvetica, sans-serif;
 }
+
+.p-dropdown-panel {
+  background-color: #1f1f1f;
+  color: #ffffff;
+}
+
+.p-dropdown-item.p-highlight {
+  background-color: #a50012;
+}
