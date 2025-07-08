@@ -25,7 +25,7 @@ export async function GET(req) {
       const data = JSON.parse(rawData);
       return Response.json(data);
     } catch (err) {
-      console.error("❌ Failed to parse JSON");
+      console.error("❌ Failed to parse JSON", err);
       return new Response(JSON.stringify({ error: "Invalid JSON" }), {
         status: 500
       });
