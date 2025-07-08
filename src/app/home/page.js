@@ -42,6 +42,10 @@ export default function HomePage() {
     return () => unsubscribe();
   }, [router]);
 
+  const handleCardClick = (id) => {
+    router.push(`/home/${id}`);
+  };
+
   useEffect(() => {
     if (!user) return;
 
@@ -57,7 +61,10 @@ export default function HomePage() {
             );
 
             if (res?.data?.data && typeof res.data.data === "object") {
-              results.push(res.data.data);
+              results.push({
+                ...res.data.data,
+                tickertapeId: company.tickertapeId
+              });
             } else {
               console.warn(
                 `🟡 No usable data for ID: ${company.moneycontrolId}`
@@ -182,6 +189,7 @@ export default function HomePage() {
             <div
               key={index}
               className="bg-zinc-900 text-white p-4 rounded-lg"
+              onClick={() => handleCardClick(item.tickertapeId)}
               style={{
                 backgroundColor: "#232323",
                 color: "#ffffff"

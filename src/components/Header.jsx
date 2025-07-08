@@ -16,7 +16,13 @@ const Header = ({ user }) => {
   return (
     <div className="header-container flex justify-between items-center">
       <div className="card flex justify-content-center">
-        <Sidebar visible={visible} onHide={() => setVisible(false)}>
+        <Sidebar
+          visible={visible}
+          onHide={() => setVisible(false)}
+          style={{
+            backgroundColor: "#2e2e2e"
+          }}
+        >
           <h1 className="text-2xl mb-2">
             Welcome, {user.displayName || user.email}
           </h1>
