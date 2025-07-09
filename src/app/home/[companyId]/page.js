@@ -19,7 +19,8 @@ export default async function CompanyPage({ params }) {
 
   return (
     <div style={{ padding: "2rem" }}>
-      <h1>{data?.SC_FULLNM || "Company Details"}</h1>
+      <h1>{data?.data[0].r}</h1>
+      <h1>{data?.data[0].sid}</h1>
       <p>Price: ₹{data?.pricecurrent}</p>
       <p>52W Low: ₹{data?.weekLow}</p>
       <p>52W High: ₹{data?.weekHigh}</p>

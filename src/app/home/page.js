@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useTransition } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import { auth } from "@/lib/firebase";
@@ -29,6 +29,7 @@ export default function HomePage() {
 
   const router = useRouter();
   const toast = useRef(null);
+  const [isPending, startTransition] = useTransition();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -43,7 +44,9 @@ export default function HomePage() {
   }, [router]);
 
   const handleCardClick = (id) => {
-    router.push(`/home/${id}`);
+    startTransition(() => {
+      router.push(`/home/${id}`);
+    });
   };
 
   useEffect(() => {
@@ -117,6 +120,8 @@ export default function HomePage() {
         <h1>Huelling...</h1>
       </div>
     );
+
+  if (isPending) return <div>Fetching shit...</div>;
 
   const Stat = ({ label, value, valueClass = "" }) => (
     <div className="grid grid-cols-[140px_1fr]">
