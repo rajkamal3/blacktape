@@ -4,7 +4,6 @@ import { useEffect, useState, useRef, useTransition } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import { auth } from "@/lib/firebase";
-import Header from "@/components/Header";
 import AddCompanyDialog from "@/components/AddCompanyDialog";
 import axios from "axios";
 import { Dropdown } from "primereact/dropdown";
@@ -144,8 +143,6 @@ export default function HomePage() {
 
   return (
     <div>
-      <Header user={user} />
-
       <Toast ref={toast} position="top-right" />
 
       <AddCompanyDialog

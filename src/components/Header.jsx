@@ -2,11 +2,14 @@ import React, { useState } from "react";
 import { Sidebar } from "primereact/sidebar";
 import { Button } from "primereact/button";
 import { signOut } from "firebase/auth";
+import { useRouter } from "next/navigation";
 import { auth } from "@/lib/firebase";
 import "./Header.css";
 
 const Header = ({ user }) => {
   const [visible, setVisible] = useState(false);
+
+  const router = useRouter();
 
   const handleLogout = async () => {
     await signOut(auth);
