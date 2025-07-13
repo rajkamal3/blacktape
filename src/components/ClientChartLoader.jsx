@@ -13,13 +13,33 @@ import {
   Legend
 } from "chart.js";
 
+const horizontalLinePlugin = {
+  id: "horizontalLine",
+  afterDraw: (chart) => {
+    if (chart.tooltip?._active && chart.tooltip._active.length) {
+      const ctx = chart.ctx;
+      const y = chart.tooltip._active[0].element.y;
+
+      ctx.save();
+      ctx.beginPath();
+      ctx.moveTo(chart.chartArea.left, y);
+      ctx.lineTo(chart.chartArea.right, y);
+      ctx.lineWidth = 1;
+      ctx.strokeStyle = "green";
+      ctx.stroke();
+      ctx.restore();
+    }
+  }
+};
+
 ChartJS.register(
   LineElement,
   CategoryScale,
   LinearScale,
   PointElement,
   Tooltip,
-  Legend
+  Legend,
+  horizontalLinePlugin
 );
 
 export default function Chart({ companyId }) {
@@ -57,7 +77,8 @@ export default function Chart({ companyId }) {
               backgroundColor: "rgba(54,162,235,0.2)",
               fill: true,
               tension: 0.4,
-              pointRadius: 2,
+              pointRadius: 0,
+              pointHoverRadius: 0,
               borderWidth: 2
             }
           ]
@@ -65,17 +86,16 @@ export default function Chart({ companyId }) {
         options={{
           responsive: true,
           plugins: {
-            legend: { display: true, position: "top" },
+            legend: { display: false },
             tooltip: { mode: "index", intersect: false }
           },
           scales: {
             x: {
-              ticks: { maxTicksLimit: 10 },
-              title: { display: true, text: "Date" }
+              display: false
             },
             y: {
               beginAtZero: false,
-              title: { display: true, text: "Price (₹)" }
+              display: false
             }
           }
         }}
