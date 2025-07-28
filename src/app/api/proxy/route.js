@@ -1,16 +1,33 @@
+const allowedOrigins = [
+  "https://blacktape.vercel.app",
+  "https://dev-blacktape.vercel.app"
+];
+
+function getCORSHeaders(origin) {
+  const isAllowed = allowedOrigins.includes(origin);
+  return {
+    "Access-Control-Allow-Origin": isAllowed ? origin : "",
+    "Access-Control-Allow-Methods": "GET, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type"
+  };
+}
+
 export async function GET(req) {
+  const origin = req.headers.get("origin");
+  const corsHeaders = getCORSHeaders(origin);
+
   const { searchParams } = new URL(req.url, "http://localhost");
   const id = searchParams.get("id");
 
   if (!id) {
     return new Response(JSON.stringify({ error: "Missing ID" }), {
-      status: 400
+      status: 400,
+      headers: corsHeaders
     });
   }
 
   try {
     const url = `https://api.tickertape.in/stocks/charts/inter/${id}?duration=5y`;
-    // console.log("🔍 Proxying to:", url);
 
     const response = await fetch(url, {
       headers: {
@@ -19,21 +36,38 @@ export async function GET(req) {
     });
 
     const rawData = await response.text();
-    // console.log("📦 Raw Response:", rawData);
 
     try {
       const data = JSON.parse(rawData);
-      return Response.json(data);
+
+      return new Response(JSON.stringify(data), {
+        status: 200,
+        headers: corsHeaders
+      });
     } catch (err) {
-      console.error("❌ Failed to parse JSON", err);
+      console.error("❌ JSON parse failed:", err);
+
       return new Response(JSON.stringify({ error: "Invalid JSON" }), {
-        status: 500
+        status: 500,
+        headers: corsHeaders
       });
     }
   } catch (err) {
-    console.error("❌ Proxy error:", err);
+    console.error("❌ Proxy fetch failed:", err);
+
     return new Response(JSON.stringify({ error: "Proxy failure" }), {
-      status: 500
+      status: 500,
+      headers: corsHeaders
     });
   }
+}
+
+export async function OPTIONS(req) {
+  const origin = req.headers.get("origin");
+  const corsHeaders = getCORSHeaders(origin);
+
+  return new Response(null, {
+    status: 204,
+    headers: corsHeaders
+  });
 }
