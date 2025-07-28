@@ -25,13 +25,13 @@ export async function GET(req) {
       const data = JSON.parse(rawData);
       return Response.json(data);
     } catch (err) {
-      // console.error("❌ Failed to parse JSON", err);
+      console.error("❌ Failed to parse JSON", err);
       return new Response(JSON.stringify({ error: "Invalid JSON" }), {
         status: 500
       });
     }
   } catch (err) {
-    // console.error("❌ Proxy error:", err);
+    console.error("❌ Proxy error:", err);
     return new Response(JSON.stringify({ error: "Proxy failure" }), {
       status: 500
     });
