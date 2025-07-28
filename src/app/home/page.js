@@ -83,6 +83,44 @@ export default function HomePage() {
         }
 
         setDataList(results);
+
+        const base =
+          process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+
+        const fetchPriceMovements = async (tickertapeId) => {
+          const response = await fetch(`${base}/api/proxy?id=${tickertapeId}`);
+          return response.json();
+        };
+
+        const addStockPriceMovementsToResults = async () => {
+          const enriched = await Promise.all(
+            results.map(async (item) => {
+              const id = item.tickertapeId;
+              if (!id) return item;
+
+              console.log("Loadinggg");
+
+              try {
+                const extraData = await fetchPriceMovements(id);
+                console.log("Loadededed");
+                return {
+                  ...item,
+                  extra: extraData.data[0]
+                };
+              } catch (err) {
+                console.error(`Failed to fetch for ${id}:`, err);
+                return item;
+              }
+            })
+          );
+
+          console.log(enriched);
+
+          return enriched;
+        };
+
+        addStockPriceMovementsToResults();
+
         setLoading(false);
 
         if (failedIds.length > 0 && toast.current) {
@@ -125,7 +163,7 @@ export default function HomePage() {
   const Stat = ({ label, value, valueClass = "" }) => (
     <div className="grid grid-cols-[140px_1fr]">
       <span className="text-gray-400">{label}</span>
-      <span className={`text-white ${valueClass}`}>{value ?? "N/A"}</span>
+      <span className={`${valueClass}`}>{value ?? "N/A"}</span>
     </div>
   );
 
@@ -202,20 +240,58 @@ export default function HomePage() {
               </h2>
 
               <div className="grid gap-y-2 text-sm">
-                <Stat label="Share Price" value={`₹ ${item.pricecurrent}`} />
-                <Stat label="52 Week Low" value={`₹ ${item["52L"]}`} />
+                {/* <Stat
+                  label="Share Price"
+                  value={`₹ ${item.pricecurrent} ${Number(
+                    item.pricepercentchange
+                  ).toFixed(2)}%`}
+                  valueClass={
+                    parseFloat(item.pricepercentchange) < 0
+                      ? "text-red-500"
+                      : "text-green-500"
+                  }
+                /> */}
+                <div className="grid grid-cols-[140px_auto_auto_1fr] items-baseline">
+                  <span className="text-gray-400">{`Price | From 52WL`}</span>
+                  <span>{`₹ ${item.pricecurrent}` ?? "N/A"}</span>
+                  <span
+                    className={
+                      parseFloat(item.pricepercentchange) < 0
+                        ? "text-red-500"
+                        : "text-green-500"
+                    }
+                  >
+                    &nbsp;
+                    {`${Number(item.pricepercentchange).toFixed(2)}%` ?? "N/A"}
+                  </span>
+                  <span>
+                    &nbsp;|&nbsp;
+                    {`${(
+                      ((item.pricecurrent - item["52L"]) / item["52L"]) *
+                      100
+                    ).toFixed(2)}%` ?? "N/A"}
+                  </span>
+                </div>
+
                 <Stat
+                  label="52WL | 52WH"
+                  value={`₹ ${item["52L"]} | ₹ ${item["52H"]}`}
+                />
+                {/* <Stat
                   label="From 52W Low"
                   value={`${(
                     ((item.pricecurrent - item["52L"]) / item["52L"]) *
                     100
                   ).toFixed(2)}%`}
-                ></Stat>
-                <Stat label="52 Week High" value={`₹ ${item["52H"]}`} />
+                ></Stat> */}
+                {/* <Stat label="52 Week High" value={`₹ ${item["52H"]}`} /> */}
                 <Stat label="Market Cap" value={`₹ ${item.MKTCAP}`} />
-                <Stat label="PE Ratio" value={item.PE} />
-                <Stat label="Industry PE" value={item.IND_PE} />
                 <Stat
+                  label="PE | Sector PE"
+                  value={`${item.PE} | ${item.IND_PE}`}
+                />
+                {/* <Stat label="Industry PE" value={item.IND_PE} /> */}
+                {/* <Stat
                   label="Day's Change"
                   value={`${Number(item.pricepercentchange).toFixed(2)}%`}
                   valueClass={
@@ -223,7 +299,7 @@ export default function HomePage() {
                       ? "text-red-500"
                       : "text-green-500"
                   }
-                />
+                /> */}
                 <Stat label="Sector" value={item.SC_SUBSEC} />
               </div>
             </div>

@@ -10,7 +10,7 @@ export async function GET(req) {
 
   try {
     const url = `https://api.tickertape.in/stocks/charts/inter/${id}?duration=5y`;
-    console.log("🔍 Proxying to:", url);
+    // console.log("🔍 Proxying to:", url);
 
     const response = await fetch(url, {
       headers: {
@@ -19,19 +19,19 @@ export async function GET(req) {
     });
 
     const rawData = await response.text();
-    console.log("📦 Raw Response:", rawData);
+    // console.log("📦 Raw Response:", rawData);
 
     try {
       const data = JSON.parse(rawData);
       return Response.json(data);
     } catch (err) {
-      console.error("❌ Failed to parse JSON", err);
+      // console.error("❌ Failed to parse JSON", err);
       return new Response(JSON.stringify({ error: "Invalid JSON" }), {
         status: 500
       });
     }
   } catch (err) {
-    console.error("❌ Proxy error:", err);
+    // console.error("❌ Proxy error:", err);
     return new Response(JSON.stringify({ error: "Proxy failure" }), {
       status: 500
     });
