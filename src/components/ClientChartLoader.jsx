@@ -75,7 +75,7 @@ export default function Chart({ companyId }) {
   const prices = data.points.map((d) => d.lp);
 
   return (
-    <div>
+    <div className="p-4">
       <div>
         <h2>{data.sid}</h2>
         {supportLevels.map((supportLevel) => {
