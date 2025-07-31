@@ -1,27 +1,27 @@
 export const nifty50 = [
   {
     name: "Swiggy",
-    moneycontrolId: "SL23",
-    tickertapeId: "SWIG"
+    summaryId: "SL23",
+    detailsId: "SWIG"
   },
   {
     name: "Avenue Supermarts",
-    moneycontrolId: "AS28",
-    tickertapeId: "AVEU"
+    summaryId: "AS28",
+    detailsId: "AVEU"
   },
   {
     name: "Invalid company",
-    moneycontrolId: "INV",
-    tickertapeId: "HUEHUE"
+    summaryId: "INV",
+    detailsId: "HUEHUE"
   },
   {
     name: "ITC",
-    moneycontrolId: "ITC",
-    tickertapeId: "ITC"
+    summaryId: "ITC",
+    detailsId: "ITC"
   },
   {
     name: "Eternal",
-    moneycontrolId: "Z01",
-    tickertapeId: "ZOM"
+    summaryId: "Z01",
+    detailsId: "ZOM"
   }
 ];

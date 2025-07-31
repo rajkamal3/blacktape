@@ -59,26 +59,21 @@ export default function HomePage() {
         for (const company of activeIndex) {
           try {
             const res = await axios.get(
-              `https://priceapi.moneycontrol.com/pricefeed/nse/equitycash/${company.moneycontrolId}`
+              `https://priceapi.moneycontrol.com/pricefeed/nse/equitycash/${company.summaryId}`
             );
 
             if (res?.data?.data && typeof res.data.data === "object") {
               results.push({
                 ...res.data.data,
-                tickertapeId: company.tickertapeId
+                detailsId: company.detailsId
               });
             } else {
-              console.warn(
-                `🟡 No usable data for ID: ${company.moneycontrolId}`
-              );
-              failedIds.push(company.moneycontrolId);
+              console.warn(`🟡 No usable data for ID: ${company.summaryId}`);
+              failedIds.push(company.summaryId);
             }
           } catch (err) {
-            console.warn(
-              `❌ Failed for ID: ${company.moneycontrolId}`,
-              err.message
-            );
-            failedIds.push(company.moneycontrolId);
+            console.warn(`❌ Failed for ID: ${company.summaryId}`, err.message);
+            failedIds.push(company.summaryId);
           }
         }
 
@@ -87,15 +82,15 @@ export default function HomePage() {
         const base =
           process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
 
-        const fetchPriceMovements = async (tickertapeId) => {
-          const response = await fetch(`${base}/api/proxy?id=${tickertapeId}`);
+        const fetchPriceMovements = async (detailsId) => {
+          const response = await fetch(`${base}/api/proxy?id=${detailsId}`);
           return response.json();
         };
 
         const addStockPriceMovementsToResults = async () => {
           const enriched = await Promise.all(
             results.map(async (item) => {
-              const id = item.tickertapeId;
+              const id = item.detailsId;
               if (!id) return item;
 
               console.log("Loadinggg");
@@ -229,7 +224,7 @@ export default function HomePage() {
             <div
               key={index}
               className="bg-zinc-900 text-white p-4 rounded-lg"
-              onClick={() => handleCardClick(item.tickertapeId)}
+              onClick={() => handleCardClick(item.detailsId)}
               style={{
                 backgroundColor: "#232323",
                 color: "#ffffff"
