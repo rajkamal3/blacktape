@@ -78,9 +78,55 @@ export default function Chart({ companyId }) {
     <div className="p-4">
       <div>
         <h2>{data.sid}</h2>
-        {supportLevels.map((supportLevel) => {
-          return <h1 key={supportLevel}>{supportLevel}</h1>;
-        })}
+        <div className="p-4 space-y-6 text-sm font-mono text-white bg-black">
+          {/* Support Zones */}
+          <div>
+            <h2 className="text-xl font-bold text-green-400">Support Zones</h2>
+            <ul className="space-y-1">
+              {supportLevels.supportZones.map((zone, i) => (
+                <li key={i} className="border-l-4 border-green-500 pl-2">
+                  Zone: ₹{zone.zone} | Bounces: {zone.bounceCount} | Confirmed
+                  Resistance: {zone.confirmedResistance ? "✅" : "❌"}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Resistance Zones */}
+          <div>
+            <h2 className="text-xl font-bold text-red-400">Resistance Zones</h2>
+            <ul className="space-y-1">
+              {supportLevels.resistanceZones.map((zone, i) => (
+                <li key={i} className="border-l-4 border-red-500 pl-2">
+                  Zone: ₹{zone.zone} | Drops: {zone.dropCount}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Highlighted Zones */}
+          <div>
+            <h2 className="text-xl font-bold text-yellow-300">
+              Highlighted Zones (🔥 Both S & R)
+            </h2>
+            <ul className="space-y-1">
+              {supportLevels.highlightedZones.map((z, i) => (
+                <li key={i} className="bg-yellow-800 p-2 rounded shadow-md">
+                  <div className="font-semibold">Zone: ₹{z.zone}</div>
+                  <div>
+                    🟢 Support - ₹{z.support.zone} | Bounces:{" "}
+                    {z.support.bounceCount} | Confirmed Resistance:{" "}
+                    {z.support.confirmedResistance ? "✅" : "❌"}
+                  </div>
+                  <div>
+                    🔴 Resistance - ₹{z.resistance.zone} | Drops:{" "}
+                    {z.resistance.dropCount}
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
       </div>
 
       <div className="p-4 bg-white rounded-xl shadow-xl">
