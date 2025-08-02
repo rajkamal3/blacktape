@@ -1,27 +1,52 @@
 export const nifty50 = [
-  {
-    name: "Swiggy",
-    summaryId: "SL23",
-    detailsId: "SWIG"
-  },
-  {
-    name: "Avenue Supermarts",
-    summaryId: "AS28",
-    detailsId: "AVEU"
-  },
-  {
-    name: "Invalid company",
-    summaryId: "INV",
-    detailsId: "HUEHUE"
-  },
-  {
-    name: "ITC",
-    summaryId: "ITC",
-    detailsId: "ITC"
-  },
-  {
-    name: "Eternal",
-    summaryId: "Z01",
-    detailsId: "ZOM"
-  }
+  { name: "Adani Enterpris", summaryId: "AE01", detailsId: "ADEL" },
+  { name: "Adani Ports", summaryId: "MPS", detailsId: "APSE" },
+  { name: "Apollo Hospital", summaryId: "AHE", detailsId: "APLH" },
+  { name: "Asian Paints", summaryId: "API", detailsId: "ASPN" },
+  { name: "Axis Bank", summaryId: "UTI10", detailsId: "AXBK" },
+  { name: "Bajaj Auto", summaryId: "BA06", detailsId: "BAJA" },
+  { name: "Bajaj Finance", summaryId: "BAF", detailsId: "BJFN" },
+  { name: "Bajaj Finserv", summaryId: "BF04", detailsId: "BJFS" },
+  { name: "Bharat Elec", summaryId: "BE03", detailsId: "BAJE" },
+  { name: "Bharti Airtel", summaryId: "BTV", detailsId: "AIR" },
+  { name: "Cipla", summaryId: "C", detailsId: "CIPL" },
+  { name: "Coal India", summaryId: "CI29", detailsId: "COAL" },
+  { name: "Dr Reddys Labs", summaryId: "DRL", detailsId: "REDY" },
+  { name: "Eicher Motors", summaryId: "EM", detailsId: "EICH" },
+  { name: "Eternal", summaryId: "Z01", detailsId: "ZOM" },
+  { name: "Grasim", summaryId: "GI01", detailsId: "GRAS" },
+  { name: "HCL Tech", summaryId: "HCL02", detailsId: "HCLT" },
+  { name: "HDFC Bank", summaryId: "HDF01", detailsId: "HDBK" },
+  { name: "HDFC Life", summaryId: "HSL01", detailsId: "HDFL" },
+  { name: "Hero Motocorp", summaryId: "HHM", detailsId: "HROM" },
+  { name: "Hindalco", summaryId: "H", detailsId: "HALC" },
+  { name: "HUL", summaryId: "HL", detailsId: "HLL" },
+  { name: "ICICI Bank", summaryId: "ICI02", detailsId: "ICBK" },
+  { name: "IndusInd Bank", summaryId: "IIB", detailsId: "INBK" },
+  { name: "Infosys", summaryId: "IT", detailsId: "INFY" },
+  { name: "ITC", summaryId: "ITC", detailsId: "ITC" },
+  { name: "Jio Financial", summaryId: "JFS", detailsId: "JIO" },
+  { name: "JSW Steel", summaryId: "JVS", detailsId: "JSTL" },
+  { name: "Kotak Mahindra", summaryId: "KMF", detailsId: "KTKM" },
+  { name: "Larsen", summaryId: "LT", detailsId: "LART" },
+  { name: "M&M", summaryId: "MM", detailsId: "MAHM" },
+  { name: "Maruti Suzuki", summaryId: "MU01", detailsId: "MRTI" },
+  { name: "Nestle", summaryId: "NI", detailsId: "NEST" },
+  { name: "NTPC", summaryId: "NTP", detailsId: "NTPC" },
+  { name: "ONGC", summaryId: "ONG", detailsId: "ONGC" },
+  { name: "Power Grid Corp", summaryId: "PGC", detailsId: "PGRD" },
+  { name: "Reliance", summaryId: "RI", detailsId: "RELI" },
+  { name: "SBI Life Insura", summaryId: "SLI03", detailsId: "SBIL" },
+  { name: "Shriram Finance", summaryId: "STF", detailsId: "SRTR" },
+  { name: "SBI", summaryId: "SBI", detailsId: "SBI" },
+  { name: "Sun Pharma", summaryId: "SPI", detailsId: "SUN" },
+  { name: "TCS", summaryId: "TCS", detailsId: "TCS" },
+  { name: "TATA Cons. Prod", summaryId: "TT", detailsId: "TACN" },
+  { name: "Tata Motors", summaryId: "TEL", detailsId: "TAMO" },
+  { name: "Tata Steel", summaryId: "TIS", detailsId: "TISC" },
+  { name: "Tech Mahindra", summaryId: "TM4", detailsId: "TEML" },
+  { name: "Titan Company", summaryId: "TI01", detailsId: "TITN" },
+  { name: "Trent", summaryId: "L", detailsId: "TREN" },
+  { name: "UltraTechCement", summaryId: "UTC", detailsId: "ULTC" },
+  { name: "Wipro", summaryId: "W", detailsId: "WIPR" }
 ];
