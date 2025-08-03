@@ -1,10 +1,12 @@
+// Function to identify support and resistance zones in price data
 export const findSupportLevels = (priceData) => {
   const supportZones = [];
   const resistanceZones = [];
-  const confirmedZones = [];
+  const highlightedZones = [];
   const checkedSupports = new Set();
   const checkedResistances = new Set();
 
+  // Helper function to validate a trendline match for support or resistance
   function trendLineMatch(baseIndex, range = 10, type = "support") {
     const base = priceData[baseIndex];
     let count = 0;
@@ -23,6 +25,7 @@ export const findSupportLevels = (priceData) => {
     return count >= 3;
   }
 
+  // Check if a price acted as resistance before a given index
   function actedAsResistanceBefore(index, price) {
     for (let i = 0; i < index; i++) {
       const prevPrice = priceData[i].lp;
@@ -38,9 +41,17 @@ export const findSupportLevels = (priceData) => {
     return false;
   }
 
+  // Filter price data range to avoid ancient irrelevant price zones
+  const latestPrice = priceData[priceData.length - 1].lp;
+  const minValidPrice = latestPrice * 0.5;
+
   for (let i = 0; i < priceData.length; i++) {
     const basePrice = priceData[i].lp;
 
+    // Skip if price is too far from current price (ancient price zones)
+    if (basePrice < minValidPrice) continue;
+
+    // SUPPORT DETECTION
     if (
       ![...checkedSupports].some(
         (p) => Math.abs(p - basePrice) / basePrice < 0.05
@@ -60,19 +71,18 @@ export const findSupportLevels = (priceData) => {
           }
         }
       }
-      const confirmed = actedAsResistanceBefore(i, basePrice);
+      const actedAsRes = actedAsResistanceBefore(i, basePrice);
       if (bounceCount >= 3) {
-        const support = {
+        supportZones.push({
           zone: basePrice.toFixed(2),
           bounceCount,
-          confirmedResistance: confirmed
-        };
-        supportZones.push(support);
-        if (confirmed) confirmedZones.push(support);
+          confirmedResistance: actedAsRes
+        });
         checkedSupports.add(basePrice);
       }
     }
 
+    // RESISTANCE DETECTION
     if (
       ![...checkedResistances].some(
         (p) => Math.abs(p - basePrice) / basePrice < 0.05
@@ -93,31 +103,30 @@ export const findSupportLevels = (priceData) => {
         }
       }
       if (dropCount >= 3) {
-        const resistance = {
-          zone: basePrice.toFixed(2),
-          dropCount
-        };
-        resistanceZones.push(resistance);
+        resistanceZones.push({ zone: basePrice.toFixed(2), dropCount });
         checkedResistances.add(basePrice);
       }
     }
   }
 
-  // Merge zones where support ≈ resistance (within 5%)
-  const highlightedZones = [];
-  supportZones.forEach((support) => {
-    resistanceZones.forEach((resistance) => {
-      const sPrice = parseFloat(support.zone);
-      const rPrice = parseFloat(resistance.zone);
-      if (Math.abs(sPrice - rPrice) / ((sPrice + rPrice) / 2) <= 0.05) {
+  // HIGHLIGHT ZONES where support also acted as resistance (within close range)
+  for (const support of supportZones) {
+    for (const resistance of resistanceZones) {
+      const priceDiff = Math.abs(
+        parseFloat(support.zone) - parseFloat(resistance.zone)
+      );
+      const avgPrice =
+        (parseFloat(support.zone) + parseFloat(resistance.zone)) / 2;
+      if (priceDiff / avgPrice <= 0.05) {
         highlightedZones.push({
-          zone: ((sPrice + rPrice) / 2).toFixed(2),
-          support,
-          resistance
+          zone: avgPrice.toFixed(2),
+          supportBounceCount: support.bounceCount,
+          resistanceDropCount: resistance.dropCount || 0,
+          type: "support-resistance overlap"
         });
       }
-    });
-  });
+    }
+  }
 
   return { supportZones, resistanceZones, highlightedZones };
 };

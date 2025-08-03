@@ -79,42 +79,42 @@ export default function HomePage() {
 
         setDataList(results);
 
-        const base =
-          process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+        // const base =
+        //   process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
 
-        const fetchPriceMovements = async (detailsId) => {
-          const response = await fetch(`${base}/api/proxy?id=${detailsId}`);
-          return response.json();
-        };
+        // const fetchPriceMovements = async (detailsId) => {
+        //   const response = await fetch(`${base}/api/proxy?id=${detailsId}`);
+        //   return response.json();
+        // };
 
-        const addStockPriceMovementsToResults = async () => {
-          const enriched = await Promise.all(
-            results.map(async (item) => {
-              const id = item.detailsId;
-              if (!id) return item;
+        // const addStockPriceMovementsToResults = async () => {
+        //   const enriched = await Promise.all(
+        //     results.map(async (item) => {
+        //       const id = item.detailsId;
+        //       if (!id) return item;
 
-              console.log("Loadinggg");
+        //       console.log("Loadinggg");
 
-              try {
-                const extraData = await fetchPriceMovements(id);
-                console.log("Loadededed");
-                return {
-                  ...item,
-                  extra: extraData.data[0]
-                };
-              } catch (err) {
-                console.error(`Failed to fetch for ${id}:`, err);
-                return item;
-              }
-            })
-          );
+        //       try {
+        //         const extraData = await fetchPriceMovements(id);
+        //         console.log("Loadededed");
+        //         return {
+        //           ...item,
+        //           extra: extraData.data[0]
+        //         };
+        //       } catch (err) {
+        //         console.error(`Failed to fetch for ${id}:`, err);
+        //         return item;
+        //       }
+        //     })
+        //   );
 
-          console.log(enriched);
+        //   console.log(enriched);
 
-          return enriched;
-        };
+        //   return enriched;
+        // };
 
-        addStockPriceMovementsToResults();
+        // addStockPriceMovementsToResults();
 
         setLoading(false);
 

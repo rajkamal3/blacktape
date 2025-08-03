@@ -77,93 +77,132 @@ export default function Chart({ companyId }) {
   return (
     <div className="p-4">
       <div>
-        <h2>{data.sid}</h2>
-        <div className="p-4 space-y-6 text-sm font-mono text-white bg-black">
-          {/* Support Zones */}
-          <div>
-            <h2 className="text-xl font-bold text-green-400">Support Zones</h2>
-            <ul className="space-y-1">
-              {supportLevels.supportZones.map((zone, i) => (
-                <li key={i} className="border-l-4 border-green-500 pl-2">
-                  Zone: ₹{zone.zone} | Bounces: {zone.bounceCount} | Confirmed
-                  Resistance: {zone.confirmedResistance ? "✅" : "❌"}
-                </li>
-              ))}
-            </ul>
+        <h2>
+          {data.sid} {data.points[data.points.length - 1].lp}
+        </h2>
+
+        <div className="bg-white rounded-xl shadow-xl">
+          <Line
+            data={{
+              labels,
+              datasets: [
+                {
+                  label: "Closing Price (₹)",
+                  data: prices,
+                  borderColor: "#36A2EB",
+                  backgroundColor: "rgba(54,162,235,0.2)",
+                  fill: true,
+                  tension: 0.4,
+                  pointRadius: 0,
+                  pointHoverRadius: 0,
+                  borderWidth: 2
+                }
+              ]
+            }}
+            options={{
+              responsive: true,
+              plugins: {
+                legend: { display: false },
+                tooltip: { mode: "index", intersect: false }
+              },
+              scales: {
+                x: {
+                  display: false
+                },
+                y: {
+                  beginAtZero: false,
+                  display: false
+                }
+              }
+            }}
+          />
+        </div>
+
+        <div className="p-4 max-w-6xl mx-auto">
+          {/* Highlighted Zones Table */}
+          <h2 className="text-2xl font-bold mb-4">
+            Highlighted Zones (Support + Resistance)
+          </h2>
+          <div className="overflow-x-auto mb-8">
+            <table className="table-auto w-full border border-yellow-500 text-black">
+              <thead>
+                <tr className="bg-yellow-200">
+                  <th className="border px-4 py-2">Zone (₹)</th>
+                  <th className="border px-4 py-2">Support Bounces</th>
+                  <th className="border px-4 py-2">Resistance Drops</th>
+                  {/* <th className="border px-4 py-2">Type</th> */}
+                </tr>
+              </thead>
+              <tbody>
+                {supportLevels.highlightedZones.map((zone, index) => (
+                  <tr key={index} className="bg-yellow-100 text-black">
+                    <td className="border px-4 py-2">{zone.zone}</td>
+                    <td className="border px-4 py-2">
+                      {zone.supportBounceCount}
+                    </td>
+                    <td className="border px-4 py-2">
+                      {zone.resistanceDropCount}
+                    </td>
+                    {/* <td className="border px-4 py-2">{zone.type}</td> */}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
 
-          {/* Resistance Zones */}
-          <div>
-            <h2 className="text-xl font-bold text-red-400">Resistance Zones</h2>
-            <ul className="space-y-1">
-              {supportLevels.resistanceZones.map((zone, i) => (
-                <li key={i} className="border-l-4 border-red-500 pl-2">
-                  Zone: ₹{zone.zone} | Drops: {zone.dropCount}
-                </li>
-              ))}
-            </ul>
+          {/* Support Zones Table */}
+          <h2 className="text-2xl font-bold mb-4">Support Zones</h2>
+          <div className="overflow-x-auto mb-8">
+            <table className="table-auto w-full border border-green-500 text-black">
+              <thead>
+                <tr className="bg-green-200">
+                  <th className="border px-4 py-2">Zone (₹)</th>
+                  <th className="border px-4 py-2">Bounce Count</th>
+                  <th className="border px-4 py-2">Was Resistance?</th>
+                </tr>
+              </thead>
+              <tbody>
+                {supportLevels.supportZones.map((zone, index) => (
+                  <tr
+                    key={index}
+                    className={`bg-green-100 text-black ${
+                      zone.confirmedResistance
+                        ? "border-4 border-green-600"
+                        : ""
+                    }`}
+                  >
+                    <td className="border px-4 py-2">{zone.zone}</td>
+                    <td className="border px-4 py-2">{zone.bounceCount}</td>
+                    <td className="border px-4 py-2">
+                      {zone.confirmedResistance ? "Yes" : "No"}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
 
-          {/* Highlighted Zones */}
-          <div>
-            <h2 className="text-xl font-bold text-yellow-300">
-              Highlighted Zones (🔥 Both S & R)
-            </h2>
-            <ul className="space-y-1">
-              {supportLevels.highlightedZones.map((z, i) => (
-                <li key={i} className="bg-yellow-800 p-2 rounded shadow-md">
-                  <div className="font-semibold">Zone: ₹{z.zone}</div>
-                  <div>
-                    🟢 Support - ₹{z.support.zone} | Bounces:{" "}
-                    {z.support.bounceCount} | Confirmed Resistance:{" "}
-                    {z.support.confirmedResistance ? "✅" : "❌"}
-                  </div>
-                  <div>
-                    🔴 Resistance - ₹{z.resistance.zone} | Drops:{" "}
-                    {z.resistance.dropCount}
-                  </div>
-                </li>
-              ))}
-            </ul>
+          {/* Resistance Zones Table */}
+          <h2 className="text-2xl font-bold mb-4">Resistance Zones</h2>
+          <div className="overflow-x-auto">
+            <table className="table-auto w-full border border-red-500 text-black">
+              <thead>
+                <tr className="bg-red-200">
+                  <th className="border px-4 py-2">Zone (₹)</th>
+                  <th className="border px-4 py-2">Drop Count</th>
+                </tr>
+              </thead>
+              <tbody>
+                {supportLevels.resistanceZones.map((zone, index) => (
+                  <tr key={index} className="bg-red-100 text-black">
+                    <td className="border px-4 py-2">{zone.zone}</td>
+                    <td className="border px-4 py-2">{zone.dropCount}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </div>
-      </div>
-
-      <div className="p-4 bg-white rounded-xl shadow-xl">
-        <Line
-          data={{
-            labels,
-            datasets: [
-              {
-                label: "Closing Price (₹)",
-                data: prices,
-                borderColor: "#36A2EB",
-                backgroundColor: "rgba(54,162,235,0.2)",
-                fill: true,
-                tension: 0.4,
-                pointRadius: 0,
-                pointHoverRadius: 0,
-                borderWidth: 2
-              }
-            ]
-          }}
-          options={{
-            responsive: true,
-            plugins: {
-              legend: { display: false },
-              tooltip: { mode: "index", intersect: false }
-            },
-            scales: {
-              x: {
-                display: false
-              },
-              y: {
-                beginAtZero: false,
-                display: false
-              }
-            }
-          }}
-        />
       </div>
     </div>
   );
