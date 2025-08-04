@@ -175,6 +175,7 @@ export default function HomePage() {
 
   const handleChangeIndex = (value) => {
     setSelectedIndex(value);
+    setLoading(true);
 
     if (value.code === "N50") {
       setActiveIndex(nifty50);
