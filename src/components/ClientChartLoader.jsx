@@ -103,7 +103,28 @@ export default function Chart({ companyId }) {
               responsive: true,
               plugins: {
                 legend: { display: false },
-                tooltip: { mode: "index", intersect: false }
+                tooltip: {
+                  mode: "index",
+                  intersect: false,
+                  displayColors: false,
+                  backgroundColor: "rgba(0, 0, 0, 0.3)",
+                  titleColor: "#fff",
+                  bodyColor: "#fff",
+                  titleFont: {
+                    family: "Inter",
+                    size: 10
+                  },
+                  bodyFont: {
+                    family: "Inter",
+                    size: 10
+                  },
+                  callbacks: {
+                    label: function (context) {
+                      const price = context.formattedValue;
+                      return `₹${price}`;
+                    }
+                  }
+                }
               },
               scales: {
                 x: {
