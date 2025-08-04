@@ -5,7 +5,7 @@ import { onAuthStateChanged } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import { auth } from "@/lib/firebase";
 import Header from "@/components/Header";
-import "./AuthLayout.css";
+import "@/utils/loader.css";
 
 export default function AuthLayout({ children }) {
   const [user, setUser] = useState(null);

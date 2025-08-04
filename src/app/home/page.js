@@ -11,6 +11,7 @@ import { Toast } from "primereact/toast";
 import { nifty50 } from "@/data/nifty50";
 import { niftySmallCap250 } from "@/data/niftySmallcap250";
 import { Button } from "primereact/button";
+import "@/utils/loader.css";
 
 const indices = [
   { name: "Nifty 50", code: "N50" },
@@ -148,8 +149,18 @@ export default function HomePage() {
 
   if (!user || loading)
     return (
-      <div>
-        <h1>Huelling...</h1>
+      <div
+        className="flex justify-center items-center"
+        style={{
+          height: "calc(100vh - 50px)",
+          fontSize: "12px",
+          gap: "10px",
+          flexDirection: "column"
+        }}
+      >
+        <div className="loader"></div>
+
+        <div>Loading companies...</div>
       </div>
     );
 
