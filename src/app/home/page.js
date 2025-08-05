@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { auth } from "@/lib/firebase";
 import AddCompanyDialog from "@/components/AddCompanyDialog";
 import axios from "axios";
+import { useGlobalStore } from "@/store/globalStore";
 import { Dropdown } from "primereact/dropdown";
 import { Toast } from "primereact/toast";
 import { nifty50 } from "@/data/nifty50";
@@ -23,9 +24,17 @@ export default function HomePage() {
   const [user, setUser] = useState(null);
   const [dataList, setDataList] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [activeIndex, setActiveIndex] = useState(nifty50);
-  const [selectedIndex, setSelectedIndex] = useState(indices[0]);
   const [visible, setVisible] = useState(false);
+
+  const indexGlobal = useGlobalStore((state) => state.indexGlobal);
+  const setIndexGlobal = useGlobalStore((state) => state.setIndexGlobal);
+
+  const dropdownActiveIndex = useGlobalStore(
+    (state) => state.dropdownActiveIndex
+  );
+  const setDropdownActiveIndex = useGlobalStore(
+    (state) => state.setDropdownActiveIndex
+  );
 
   const router = useRouter();
   const toast = useRef(null);
@@ -57,7 +66,7 @@ export default function HomePage() {
       let failedIds = [];
 
       try {
-        for (const company of activeIndex) {
+        for (const company of indexGlobal) {
           try {
             const res = await axios.get(
               `https://priceapi.moneycontrol.com/pricefeed/nse/equitycash/${company.summaryId}`
@@ -145,7 +154,7 @@ export default function HomePage() {
     };
 
     fetchAll();
-  }, [user, activeIndex]);
+  }, [user, indexGlobal]);
 
   if (!user || loading)
     return (
@@ -174,15 +183,15 @@ export default function HomePage() {
   );
 
   const handleChangeIndex = (value) => {
-    setSelectedIndex(value);
+    setDropdownActiveIndex(value);
     setLoading(true);
 
     if (value.code === "N50") {
-      setActiveIndex(nifty50);
+      setIndexGlobal(nifty50);
     } else if (value.code === "NS250") {
-      setActiveIndex(niftySmallCap250);
+      setIndexGlobal(niftySmallCap250);
     } else if (value.code === "WL1") {
-      setActiveIndex([]);
+      setIndexGlobal([]);
     }
   };
 
@@ -192,7 +201,7 @@ export default function HomePage() {
 
       <AddCompanyDialog
         visible={visible}
-        selectedIndex={selectedIndex}
+        selectedIndex={dropdownActiveIndex}
         setVisible={setVisible}
       />
 
@@ -204,7 +213,7 @@ export default function HomePage() {
       >
         <div className="card flex justify-content-center mb-3">
           <Dropdown
-            value={selectedIndex}
+            value={dropdownActiveIndex}
             onChange={(e) => handleChangeIndex(e.value)}
             options={indices}
             optionLabel="name"
@@ -218,7 +227,7 @@ export default function HomePage() {
             }}
           />
 
-          {selectedIndex.code === "WL1" && (
+          {dropdownActiveIndex.code === "WL1" && (
             <Button
               label="+"
               onClick={() => setVisible(true)}
