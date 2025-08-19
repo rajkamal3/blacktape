@@ -10,14 +10,19 @@ import { useGlobalStore } from "@/store/globalStore";
 import { Dropdown } from "primereact/dropdown";
 import { Toast } from "primereact/toast";
 import { nifty50 } from "@/data/nifty50";
+import { niftyNext50 } from "@/data/niftyNext50";
+import { niftyMidcap150 } from "@/data/niftyMidcap150";
 import { niftySmallCap250 } from "@/data/niftySmallcap250";
+import { watchlist } from "@/data/watchlist";
 import { Button } from "primereact/button";
 import "@/utils/loader.css";
 
 const indices = [
+  { name: "Watchlist 1", code: "WL1" },
   { name: "Nifty 50", code: "N50" },
-  { name: "Nifty Smallcap 250", code: "NS250" },
-  { name: "Watchlist 1", code: "WL1" }
+  { name: "Nifty Next 50", code: "NN50" },
+  { name: "Nifty Midcap 150", code: "NM150" },
+  { name: "Nifty Smallcap 250", code: "NS250" }
 ];
 
 export default function HomePage() {
@@ -188,10 +193,14 @@ export default function HomePage() {
 
     if (value.code === "N50") {
       setIndexGlobal(nifty50);
+    } else if (value.code === "NN50") {
+      setIndexGlobal(niftyNext50);
+    } else if (value.code === "NM150") {
+      setIndexGlobal(niftyMidcap150);
     } else if (value.code === "NS250") {
       setIndexGlobal(niftySmallCap250);
     } else if (value.code === "WL1") {
-      setIndexGlobal([]);
+      setIndexGlobal(watchlist);
     }
   };
 

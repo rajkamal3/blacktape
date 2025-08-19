@@ -1,9 +1,9 @@
 import { create } from "zustand";
-import { nifty50 } from "@/data/nifty50";
+import { watchlist } from "@/data/watchlist";
 
 export const useGlobalStore = create((set) => ({
-  indexGlobal: nifty50,
-  dropdownActiveIndex: { name: "Nifty 50", code: "N50" },
+  indexGlobal: watchlist,
+  dropdownActiveIndex: { name: "Watchlist 1", code: "WL1" },
 
   setIndexGlobal: (indexGlobal) => set({ indexGlobal }),
   setDropdownActiveIndex: (dropdownActiveIndex) => set({ dropdownActiveIndex })
