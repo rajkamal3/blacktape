@@ -63,6 +63,23 @@ export default function HomePage() {
     });
   };
 
+  const sortByProximityTo52WeekLow = (results) => {
+    return results
+      .map((item) => {
+        const current = parseFloat(item.pricecurrent);
+        const low52 = parseFloat(item["52L"]);
+
+        if (isNaN(current) || isNaN(low52) || low52 === 0) {
+          return { ...item, closenessToLowPct: Infinity };
+        }
+
+        const closeness = ((current - low52) / low52) * 100;
+
+        return { ...item, closenessToLowPct: closeness };
+      })
+      .sort((a, b) => a.closenessToLowPct - b.closenessToLowPct);
+  };
+
   useEffect(() => {
     if (!user) return;
 
@@ -92,7 +109,9 @@ export default function HomePage() {
           }
         }
 
-        setDataList(results);
+        const sortedResults = sortByProximityTo52WeekLow(results);
+
+        setDataList(sortedResults);
 
         // const base =
         //   process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
