@@ -15,20 +15,34 @@ import {
 } from "chart.js";
 import { findSupportLevels } from "@/utils/findSupportLevels";
 
-const horizontalLinePlugin = {
-  id: "horizontalLine",
+const crosshairLinePlugin = {
+  id: "crosshairLine",
   afterDraw: (chart) => {
     if (chart.tooltip?._active && chart.tooltip._active.length) {
       const ctx = chart.ctx;
-      const y = chart.tooltip._active[0].element.y;
+      const activePoint = chart.tooltip._active[0].element;
+
+      if (!activePoint) return;
+
+      const x = activePoint.x;
+      const y = activePoint.y;
 
       ctx.save();
+
       ctx.beginPath();
       ctx.moveTo(chart.chartArea.left, y);
       ctx.lineTo(chart.chartArea.right, y);
       ctx.lineWidth = 1;
       ctx.strokeStyle = "green";
       ctx.stroke();
+
+      ctx.beginPath();
+      ctx.moveTo(x, chart.chartArea.top);
+      ctx.lineTo(x, chart.chartArea.bottom);
+      ctx.lineWidth = 1;
+      ctx.strokeStyle = "green";
+      ctx.stroke();
+
       ctx.restore();
     }
   }
@@ -42,7 +56,7 @@ ChartJS.register(
   Tooltip,
   Legend,
   Filler,
-  horizontalLinePlugin
+  crosshairLinePlugin
 );
 
 export default function Chart({ companyId }) {
