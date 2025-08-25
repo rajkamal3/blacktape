@@ -33,14 +33,14 @@ const crosshairLinePlugin = {
       ctx.moveTo(chart.chartArea.left, y);
       ctx.lineTo(chart.chartArea.right, y);
       ctx.lineWidth = 1;
-      ctx.strokeStyle = "green";
+      ctx.strokeStyle = "#505050";
       ctx.stroke();
 
       ctx.beginPath();
       ctx.moveTo(x, chart.chartArea.top);
       ctx.lineTo(x, chart.chartArea.bottom);
       ctx.lineWidth = 1;
-      ctx.strokeStyle = "green";
+      ctx.strokeStyle = "#505050";
       ctx.stroke();
 
       ctx.restore();
@@ -103,8 +103,8 @@ export default function Chart({ companyId }) {
                 {
                   label: "Closing Price (₹)",
                   data: prices,
-                  borderColor: "#36A2EB",
-                  backgroundColor: "rgba(54,162,235,0.2)",
+                  borderColor: "#000000",
+                  backgroundColor: "rgba(30, 0, 0, 0.1)",
                   fill: true,
                   tension: 0.4,
                   pointRadius: 0,
