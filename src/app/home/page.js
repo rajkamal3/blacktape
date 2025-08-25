@@ -16,6 +16,7 @@ import { niftySmallCap250 } from "@/data/niftySmallcap250";
 import { watchlist } from "@/data/watchlist";
 import { Button } from "primereact/button";
 import "@/utils/loader.css";
+import { formatIndianCurrency } from "@/utils/formatIndianCurrency";
 
 const indices = [
   { name: "Watchlist 1", code: "WL1" },
@@ -286,19 +287,22 @@ export default function HomePage() {
               <div className="grid gap-y-2 text-sm">
                 <Stat
                   label="Price"
-                  value={`₹ ${item.pricecurrent} ${Number(
+                  value={`${formatIndianCurrency(item.pricecurrent)} ${Number(
                     item.pricepercentchange
                   ).toFixed(2)}%`}
                 />
 
                 <Stat
                   label="52WL | From 52WL"
-                  value={`₹ ${item["52L"]} | ${(
+                  value={`${formatIndianCurrency(item["52L"])} | ${(
                     ((item.pricecurrent - item["52L"]) / item["52L"]) *
                     100
                   ).toFixed(2)}%`}
                 />
-                <Stat label="Market Cap" value={`₹ ${item.MKTCAP}`} />
+                <Stat
+                  label="Market Cap"
+                  value={`${formatIndianCurrency(item.MKTCAP)}`}
+                />
                 <Stat
                   label="PE | Sector PE"
                   value={`${item.PE} | ${item.IND_PE}`}
