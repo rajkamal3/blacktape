@@ -85,6 +85,15 @@ export default function HomePage() {
     if (!user) return;
 
     const fetchAll = async () => {
+      const cacheKey = `companies_${dropdownActiveIndex.code}`;
+      const cached = sessionStorage.getItem(cacheKey);
+
+      if (cached) {
+        setDataList(JSON.parse(cached));
+        setLoading(false);
+        return;
+      }
+
       const results = [];
       let failedIds = [];
 
@@ -113,6 +122,7 @@ export default function HomePage() {
         const sortedResults = sortByProximityTo52WeekLow(results);
 
         setDataList(sortedResults);
+        sessionStorage.setItem(cacheKey, JSON.stringify(sortedResults));
 
         // const base =
         //   process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
@@ -151,8 +161,6 @@ export default function HomePage() {
 
         // addStockPriceMovementsToResults();
 
-        setLoading(false);
-
         if (failedIds.length > 0 && toast.current) {
           toast.current.show({
             severity: "warn",
@@ -179,7 +187,7 @@ export default function HomePage() {
     };
 
     fetchAll();
-  }, [user, indexGlobal]);
+  }, [user, indexGlobal, dropdownActiveIndex]);
 
   if (!user || loading)
     return (
