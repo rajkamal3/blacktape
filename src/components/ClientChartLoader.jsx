@@ -14,6 +14,7 @@ import {
   Filler
 } from "chart.js";
 import { findSupportLevels } from "@/utils/findSupportLevels";
+import { formatIndianCurrency } from "@/utils/formatIndianCurrency";
 
 const crosshairLinePlugin = {
   id: "crosshairLine",
@@ -154,46 +155,13 @@ export default function Chart({ companyId }) {
         </div>
 
         <div className="p-4 max-w-6xl mx-auto">
-          {/* Highlighted Zones Table */}
-          {/* <h2 className="text-2xl font-bold mb-4">
-            Highlighted Zones (Support + Resistance)
-          </h2>
-          <div className="overflow-x-auto mb-8">
-            <table className="table-auto w-full border border-yellow-500 text-black">
-              <thead>
-                <tr className="bg-yellow-200">
-                  <th className="border px-4 py-2">Zone (₹)</th>
-                  <th className="border px-4 py-2">Support Bounces</th>
-                  <th className="border px-4 py-2">Resistance Drops</th>
-                  // <th className="border px-4 py-2">Type</th>
-                </tr>
-              </thead>
-              <tbody>
-                {supportLevels.highlightedZones.map((zone, index) => (
-                  <tr key={index} className="bg-yellow-100 text-black">
-                    <td className="border px-4 py-2">{zone.zone}</td>
-                    <td className="border px-4 py-2">
-                      {zone.supportBounceCount}
-                    </td>
-                    <td className="border px-4 py-2">
-                      {zone.resistanceDropCount}
-                    </td>
-                    // <td className="border px-4 py-2">{zone.type}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div> */}
-
-          {/* Support Zones Table */}
           <h2 className="text-2xl font-bold mb-4">Support Zones</h2>
           <div className="overflow-x-auto mb-8">
             <table className="table-auto w-full border border-green-500 text-black">
               <thead>
                 <tr className="bg-green-200">
-                  <th className="border px-4 py-2">Zone (₹)</th>
+                  <th className="border px-4 py-2">Zone</th>
                   <th className="border px-4 py-2">Bounce Count</th>
-                  <th className="border px-4 py-2">Was Resistance?</th>
                 </tr>
               </thead>
               <tbody>
@@ -206,37 +174,15 @@ export default function Chart({ companyId }) {
                         : ""
                     }`}
                   >
-                    <td className="border px-4 py-2">{zone.zone}</td>
-                    <td className="border px-4 py-2">{zone.bounceCount}</td>
                     <td className="border px-4 py-2">
-                      {zone.confirmedResistance ? "Yes" : "No"}
+                      {formatIndianCurrency(zone.zone)}
                     </td>
+                    <td className="border px-4 py-2">{zone.bounceCount}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
-
-          {/* Resistance Zones Table */}
-          {/* <h2 className="text-2xl font-bold mb-4">Resistance Zones</h2>
-          <div className="overflow-x-auto">
-            <table className="table-auto w-full border border-red-500 text-black">
-              <thead>
-                <tr className="bg-red-200">
-                  <th className="border px-4 py-2">Zone (₹)</th>
-                  <th className="border px-4 py-2">Drop Count</th>
-                </tr>
-              </thead>
-              <tbody>
-                {supportLevels.resistanceZones.map((zone, index) => (
-                  <tr key={index} className="bg-red-100 text-black">
-                    <td className="border px-4 py-2">{zone.zone}</td>
-                    <td className="border px-4 py-2">{zone.dropCount}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div> */}
         </div>
       </div>
     </div>
