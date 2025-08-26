@@ -109,7 +109,7 @@ export default function Chart({ companyId }) {
       position: "start",
       backgroundColor: "rgba(0, 0, 0, 0.0)",
       color: "#000",
-      font: { size: 10 }
+      font: { size: 6 }
     }
   }));
 
