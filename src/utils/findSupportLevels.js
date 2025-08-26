@@ -108,7 +108,7 @@ export const findSupportLevels = (priceData) => {
       }
       const actedAsRes = actedAsResistanceBefore(i, basePrice);
       // require at least 3 confirmed bounces to call it a support
-      if (bounceCount >= 3) {
+      if (bounceCount >= 3 && basePrice < priceData[priceData.length - 1].lp) {
         supportZones.push({
           zone: basePrice.toFixed(2),
           bounceCount,
