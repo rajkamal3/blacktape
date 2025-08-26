@@ -15,6 +15,7 @@ import {
 } from "chart.js";
 import { findSupportLevels } from "@/utils/findSupportLevels";
 import { formatIndianCurrency } from "@/utils/formatIndianCurrency";
+import annotationPlugin from "chartjs-plugin-annotation";
 
 const crosshairLinePlugin = {
   id: "crosshairLine",
@@ -57,13 +58,18 @@ ChartJS.register(
   Tooltip,
   Legend,
   Filler,
-  crosshairLinePlugin
+  crosshairLinePlugin,
+  annotationPlugin
 );
 
 export default function Chart({ companyId }) {
   const [data, setData] = useState(null);
   const [err, setErr] = useState(null);
-  const [supportLevels, setSupportLevels] = useState([]);
+  const [supportLevels, setSupportLevels] = useState({
+    supportZones: [],
+    resistanceZones: [],
+    highlightedZones: []
+  });
 
   useEffect(() => {
     const base = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
@@ -88,6 +94,24 @@ export default function Chart({ companyId }) {
   );
 
   const prices = data.points.map((d) => d.lp);
+
+  const supportAnnotations = supportLevels.supportZones.map((zone, idx) => ({
+    type: "line",
+    yMin: parseFloat(zone.zone),
+    yMax: parseFloat(zone.zone),
+    borderColor: zone.confirmedResistance
+      ? "rgba(0, 0, 0, 0.5)"
+      : "rgba(0, 0, 0, 0.25)",
+    borderWidth: zone.confirmedResistance ? 1 : 0.5,
+    label: {
+      display: true,
+      content: `${formatIndianCurrency(zone.zone)}`,
+      position: "start",
+      backgroundColor: "rgba(0, 0, 0, 0.0)",
+      color: "#000",
+      font: { size: 10 }
+    }
+  }));
 
   return (
     <div className="p-4">
@@ -138,6 +162,14 @@ export default function Chart({ companyId }) {
                       const price = context.formattedValue;
                       return `₹${price}`;
                     }
+                  }
+                },
+                annotation: {
+                  annotations: {
+                    ...supportAnnotations.reduce((acc, cur, i) => {
+                      acc[`support_${i}`] = cur;
+                      return acc;
+                    }, {})
                   }
                 }
               },
