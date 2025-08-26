@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { Line } from "react-chartjs-2";
+import { Line, Bar } from "react-chartjs-2";
 import {
   Chart as ChartJS,
   LineElement,
@@ -11,7 +11,9 @@ import {
   PointElement,
   Tooltip,
   Legend,
-  Filler
+  Filler,
+  BarElement,
+  Title
 } from "chart.js";
 import { findSupportLevels } from "@/utils/findSupportLevels";
 import { formatIndianCurrency } from "@/utils/formatIndianCurrency";
@@ -54,6 +56,8 @@ ChartJS.register(
   LineElement,
   CategoryScale,
   LinearScale,
+  BarElement,
+  Title,
   PointElement,
   Tooltip,
   Legend,
@@ -70,11 +74,13 @@ export default function Chart({ companyId }) {
     resistanceZones: [],
     highlightedZones: []
   });
+  const [financals, setFinancials] = useState(null);
 
   useEffect(() => {
     const base = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+
     axios
-      .get(`${base}/api/proxy?id=${companyId}`)
+      .get(`${base}/api/proxy?id=${companyId}&type=chart`)
       .then((res) => {
         setData(res.data?.data?.[0]);
         return res.data?.data?.[0];
@@ -82,6 +88,13 @@ export default function Chart({ companyId }) {
       .then((res) => {
         const supports = findSupportLevels(res.points);
         setSupportLevels(supports);
+      })
+      .catch((error) => setErr(error.message));
+
+    axios
+      .get(`${base}/api/proxy?id=${companyId}&type=financials`)
+      .then((res) => {
+        setFinancials(res.data?.data);
       })
       .catch((error) => setErr(error.message));
   }, [companyId]);
@@ -112,6 +125,40 @@ export default function Chart({ companyId }) {
       font: { size: 7 }
     }
   }));
+
+  const financialsData = {
+    labels: financals?.map((d) => d.displayPeriod),
+    datasets: [
+      {
+        label: "Revenue",
+        data: financals?.map((d) => d.incTrev),
+        backgroundColor: "#696969"
+      },
+      {
+        label: "Net Income",
+        data: financals?.map((d) => d.incNinc),
+        backgroundColor: "#cbcbcb"
+      }
+    ]
+  };
+
+  const financialsOptions = {
+    responsive: true,
+    plugins: {
+      legend: {
+        display: false
+      }
+    },
+    scales: {
+      x: {
+        display: false
+      },
+      y: {
+        beginAtZero: false,
+        display: false
+      }
+    }
+  };
 
   return (
     <div className="p-4">
@@ -216,6 +263,10 @@ export default function Chart({ companyId }) {
             </table>
           </div>
         </div>
+      </div>
+
+      <div>
+        <Bar data={financialsData} options={financialsOptions} />
       </div>
     </div>
   );
