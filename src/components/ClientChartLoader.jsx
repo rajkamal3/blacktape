@@ -155,7 +155,7 @@ export default function Chart({ companyId }) {
 
         <div className="p-4 max-w-6xl mx-auto">
           {/* Highlighted Zones Table */}
-          <h2 className="text-2xl font-bold mb-4">
+          {/* <h2 className="text-2xl font-bold mb-4">
             Highlighted Zones (Support + Resistance)
           </h2>
           <div className="overflow-x-auto mb-8">
@@ -165,7 +165,7 @@ export default function Chart({ companyId }) {
                   <th className="border px-4 py-2">Zone (₹)</th>
                   <th className="border px-4 py-2">Support Bounces</th>
                   <th className="border px-4 py-2">Resistance Drops</th>
-                  {/* <th className="border px-4 py-2">Type</th> */}
+                  // <th className="border px-4 py-2">Type</th>
                 </tr>
               </thead>
               <tbody>
@@ -178,12 +178,12 @@ export default function Chart({ companyId }) {
                     <td className="border px-4 py-2">
                       {zone.resistanceDropCount}
                     </td>
-                    {/* <td className="border px-4 py-2">{zone.type}</td> */}
+                    // <td className="border px-4 py-2">{zone.type}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
-          </div>
+          </div> */}
 
           {/* Support Zones Table */}
           <h2 className="text-2xl font-bold mb-4">Support Zones</h2>
@@ -218,7 +218,7 @@ export default function Chart({ companyId }) {
           </div>
 
           {/* Resistance Zones Table */}
-          <h2 className="text-2xl font-bold mb-4">Resistance Zones</h2>
+          {/* <h2 className="text-2xl font-bold mb-4">Resistance Zones</h2>
           <div className="overflow-x-auto">
             <table className="table-auto w-full border border-red-500 text-black">
               <thead>
@@ -236,7 +236,7 @@ export default function Chart({ companyId }) {
                 ))}
               </tbody>
             </table>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>
