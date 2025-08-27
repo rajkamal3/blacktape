@@ -18,6 +18,7 @@ import {
 import { findSupportLevels } from "@/utils/findSupportLevels";
 import { formatIndianCurrency } from "@/utils/formatIndianCurrency";
 import annotationPlugin from "chartjs-plugin-annotation";
+import { useGlobalStore } from "@/store/globalStore";
 
 const crosshairLinePlugin = {
   id: "crosshairLine",
@@ -76,6 +77,8 @@ export default function Chart({ companyId }) {
   });
   const [financals, setFinancials] = useState(null);
   const [financalsQuarterly, setFinancialsQuarterly] = useState(null);
+
+  const companySummary = useGlobalStore((state) => state.companySummary);
 
   useEffect(() => {
     const base = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
@@ -187,8 +190,9 @@ export default function Chart({ companyId }) {
   return (
     <div className="p-4">
       <div>
-        <h2>
-          {data.sid} {data.points[data.points.length - 1].lp}
+        <h2 className="font-bold">
+          {companySummary.SC_FULLNM || data.sid}&nbsp;&nbsp;
+          {formatIndianCurrency(data.points[data.points.length - 1].lp)}
         </h2>
 
         <div className="bg-white rounded-xl shadow-xl">
@@ -300,6 +304,69 @@ export default function Chart({ companyId }) {
 
         <Bar data={financialsQuarterlyData} options={financialsOptions} />
       </div>
+
+      {companySummary.SC_FULLNM && (
+        <div className="p-4">
+          <div className="bg-zinc-900 text-white p-6 rounded-xl shadow-lg">
+            <h2 className="text-xl font-bold mb-4">
+              {companySummary.SC_FULLNM}
+            </h2>
+            <table className="w-full border-collapse text-sm">
+              <tbody>
+                <tr className="border-b border-zinc-700">
+                  <td className="py-2 text-gray-400">Price</td>
+                  <td className="py-2 font-semibold">
+                    {formatIndianCurrency(companySummary.pricecurrent)} (
+                    {Number(companySummary.pricepercentchange).toFixed(2)}%)
+                  </td>
+                </tr>
+                <tr className="border-b border-zinc-700">
+                  <td className="py-2 text-gray-400">Prev Close</td>
+                  <td className="py-2">
+                    {formatIndianCurrency(companySummary.priceprevclose)}
+                  </td>
+                </tr>
+                <tr className="border-b border-zinc-700">
+                  <td className="py-2 text-gray-400">52W High / Low</td>
+                  <td className="py-2">
+                    <div className="flex items-center justify-between">
+                      <span>
+                        {formatIndianCurrency(companySummary["52H"])} /{" "}
+                        {formatIndianCurrency(companySummary["52L"])}
+                      </span>
+                      <span className="ml-4 text-xs text-gray-400 bg-zinc-800 px-2 py-0.5 rounded">
+                        Near Low: {companySummary.closenessToLowPct.toFixed(2)}%
+                      </span>
+                    </div>
+                  </td>
+                </tr>
+                <tr className="border-b border-zinc-700">
+                  <td className="py-2 text-gray-400">Market Cap</td>
+                  <td className="py-2">
+                    {formatIndianCurrency(companySummary.MKTCAP)} Cr
+                  </td>
+                </tr>
+                <tr className="border-b border-zinc-700">
+                  <td className="py-2 text-gray-400">Valuation</td>
+                  <td className="py-2">
+                    PE: {companySummary.PE} (Sector: {companySummary.IND_PE}) |
+                    PB: {companySummary.PB} | BV: ₹{companySummary.BV}
+                  </td>
+                </tr>
+                <tr>
+                  <td className="py-2 text-gray-400">Trend</td>
+                  <td className="py-2">
+                    1M: {companySummary.cl1mPerChange}% | 3M:{" "}
+                    {companySummary.cl3mPerChange}% | 1Y:{" "}
+                    {companySummary.cl1yPerChange}% | 5Y CAGR:{" "}
+                    {companySummary.cagr5Y}%
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

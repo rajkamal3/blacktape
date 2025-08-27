@@ -34,6 +34,7 @@ export default function HomePage() {
 
   const indexGlobal = useGlobalStore((state) => state.indexGlobal);
   const setIndexGlobal = useGlobalStore((state) => state.setIndexGlobal);
+  const setCompanySummary = useGlobalStore((state) => state.setCompanySummary);
 
   const dropdownActiveIndex = useGlobalStore(
     (state) => state.dropdownActiveIndex
@@ -58,10 +59,12 @@ export default function HomePage() {
     return () => unsubscribe();
   }, [router]);
 
-  const handleCardClick = (id) => {
+  const handleCardClick = (item) => {
     startTransition(() => {
-      router.push(`/home/${id}`);
+      router.push(`/home/${item.detailsId}`);
     });
+
+    setCompanySummary(item);
   };
 
   const sortByProximityTo52WeekLow = (results) => {
@@ -282,7 +285,7 @@ export default function HomePage() {
             <div
               key={index}
               className="bg-zinc-900 text-white p-4 rounded-lg"
-              onClick={() => handleCardClick(item.detailsId)}
+              onClick={() => handleCardClick(item)}
               style={{
                 backgroundColor: "#232323",
                 color: "#ffffff"
