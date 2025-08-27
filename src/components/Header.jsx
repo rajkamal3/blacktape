@@ -18,7 +18,11 @@ const Header = ({ user }) => {
   };
 
   const handleBack = () => {
-    router.push("/home");
+    if (window.history.length > 1) {
+      router.back();
+    } else {
+      router.push("/home");
+    }
   };
 
   return (
