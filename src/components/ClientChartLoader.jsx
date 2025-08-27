@@ -75,6 +75,7 @@ export default function Chart({ companyId }) {
     highlightedZones: []
   });
   const [financals, setFinancials] = useState(null);
+  const [financalsQuarterly, setFinancialsQuarterly] = useState(null);
 
   useEffect(() => {
     const base = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
@@ -95,6 +96,13 @@ export default function Chart({ companyId }) {
       .get(`${base}/api/proxy?id=${companyId}&type=financials`)
       .then((res) => {
         setFinancials(res.data?.data);
+      })
+      .catch((error) => setErr(error.message));
+
+    axios
+      .get(`${base}/api/proxy?id=${companyId}&type=financialsQuarterly`)
+      .then((res) => {
+        setFinancialsQuarterly(res.data?.data);
       })
       .catch((error) => setErr(error.message));
   }, [companyId]);
@@ -137,6 +145,22 @@ export default function Chart({ companyId }) {
       {
         label: "Net Income",
         data: financals?.map((d) => d.incNinc),
+        backgroundColor: "#cbcbcb"
+      }
+    ]
+  };
+
+  const financialsQuarterlyData = {
+    labels: financalsQuarterly?.map((d) => d.displayPeriod),
+    datasets: [
+      {
+        label: "Revenue",
+        data: financalsQuarterly?.map((d) => d.qIncTrev),
+        backgroundColor: "#696969"
+      },
+      {
+        label: "Net Income",
+        data: financalsQuarterly?.map((d) => d.qIncNinc),
         backgroundColor: "#cbcbcb"
       }
     ]
@@ -265,8 +289,16 @@ export default function Chart({ companyId }) {
         </div>
       </div>
 
-      <div>
+      <div className="p-4">
+        <h2 className="text-2xl font-bold mb-4">Yearly Financials</h2>
+
         <Bar data={financialsData} options={financialsOptions} />
+      </div>
+
+      <div className="p-4">
+        <h2 className="text-2xl font-bold mb-4">Quarterly Financials</h2>
+
+        <Bar data={financialsQuarterlyData} options={financialsOptions} />
       </div>
     </div>
   );
