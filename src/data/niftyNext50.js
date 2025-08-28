@@ -1,5 +1,5 @@
 export const niftyNext50 = [
-  { name: "ABB", summaryId: "ABB", detailsId: "ABB" },
+  { name: "ABB India", summaryId: "ABB", detailsId: "ABB" },
   { name: "Adani Energy Solutions", summaryId: "AT18", detailsId: "ADAI" },
   {
     name: "Adani Green Energy",
@@ -29,7 +29,7 @@ export const niftyNext50 = [
   { name: "Dabur India", summaryId: "DI", detailsId: "DABU" },
   { name: "Divis Laboratories", summaryId: "DL03", detailsId: "DIVI" },
   { name: "DLF", summaryId: "D04", detailsId: "DLF" },
-  { name: "GAIL (India)", summaryId: "GAI", detailsId: "GAIL" },
+  { name: "Gas Authority of India", summaryId: "GAI", detailsId: "GAIL" },
   { name: "Godrej Consumer Products", summaryId: "GCP", detailsId: "GOCP" },
   { name: "Havells India", summaryId: "HI01", detailsId: "HVEL" },
   { name: "Hindustan Aeronautics", summaryId: "HAL", detailsId: "HIAE" },

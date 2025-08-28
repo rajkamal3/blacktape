@@ -1,5 +1,9 @@
 export const niftyMidcap150 = [
-  { name: "360 One Wam", summaryId: "IIFLW54277", detailsId: "IIFW" },
+  {
+    name: "360 One Wam (IIFL Wealth Management)",
+    summaryId: "IIFLW54277",
+    detailsId: "IIFW"
+  },
   { name: "3M India", summaryId: "B3M", detailsId: "TMIN" },
   { name: "Abbott India", summaryId: "KP", detailsId: "ABOT" },
   { name: "ACC", summaryId: "ACC", detailsId: "ACC" },
@@ -16,7 +20,7 @@ export const niftyMidcap150 = [
   { name: "Astral", summaryId: "APT02", detailsId: "ASPT" },
   { name: "AU Small Finance Bank", summaryId: "ASF03", detailsId: "AUFI" },
   { name: "Aurobindo Pharma", summaryId: "AP", detailsId: "ARBN" },
-  { name: "AWL Agri", summaryId: "AW01", detailsId: "AWL" },
+  { name: "AWL Agri Business", summaryId: "AW01", detailsId: "AWL" },
   { name: "Balkrishna Industries", summaryId: "BI03", detailsId: "BLKI" },
   { name: "Bandhan Bank", summaryId: "BB09", detailsId: "BANH" },
   { name: "Bank of India", summaryId: "BOI", detailsId: "BOI" },
@@ -36,7 +40,7 @@ export const niftyMidcap150 = [
   { name: "Coramandel International", summaryId: "CF06", detailsId: "CORF" },
   { name: "CRISIL", summaryId: "CRI", detailsId: "CRSL" },
   { name: "Cummins", summaryId: "CI02", detailsId: "CUMM" },
-  { name: "Dalmia Bharat", summaryId: "OCL", detailsId: "DALB" },
+  { name: "Dalmia Bharat Group", summaryId: "OCL", detailsId: "DALB" },
   { name: "Deepak Nitrite", summaryId: "DN", detailsId: "DPNT" },
   { name: "Dixon Technologies", summaryId: "DT07", detailsId: "DIXO" },
   { name: "Emami", summaryId: "E05", detailsId: "EMAM" },
@@ -132,7 +136,7 @@ export const niftyMidcap150 = [
   { name: "NLC India", summaryId: "NLC", detailsId: "NLCI" },
   { name: "NMDC", summaryId: "NMD01", detailsId: "NMDC" },
   { name: "NTPC Green Energy", summaryId: "NGE", detailsId: "NTP" },
-  { name: "Oberoi Realry", summaryId: "OR", detailsId: "OEBO" },
+  { name: "Oberoi Realty", summaryId: "OR", detailsId: "OEBO" },
   { name: "Oil India", summaryId: "OI13", detailsId: "OILI" },
   { name: "Ola Electric Mobility", summaryId: "OEM", detailsId: "OLAE" },
   { name: "One97 Communications (Paytm)", summaryId: "OC10", detailsId: "PAY" },
