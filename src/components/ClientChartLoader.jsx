@@ -192,7 +192,8 @@ export default function Chart({ companyId }) {
       <div>
         <h2 className="font-bold">
           {companySummary.SC_FULLNM || data.sid}&nbsp;&nbsp;
-          {formatIndianCurrency(data.points[data.points.length - 1].lp)}
+          {companySummary.pricecurrent ||
+            formatIndianCurrency(data.points[data.points.length - 1].lp)}
         </h2>
 
         <div className="bg-white rounded-xl shadow-xl">
@@ -321,45 +322,60 @@ export default function Chart({ companyId }) {
                   </td>
                 </tr>
                 <tr className="border-b border-zinc-700">
-                  <td className="py-2 text-gray-400">Prev Close</td>
+                  <td className="py-2 text-gray-400">52W High</td>
                   <td className="py-2">
-                    {formatIndianCurrency(companySummary.priceprevclose)}
+                    <div className="flex items-center justify-between">
+                      <span>{formatIndianCurrency(companySummary["52H"])}</span>
+                    </div>
                   </td>
                 </tr>
                 <tr className="border-b border-zinc-700">
-                  <td className="py-2 text-gray-400">52W High / Low</td>
+                  <td className="py-2 text-gray-400">52W Low</td>
                   <td className="py-2">
                     <div className="flex items-center justify-between">
-                      <span>
-                        {formatIndianCurrency(companySummary["52H"])} /{" "}
-                        {formatIndianCurrency(companySummary["52L"])}
-                      </span>
-                      <span className="ml-4 text-xs text-gray-400 bg-zinc-800 px-2 py-0.5 rounded">
+                      <span>{formatIndianCurrency(companySummary["52L"])}</span>
+                      <span className="ml-2 text-xs text-gray-400 bg-zinc-800 px-2 py-0.5 rounded">
                         Near Low: {companySummary.closenessToLowPct.toFixed(2)}%
                       </span>
                     </div>
                   </td>
                 </tr>
                 <tr className="border-b border-zinc-700">
-                  <td className="py-2 text-gray-400">Market Cap</td>
+                  <td className="py-2 text-gray-400">Valuation</td>
                   <td className="py-2">
                     {formatIndianCurrency(companySummary.MKTCAP)} Cr
                   </td>
                 </tr>
                 <tr className="border-b border-zinc-700">
-                  <td className="py-2 text-gray-400">Valuation</td>
+                  <td className="py-2 text-gray-400">PE / S. PE</td>
                   <td className="py-2">
-                    PE: {companySummary.PE} (Sector: {companySummary.IND_PE}) |
-                    PB: {companySummary.PB} | BV: ₹{companySummary.BV}
+                    {companySummary.PE} / {companySummary.IND_PE}
                   </td>
                 </tr>
-                <tr>
-                  <td className="py-2 text-gray-400">Trend</td>
+                <tr className="border-b border-zinc-700">
+                  <td className="py-2 text-gray-400">PB</td>
                   <td className="py-2">
-                    1M: {companySummary.cl1mPerChange}% | 3M:{" "}
-                    {companySummary.cl3mPerChange}% | 1Y:{" "}
-                    {companySummary.cl1yPerChange}% | 5Y CAGR:{" "}
-                    {companySummary.cagr5Y}%
+                    {formatIndianCurrency(companySummary.PB)}
+                  </td>
+                </tr>
+                <tr className="border-b border-zinc-700">
+                  <td className="py-2 text-gray-400">BV</td>
+                  <td className="py-2">
+                    {formatIndianCurrency(companySummary.BV)}
+                  </td>
+                </tr>
+                <tr className="border-b border-zinc-700">
+                  <td className="py-2 text-gray-400">1M | 3M | 1Y</td>
+                  <td className="py-2">
+                    {Number(companySummary.cl1mPerChange).toFixed(2)}% |{" "}
+                    {Number(companySummary.cl3mPerChange).toFixed(2)}% |{" "}
+                    {Number(companySummary.cl1yPerChange).toFixed(2)}%
+                  </td>
+                </tr>
+                <tr className="border-b border-zinc-700">
+                  <td className="py-2 text-gray-400">Trend (5Y CAGR)</td>
+                  <td className="py-2">
+                    {Number(companySummary.cagr5Y).toFixed(2)}%
                   </td>
                 </tr>
               </tbody>
