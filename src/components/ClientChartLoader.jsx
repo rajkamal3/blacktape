@@ -309,7 +309,7 @@ export default function Chart({ companyId }) {
       {companySummary.SC_FULLNM && (
         <div className="p-4">
           <div className="bg-zinc-900 text-white p-6 rounded-xl shadow-lg">
-            <h2 className="text-xl font-bold mb-4">
+            <h2 className="text-xl font-bold mb-2">
               {companySummary.SC_FULLNM}
             </h2>
             <table className="w-full border-collapse text-sm">
@@ -373,13 +373,40 @@ export default function Chart({ companyId }) {
                   </td>
                 </tr>
                 <tr className="border-b border-zinc-700">
+                  <td className="py-2 text-gray-400">3Y CAGR</td>
+                  <td className="py-2">
+                    {Number(companySummary.cagr3Y)
+                      ? `${Number(companySummary.cagr3Y).toFixed(2)}%`
+                      : "-"}
+                  </td>
+                </tr>
+                <tr className="border-b border-zinc-700">
                   <td className="py-2 text-gray-400">5Y CAGR</td>
                   <td className="py-2">
-                    {companySummary.cagr5Y
-                      ? Number(companySummary.cagr5Y).toFixed(2)
+                    {Number(companySummary.cagr5Y)
+                      ? `${Number(companySummary.cagr5Y).toFixed(2)}%`
                       : "-"}
-                    %
                   </td>
+                </tr>
+                <tr className="border-b border-zinc-700">
+                  <td className="py-2 text-gray-400">7Y CAGR</td>
+                  <td className="py-2">
+                    {Number(companySummary.cagr7Y)
+                      ? `${Number(companySummary.cagr7Y).toFixed(2)}%`
+                      : "-"}
+                  </td>
+                </tr>
+                <tr className="border-b border-zinc-700">
+                  <td className="py-2 text-gray-400">10Y CAGR</td>
+                  <td className="py-2">
+                    {Number(companySummary.cagr10Y)
+                      ? `${Number(companySummary.cagr10Y).toFixed(2)}%`
+                      : "-"}
+                  </td>
+                </tr>
+                <tr className="border-b border-zinc-700">
+                  <td className="py-2 text-gray-400">Sector</td>
+                  <td className="py-2">{companySummary.SC_SUBSEC}</td>
                 </tr>
               </tbody>
             </table>
