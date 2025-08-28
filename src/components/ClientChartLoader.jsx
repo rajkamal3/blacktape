@@ -313,12 +313,12 @@ export default function Chart({ companyId }) {
               {companySummary.SC_FULLNM}
             </h2>
 
-            <table className="w-full text-sm">
+            <table className="w-full text-xs">
               <tbody>
                 <tr className="border-b border-zinc-700">
                   <td colSpan={2} className="py-3">
                     <div className="flex flex-col">
-                      <span className="text-gray-400 text-xs">Price</span>
+                      <span className="text-gray-400 text-xxs">Price</span>
                       <span className="font-semibold">
                         {formatIndianCurrency(companySummary.pricecurrent)} (
                         {Number(companySummary.pricepercentchange).toFixed(2)}%)
@@ -329,21 +329,21 @@ export default function Chart({ companyId }) {
                 <tr className="border-b border-zinc-700">
                   <td className="py-3 w-1/3">
                     <div className="flex flex-col">
-                      <span className="text-gray-400 text-xs">52W High</span>
+                      <span className="text-gray-400 text-xxs">52W High</span>
                       <span>{formatIndianCurrency(companySummary["52H"])}</span>
                     </div>
                   </td>
 
                   <td className="py-3 w-1/3">
                     <div className="flex flex-col">
-                      <span className="text-gray-400 text-xs">52W Low</span>
+                      <span className="text-gray-400 text-xxs">52W Low</span>
                       <span>{formatIndianCurrency(companySummary["52L"])}</span>
                     </div>
                   </td>
 
                   <td className="py-3 w-1/3">
                     <div className="flex flex-col">
-                      <span className="text-gray-400 text-xs">
+                      <span className="text-gray-400 text-xxs">
                         From 52W Low
                       </span>
                       <span>
@@ -355,7 +355,7 @@ export default function Chart({ companyId }) {
                 <tr className="border-b border-zinc-700">
                   <td className="py-3 w-1/3">
                     <div className="flex flex-col">
-                      <span className="text-gray-400 text-xs">
+                      <span className="text-gray-400 text-xxs">
                         Valuation (Cr)
                       </span>
                       <span>{formatIndianCurrency(companySummary.MKTCAP)}</span>
@@ -364,14 +364,14 @@ export default function Chart({ companyId }) {
 
                   <td className="py-3 w-1/3">
                     <div className="flex flex-col">
-                      <span className="text-gray-400 text-xs">PE</span>
+                      <span className="text-gray-400 text-xxs">PE</span>
                       <span>{companySummary.PE}</span>
                     </div>
                   </td>
 
                   <td className="py-3 w-1/3">
                     <div className="flex flex-col">
-                      <span className="text-gray-400 text-xs">Sector PE</span>
+                      <span className="text-gray-400 text-xxs">Sector PE</span>
                       <span>{companySummary.IND_PE}</span>
                     </div>
                   </td>
@@ -379,13 +379,13 @@ export default function Chart({ companyId }) {
                 <tr className="border-b border-zinc-700">
                   <td className="py-3">
                     <div className="flex flex-col">
-                      <span className="text-gray-400 text-xs">PB</span>
+                      <span className="text-gray-400 text-xxs">PB</span>
                       <span>{formatIndianCurrency(companySummary.PB)}</span>
                     </div>
                   </td>
                   <td className="py-3">
                     <div className="flex flex-col">
-                      <span className="text-gray-400 text-xs">BV</span>
+                      <span className="text-gray-400 text-xxs">BV</span>
                       <span>{formatIndianCurrency(companySummary.BV)}</span>
                     </div>
                   </td>
@@ -393,7 +393,7 @@ export default function Chart({ companyId }) {
                 <tr className="border-b border-zinc-700">
                   <td className="py-3 w-1/3">
                     <div className="flex flex-col">
-                      <span className="text-gray-400 text-xs">1 Month</span>
+                      <span className="text-gray-400 text-xxs">1 Month</span>
                       <span>
                         {Number(companySummary.cl1mPerChange).toFixed(2)}%
                       </span>
@@ -402,7 +402,7 @@ export default function Chart({ companyId }) {
 
                   <td className="py-3 w-1/3">
                     <div className="flex flex-col">
-                      <span className="text-gray-400 text-xs">3 Months</span>
+                      <span className="text-gray-400 text-xxs">3 Months</span>
                       <span>
                         {Number(companySummary.cl3mPerChange).toFixed(2)}%
                       </span>
@@ -411,7 +411,7 @@ export default function Chart({ companyId }) {
 
                   <td className="py-3 w-1/3">
                     <div className="flex flex-col">
-                      <span className="text-gray-400 text-xs">1 Year</span>
+                      <span className="text-gray-400 text-xxs">1 Year</span>
                       <span>
                         {Number(companySummary.cl1yPerChange).toFixed(2)}%
                       </span>
@@ -421,7 +421,7 @@ export default function Chart({ companyId }) {
                 <tr className="border-b border-zinc-700">
                   <td className="py-3 w-1/4">
                     <div className="flex flex-col">
-                      <span className="text-gray-400 text-xs">3Y</span>
+                      <span className="text-gray-400 text-xxs">3Y</span>
                       <span>
                         {Number(companySummary.cagr3Y)
                           ? `${Number(companySummary.cagr3Y).toFixed(2)}%`
@@ -432,7 +432,7 @@ export default function Chart({ companyId }) {
 
                   <td className="py-3 w-1/4">
                     <div className="flex flex-col">
-                      <span className="text-gray-400 text-xs">5Y</span>
+                      <span className="text-gray-400 text-xxs">5Y</span>
                       <span>
                         {Number(companySummary.cagr5Y)
                           ? `${Number(companySummary.cagr5Y).toFixed(2)}%`
@@ -443,7 +443,7 @@ export default function Chart({ companyId }) {
 
                   <td className="py-3 w-1/4">
                     <div className="flex flex-col">
-                      <span className="text-gray-400 text-xs">7Y</span>
+                      <span className="text-gray-400 text-xxs">7Y</span>
                       <span>
                         {Number(companySummary.cagr7Y)
                           ? `${Number(companySummary.cagr7Y).toFixed(2)}%`
@@ -453,7 +453,7 @@ export default function Chart({ companyId }) {
                   </td>
                   <td className="py-3 w-1/4">
                     <div className="flex flex-col">
-                      <span className="text-gray-400 text-xs">10Y</span>
+                      <span className="text-gray-400 text-xxs">10Y</span>
                       <span>
                         {Number(companySummary.cagr10Y)
                           ? `${Number(companySummary.cagr10Y).toFixed(2)}%`
@@ -466,7 +466,7 @@ export default function Chart({ companyId }) {
                 <tr>
                   <td colSpan={2} className="py-3">
                     <div className="flex flex-col">
-                      <span className="text-gray-400 text-xs">Sector</span>
+                      <span className="text-gray-400 text-xxs">Sector</span>
                       <span>{companySummary.SC_SUBSEC}</span>
                     </div>
                   </td>
