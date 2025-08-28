@@ -347,9 +347,9 @@ export default function Chart({ companyId }) {
                   </td>
                 </tr>
                 <tr className="border-b border-zinc-700">
-                  <td className="py-2 text-gray-400">PE / S. PE</td>
+                  <td className="py-2 text-gray-400">PE | S. PE</td>
                   <td className="py-2">
-                    {companySummary.PE} / {companySummary.IND_PE}
+                    {companySummary.PE} | {companySummary.IND_PE}
                   </td>
                 </tr>
                 <tr className="border-b border-zinc-700">
@@ -373,7 +373,7 @@ export default function Chart({ companyId }) {
                   </td>
                 </tr>
                 <tr className="border-b border-zinc-700">
-                  <td className="py-2 text-gray-400">Trend (5Y CAGR)</td>
+                  <td className="py-2 text-gray-400">5Y CAGR</td>
                   <td className="py-2">
                     {Number(companySummary.cagr5Y).toFixed(2)}%
                   </td>
