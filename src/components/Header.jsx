@@ -25,6 +25,14 @@ const Header = ({ user }) => {
     }
   };
 
+  const clearCache = () => {
+    Object.keys(localStorage).forEach((key) => {
+      if (key.startsWith("companies_")) {
+        localStorage.removeItem(key);
+      }
+    });
+  };
+
   return (
     <div className="header-container flex justify-between items-center">
       <div className="card flex justify-content-center">
@@ -41,21 +49,15 @@ const Header = ({ user }) => {
                 Welcome, {user.displayName || user.email}
               </h1>
 
-              <button
-                onClick={handleLogout}
-                style={{
-                  padding: "0.75rem 1.5rem",
-                  fontSize: "1rem",
-                  cursor: "pointer",
-                  border: "none",
-                  borderRadius: "6px",
-                  backgroundColor: "#e63946",
-                  color: "white"
-                }}
-              >
-                Logout
-              </button>
+              <div>
+                <Button onClick={clearCache}>Clear Cache</Button>
+              </div>
+
+              <div>
+                <Button onClick={handleLogout}>Logout</Button>
+              </div>
             </Sidebar>
+
             <Button icon="pi pi-arrow-right" onClick={() => setVisible(true)} />
           </>
         ) : (
