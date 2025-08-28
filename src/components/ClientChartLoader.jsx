@@ -312,101 +312,164 @@ export default function Chart({ companyId }) {
             <h2 className="text-xl font-bold mb-2">
               {companySummary.SC_FULLNM}
             </h2>
-            <table className="w-full border-collapse text-sm">
+
+            <table className="w-full text-sm">
               <tbody>
                 <tr className="border-b border-zinc-700">
-                  <td className="py-2 text-gray-400">Price</td>
-                  <td className="py-2 font-semibold">
-                    {formatIndianCurrency(companySummary.pricecurrent)} (
-                    {Number(companySummary.pricepercentchange).toFixed(2)}%)
-                  </td>
-                </tr>
-                <tr className="border-b border-zinc-700">
-                  <td className="py-2 text-gray-400">52W High</td>
-                  <td className="py-2">
-                    <div className="flex items-center justify-between">
-                      <span>{formatIndianCurrency(companySummary["52H"])}</span>
-                    </div>
-                  </td>
-                </tr>
-                <tr className="border-b border-zinc-700">
-                  <td className="py-2 text-gray-400">52W Low</td>
-                  <td className="py-2">
-                    <div className="flex items-center justify-between">
-                      <span>{formatIndianCurrency(companySummary["52L"])}</span>
-                      <span className="ml-2 text-xs text-gray-400 bg-zinc-800 px-2 py-0.5 rounded">
-                        Near Low: {companySummary.closenessToLowPct.toFixed(2)}%
+                  <td colSpan={2} className="py-3">
+                    <div className="flex flex-col">
+                      <span className="text-gray-400 text-xs">Price</span>
+                      <span className="font-semibold">
+                        {formatIndianCurrency(companySummary.pricecurrent)} (
+                        {Number(companySummary.pricepercentchange).toFixed(2)}%)
                       </span>
                     </div>
                   </td>
                 </tr>
                 <tr className="border-b border-zinc-700">
-                  <td className="py-2 text-gray-400">Valuation</td>
-                  <td className="py-2">
-                    {formatIndianCurrency(companySummary.MKTCAP)} Cr
+                  <td className="py-3 w-1/3">
+                    <div className="flex flex-col">
+                      <span className="text-gray-400 text-xs">52W High</span>
+                      <span>{formatIndianCurrency(companySummary["52H"])}</span>
+                    </div>
+                  </td>
+
+                  <td className="py-3 w-1/3">
+                    <div className="flex flex-col">
+                      <span className="text-gray-400 text-xs">52W Low</span>
+                      <span>{formatIndianCurrency(companySummary["52L"])}</span>
+                    </div>
+                  </td>
+
+                  <td className="py-3 w-1/3">
+                    <div className="flex flex-col">
+                      <span className="text-gray-400 text-xs">
+                        From 52W Low
+                      </span>
+                      <span>
+                        {companySummary.closenessToLowPct.toFixed(2)}%
+                      </span>
+                    </div>
                   </td>
                 </tr>
                 <tr className="border-b border-zinc-700">
-                  <td className="py-2 text-gray-400">PE | S. PE</td>
-                  <td className="py-2">
-                    {companySummary.PE} | {companySummary.IND_PE}
+                  <td className="py-3 w-1/3">
+                    <div className="flex flex-col">
+                      <span className="text-gray-400 text-xs">
+                        Valuation (Cr)
+                      </span>
+                      <span>{formatIndianCurrency(companySummary.MKTCAP)}</span>
+                    </div>
+                  </td>
+
+                  <td className="py-3 w-1/3">
+                    <div className="flex flex-col">
+                      <span className="text-gray-400 text-xs">PE</span>
+                      <span>{companySummary.PE}</span>
+                    </div>
+                  </td>
+
+                  <td className="py-3 w-1/3">
+                    <div className="flex flex-col">
+                      <span className="text-gray-400 text-xs">Sector PE</span>
+                      <span>{companySummary.IND_PE}</span>
+                    </div>
                   </td>
                 </tr>
                 <tr className="border-b border-zinc-700">
-                  <td className="py-2 text-gray-400">PB</td>
-                  <td className="py-2">
-                    {formatIndianCurrency(companySummary.PB)}
+                  <td className="py-3">
+                    <div className="flex flex-col">
+                      <span className="text-gray-400 text-xs">PB</span>
+                      <span>{formatIndianCurrency(companySummary.PB)}</span>
+                    </div>
+                  </td>
+                  <td className="py-3">
+                    <div className="flex flex-col">
+                      <span className="text-gray-400 text-xs">BV</span>
+                      <span>{formatIndianCurrency(companySummary.BV)}</span>
+                    </div>
                   </td>
                 </tr>
                 <tr className="border-b border-zinc-700">
-                  <td className="py-2 text-gray-400">BV</td>
-                  <td className="py-2">
-                    {formatIndianCurrency(companySummary.BV)}
+                  <td className="py-3 w-1/3">
+                    <div className="flex flex-col">
+                      <span className="text-gray-400 text-xs">1 Month</span>
+                      <span>
+                        {Number(companySummary.cl1mPerChange).toFixed(2)}%
+                      </span>
+                    </div>
+                  </td>
+
+                  <td className="py-3 w-1/3">
+                    <div className="flex flex-col">
+                      <span className="text-gray-400 text-xs">3 Months</span>
+                      <span>
+                        {Number(companySummary.cl3mPerChange).toFixed(2)}%
+                      </span>
+                    </div>
+                  </td>
+
+                  <td className="py-3 w-1/3">
+                    <div className="flex flex-col">
+                      <span className="text-gray-400 text-xs">1 Year</span>
+                      <span>
+                        {Number(companySummary.cl1yPerChange).toFixed(2)}%
+                      </span>
+                    </div>
                   </td>
                 </tr>
                 <tr className="border-b border-zinc-700">
-                  <td className="py-2 text-gray-400">1M | 3M | 1Y</td>
-                  <td className="py-2">
-                    {Number(companySummary.cl1mPerChange).toFixed(2)}% |{" "}
-                    {Number(companySummary.cl3mPerChange).toFixed(2)}% |{" "}
-                    {Number(companySummary.cl1yPerChange).toFixed(2)}%
+                  <td className="py-3 w-1/4">
+                    <div className="flex flex-col">
+                      <span className="text-gray-400 text-xs">3Y</span>
+                      <span>
+                        {Number(companySummary.cagr3Y)
+                          ? `${Number(companySummary.cagr3Y).toFixed(2)}%`
+                          : "-"}
+                      </span>
+                    </div>
+                  </td>
+
+                  <td className="py-3 w-1/4">
+                    <div className="flex flex-col">
+                      <span className="text-gray-400 text-xs">5Y</span>
+                      <span>
+                        {Number(companySummary.cagr5Y)
+                          ? `${Number(companySummary.cagr5Y).toFixed(2)}%`
+                          : "-"}
+                      </span>
+                    </div>
+                  </td>
+
+                  <td className="py-3 w-1/4">
+                    <div className="flex flex-col">
+                      <span className="text-gray-400 text-xs">7Y</span>
+                      <span>
+                        {Number(companySummary.cagr7Y)
+                          ? `${Number(companySummary.cagr7Y).toFixed(2)}%`
+                          : "-"}
+                      </span>
+                    </div>
+                  </td>
+                  <td className="py-3 w-1/4">
+                    <div className="flex flex-col">
+                      <span className="text-gray-400 text-xs">10Y</span>
+                      <span>
+                        {Number(companySummary.cagr10Y)
+                          ? `${Number(companySummary.cagr10Y).toFixed(2)}%`
+                          : "-"}
+                      </span>
+                    </div>
                   </td>
                 </tr>
-                <tr className="border-b border-zinc-700">
-                  <td className="py-2 text-gray-400">3Y CAGR</td>
-                  <td className="py-2">
-                    {Number(companySummary.cagr3Y)
-                      ? `${Number(companySummary.cagr3Y).toFixed(2)}%`
-                      : "-"}
+
+                <tr>
+                  <td colSpan={2} className="py-3">
+                    <div className="flex flex-col">
+                      <span className="text-gray-400 text-xs">Sector</span>
+                      <span>{companySummary.SC_SUBSEC}</span>
+                    </div>
                   </td>
-                </tr>
-                <tr className="border-b border-zinc-700">
-                  <td className="py-2 text-gray-400">5Y CAGR</td>
-                  <td className="py-2">
-                    {Number(companySummary.cagr5Y)
-                      ? `${Number(companySummary.cagr5Y).toFixed(2)}%`
-                      : "-"}
-                  </td>
-                </tr>
-                <tr className="border-b border-zinc-700">
-                  <td className="py-2 text-gray-400">7Y CAGR</td>
-                  <td className="py-2">
-                    {Number(companySummary.cagr7Y)
-                      ? `${Number(companySummary.cagr7Y).toFixed(2)}%`
-                      : "-"}
-                  </td>
-                </tr>
-                <tr className="border-b border-zinc-700">
-                  <td className="py-2 text-gray-400">10Y CAGR</td>
-                  <td className="py-2">
-                    {Number(companySummary.cagr10Y)
-                      ? `${Number(companySummary.cagr10Y).toFixed(2)}%`
-                      : "-"}
-                  </td>
-                </tr>
-                <tr className="border-b border-zinc-700">
-                  <td className="py-2 text-gray-400">Sector</td>
-                  <td className="py-2">{companySummary.SC_SUBSEC}</td>
                 </tr>
               </tbody>
             </table>
