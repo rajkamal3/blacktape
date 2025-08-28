@@ -89,12 +89,16 @@ export default function HomePage() {
 
     const fetchAll = async () => {
       const cacheKey = `companies_${dropdownActiveIndex.code}`;
-      const cached = sessionStorage.getItem(cacheKey);
+      const cached = localStorage.getItem(cacheKey);
 
       if (cached) {
-        setDataList(JSON.parse(cached));
-        setLoading(false);
-        return;
+        const parsed = JSON.parse(cached);
+
+        if (parsed.expiry && new Date().getTime() < parsed.expiry) {
+          setDataList(parsed.data);
+          setLoading(false);
+          return;
+        }
       }
 
       const results = [];
@@ -125,7 +129,18 @@ export default function HomePage() {
         const sortedResults = sortByProximityTo52WeekLow(results);
 
         setDataList(sortedResults);
-        sessionStorage.setItem(cacheKey, JSON.stringify(sortedResults));
+
+        const now = new Date();
+        const endOfDay = new Date(now);
+        endOfDay.setHours(23, 59, 59, 999);
+
+        localStorage.setItem(
+          cacheKey,
+          JSON.stringify({
+            data: sortedResults,
+            expiry: endOfDay.getTime()
+          })
+        );
 
         // const base =
         //   process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
