@@ -375,7 +375,10 @@ export default function Chart({ companyId }) {
                 <tr className="border-b border-zinc-700">
                   <td className="py-2 text-gray-400">5Y CAGR</td>
                   <td className="py-2">
-                    {Number(companySummary.cagr5Y).toFixed(2)}%
+                    {companySummary.cagr5Y
+                      ? Number(companySummary.cagr5Y).toFixed(2)
+                      : "-"}
+                    %
                   </td>
                 </tr>
               </tbody>
