@@ -17,6 +17,7 @@ import { watchlist } from "@/data/watchlist";
 import { Button } from "primereact/button";
 import "@/utils/loader.css";
 import { formatIndianCurrency } from "@/utils/formatIndianCurrency";
+import { Dialog } from "primereact/dialog";
 
 const indices = [
   { name: "Watchlist 1", code: "WL1" },
@@ -31,6 +32,8 @@ export default function HomePage() {
   const [dataList, setDataList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [visible, setVisible] = useState(false);
+  const [filtersVisible, setFiltersVisible] = useState(false);
+  const [sortOrderAsc, setSortOrderAsc] = useState(true);
 
   const indexGlobal = useGlobalStore((state) => state.indexGlobal);
   const setIndexGlobal = useGlobalStore((state) => state.setIndexGlobal);
@@ -42,6 +45,10 @@ export default function HomePage() {
   const setDropdownActiveIndex = useGlobalStore(
     (state) => state.setDropdownActiveIndex
   );
+
+  const storageKey = dropdownActiveIndex
+    ? `companies_${dropdownActiveIndex.code}`
+    : null;
 
   const router = useRouter();
   const toast = useRef(null);
@@ -142,43 +149,6 @@ export default function HomePage() {
           })
         );
 
-        // const base =
-        //   process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
-
-        // const fetchPriceMovements = async (detailsId) => {
-        //   const response = await fetch(`${base}/api/proxy?id=${detailsId}`);
-        //   return response.json();
-        // };
-
-        // const addStockPriceMovementsToResults = async () => {
-        //   const enriched = await Promise.all(
-        //     results.map(async (item) => {
-        //       const id = item.detailsId;
-        //       if (!id) return item;
-
-        //       console.log("Loadinggg");
-
-        //       try {
-        //         const extraData = await fetchPriceMovements(id);
-        //         console.log("Loadededed");
-        //         return {
-        //           ...item,
-        //           extra: extraData.data[0]
-        //         };
-        //       } catch (err) {
-        //         console.error(`Failed to fetch for ${id}:`, err);
-        //         return item;
-        //       }
-        //     })
-        //   );
-
-        //   console.log(enriched);
-
-        //   return enriched;
-        // };
-
-        // addStockPriceMovementsToResults();
-
         if (failedIds.length > 0 && toast.current) {
           toast.current.show({
             severity: "warn",
@@ -250,15 +220,78 @@ export default function HomePage() {
     }
   };
 
+  const sortBy = (target) => {
+    const raw = localStorage.getItem(storageKey);
+    const parsed = JSON.parse(raw);
+    const parsedData = parsed.data;
+
+    let sorted;
+
+    if (target === "name") {
+      sorted = [...parsedData].sort((a, b) => {
+        return sortOrderAsc
+          ? a.SC_FULLNM.localeCompare(b.SC_FULLNM)
+          : b.SC_FULLNM.localeCompare(a.SC_FULLNM);
+      });
+
+      setSortOrderAsc(!sortOrderAsc);
+    }
+
+    if (target === "change") {
+      sorted = [...parsedData].sort((a, b) => {
+        return sortOrderAsc
+          ? a.pricepercentchange - b.pricepercentchange
+          : b.pricepercentchange - a.pricepercentchange;
+      });
+
+      setSortOrderAsc(!sortOrderAsc);
+    }
+
+    setDataList(sorted);
+
+    localStorage.setItem(
+      storageKey,
+      JSON.stringify({ data: sorted, expiry: parsed.expiry })
+    );
+  };
+
   return (
     <div>
       <Toast ref={toast} position="top-right" />
+
+      <div
+        style={{
+          position: "fixed",
+          zIndex: 999,
+          right: "10px",
+          bottom: "10px",
+          height: "60px",
+          width: "60px",
+          backgroundColor: "#d60017",
+          borderRadius: "100px"
+        }}
+        onClick={() => setFiltersVisible(true)}
+      ></div>
 
       <AddCompanyDialog
         visible={visible}
         selectedIndex={dropdownActiveIndex}
         setVisible={setVisible}
       />
+
+      <Dialog
+        header={"Filter and sort"}
+        visible={filtersVisible}
+        onHide={() => {
+          if (!filtersVisible) return;
+          setFiltersVisible(false);
+        }}
+        style={{ width: "50vw" }}
+        breakpoints={{ "960px": "75vw", "641px": "90vw" }}
+      >
+        <Button onClick={() => sortBy("name")}>Sort by name</Button>
+        <Button onClick={() => sortBy("change")}>Sort by day's change</Button>
+      </Dialog>
 
       <div
         className="p-4"
