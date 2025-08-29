@@ -290,7 +290,7 @@ export default function HomePage() {
         breakpoints={{ "960px": "75vw", "641px": "90vw" }}
       >
         <Button onClick={() => sortBy("name")}>Sort by name</Button>
-        <Button onClick={() => sortBy("change")}>Sort by day's change</Button>
+        <Button onClick={() => sortBy("change")}>Sort by day change</Button>
       </Dialog>
 
       <div
