@@ -327,7 +327,7 @@ export default function HomePage() {
                 />
                 <Stat
                   label="Market Cap"
-                  value={`${formatIndianCurrency(item.MKTCAP)}`}
+                  value={`${formatIndianCurrency(item.MKTCAP)} Cr`}
                 />
                 <Stat
                   label="PE | Sector PE"
