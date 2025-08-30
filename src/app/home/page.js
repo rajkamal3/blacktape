@@ -247,6 +247,40 @@ export default function HomePage() {
       setSortOrderAsc(!sortOrderAsc);
     }
 
+    if (target === "valuation") {
+      sorted = [...parsedData].sort((a, b) => {
+        return sortOrderAsc ? a.MKTCAP - b.MKTCAP : b.MKTCAP - a.MKTCAP;
+      });
+
+      setSortOrderAsc(!sortOrderAsc);
+    }
+
+    if (target === "pe") {
+      sorted = [...parsedData].sort((a, b) => {
+        return sortOrderAsc ? a.PE - b.PE : b.PE - a.PE;
+      });
+
+      setSortOrderAsc(!sortOrderAsc);
+    }
+
+    if (target === "sectorPe") {
+      sorted = [...parsedData].sort((a, b) => {
+        return sortOrderAsc ? a.IND_PE - b.IND_PE : b.IND_PE - a.IND_PE;
+      });
+
+      setSortOrderAsc(!sortOrderAsc);
+    }
+
+    if (target === "closenessToLow") {
+      sorted = [...parsedData].sort((a, b) => {
+        return sortOrderAsc
+          ? a.closenessToLowPct - b.closenessToLowPct
+          : b.closenessToLowPct - a.closenessToLowPct;
+      });
+
+      setSortOrderAsc(!sortOrderAsc);
+    }
+
     setDataList(sorted);
 
     localStorage.setItem(
@@ -291,6 +325,12 @@ export default function HomePage() {
       >
         <Button onClick={() => sortBy("name")}>Sort by name</Button>
         <Button onClick={() => sortBy("change")}>Sort by day change</Button>
+        <Button onClick={() => sortBy("valuation")}>Sort by market Cap</Button>
+        <Button onClick={() => sortBy("pe")}>Sort by PE</Button>
+        <Button onClick={() => sortBy("sectorPe")}>Sort by sector PE</Button>
+        <Button onClick={() => sortBy("closenessToLow")}>
+          Sort by closeness to 52W low
+        </Button>
       </Dialog>
 
       <div
