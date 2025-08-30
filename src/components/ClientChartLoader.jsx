@@ -174,13 +174,39 @@ export default function Chart({ companyId }) {
     plugins: {
       legend: {
         display: false
+      },
+      tooltip: {
+        displayColors: false,
+        mode: "index",
+        intersect: false,
+        callbacks: {
+          label: function (context) {
+            const revenue =
+              context.chart.data.datasets[0].data[context.dataIndex];
+            const netProfit =
+              context.chart.data.datasets[1].data[context.dataIndex];
+
+            let percentage = 0;
+            if (revenue && netProfit) {
+              percentage = ((netProfit / revenue) * 100).toFixed(2);
+            }
+
+            return context.dataset.label === "Revenue"
+              ? `Revenue: ${revenue.toLocaleString()}`
+              : `Net Profit: ${netProfit.toLocaleString()} (${percentage}% of revenue)`;
+          }
+        },
+        titleFont: { family: "Inter, sans-serif" },
+        bodyFont: { family: "Inter, sans-serif" }
       }
     },
     scales: {
       x: {
+        stacked: true,
         display: false
       },
       y: {
+        stacked: true,
         beginAtZero: false,
         display: false
       }
