@@ -168,7 +168,7 @@ export const findSupportLevels = (priceData) => {
     }
   }
   const aggregatedSupportZones = Object.values(aggregatedSupportMap).sort(
-    (a, b) => parseFloat(a.zone) - parseFloat(b.zone)
+    (a, b) => parseFloat(b.zone) - parseFloat(a.zone)
   );
 
   const aggregatedResistanceMap = {};

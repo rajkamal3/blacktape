@@ -279,7 +279,7 @@ export default function Chart({ companyId }) {
               <thead>
                 <tr className="bg-green-200">
                   <th className="border px-4 py-2">Zone</th>
-                  <th className="border px-4 py-2">Bounce Count</th>
+                  <th className="border px-4 py-2">From Current Price</th>
                 </tr>
               </thead>
               <tbody>
@@ -295,7 +295,15 @@ export default function Chart({ companyId }) {
                     <td className="border px-4 py-2">
                       {formatIndianCurrency(zone.zone)}
                     </td>
-                    <td className="border px-4 py-2">{zone.bounceCount}</td>
+                    <td className="border px-4 py-2">
+                      {companySummary.pricecurrent
+                        ? `${(
+                            ((companySummary.pricecurrent - zone.zone) /
+                              companySummary.pricecurrent) *
+                            100
+                          ).toFixed(2)}%`
+                        : `-`}
+                    </td>
                   </tr>
                 ))}
               </tbody>
