@@ -190,11 +190,21 @@ export default function Chart({ companyId }) {
   return (
     <div className="p-4">
       <div>
-        <h2 className="font-bold">
-          {companySummary.SC_FULLNM || data.sid}&nbsp;&nbsp;
-          {companySummary.pricecurrent ||
-            formatIndianCurrency(data.points[data.points.length - 1].lp)}
-        </h2>
+        <div>
+          <h2 className="text-2xl font-bold">
+            {companySummary.SC_FULLNM || data.sid}&nbsp;&nbsp;
+          </h2>
+        </div>
+
+        <div>
+          <h2 className="text-lg font-bold mb-4">
+            {companySummary.pricecurrent
+              ? `${formatIndianCurrency(companySummary.pricecurrent)} (${Number(
+                  companySummary.pricepercentchange
+                ).toFixed(2)}%)`
+              : formatIndianCurrency(data.points[data.points.length - 1].lp)}
+          </h2>
+        </div>
 
         <div className="bg-white rounded-xl shadow-xl">
           <Line
@@ -262,9 +272,9 @@ export default function Chart({ companyId }) {
           />
         </div>
 
-        <div className="p-4 max-w-6xl mx-auto">
+        <div className="py-4 max-w-6xl mx-auto">
           <h2 className="text-2xl font-bold mb-4">Support Zones</h2>
-          <div className="overflow-x-auto mb-8">
+          <div className="overflow-x-auto">
             <table className="table-auto w-full border border-green-500 text-black">
               <thead>
                 <tr className="bg-green-200">
@@ -294,20 +304,20 @@ export default function Chart({ companyId }) {
         </div>
       </div>
 
-      <div className="p-4">
+      <div className="py-4">
         <h2 className="text-2xl font-bold mb-4">Yearly Financials</h2>
 
         <Bar data={financialsData} options={financialsOptions} />
       </div>
 
-      <div className="p-4">
+      <div className="py-4">
         <h2 className="text-2xl font-bold mb-4">Quarterly Financials</h2>
 
         <Bar data={financialsQuarterlyData} options={financialsOptions} />
       </div>
 
       {companySummary.SC_FULLNM && (
-        <div className="p-4">
+        <div className="py-4">
           <div className="bg-zinc-900 text-white p-6 rounded-xl shadow-lg">
             <h2 className="text-xl font-bold mb-2">
               {companySummary.SC_FULLNM}
@@ -315,7 +325,7 @@ export default function Chart({ companyId }) {
 
             <table className="w-full text-xs">
               <tbody>
-                <tr className="border-b border-zinc-700">
+                {/* <tr className="border-b border-zinc-700">
                   <td colSpan={2} className="py-3">
                     <div className="flex flex-col">
                       <span className="text-gray-400 text-xxs">Price</span>
@@ -325,7 +335,32 @@ export default function Chart({ companyId }) {
                       </span>
                     </div>
                   </td>
+                </tr> */}
+                <tr className="border-b border-zinc-700">
+                  <td className="py-3 w-1/3">
+                    <div className="flex flex-col">
+                      <span className="text-gray-400 text-xxs">
+                        Valuation (Cr)
+                      </span>
+                      <span>{formatIndianCurrency(companySummary.MKTCAP)}</span>
+                    </div>
+                  </td>
+
+                  <td className="py-3 w-1/3">
+                    <div className="flex flex-col">
+                      <span className="text-gray-400 text-xxs">PE</span>
+                      <span>{companySummary.PE}</span>
+                    </div>
+                  </td>
+
+                  <td className="py-3 w-1/3">
+                    <div className="flex flex-col">
+                      <span className="text-gray-400 text-xxs">Sector PE</span>
+                      <span>{companySummary.IND_PE}</span>
+                    </div>
+                  </td>
                 </tr>
+
                 <tr className="border-b border-zinc-700">
                   <td className="py-3 w-1/3">
                     <div className="flex flex-col">
@@ -352,30 +387,7 @@ export default function Chart({ companyId }) {
                     </div>
                   </td>
                 </tr>
-                <tr className="border-b border-zinc-700">
-                  <td className="py-3 w-1/3">
-                    <div className="flex flex-col">
-                      <span className="text-gray-400 text-xxs">
-                        Valuation (Cr)
-                      </span>
-                      <span>{formatIndianCurrency(companySummary.MKTCAP)}</span>
-                    </div>
-                  </td>
 
-                  <td className="py-3 w-1/3">
-                    <div className="flex flex-col">
-                      <span className="text-gray-400 text-xxs">PE</span>
-                      <span>{companySummary.PE}</span>
-                    </div>
-                  </td>
-
-                  <td className="py-3 w-1/3">
-                    <div className="flex flex-col">
-                      <span className="text-gray-400 text-xxs">Sector PE</span>
-                      <span>{companySummary.IND_PE}</span>
-                    </div>
-                  </td>
-                </tr>
                 <tr className="border-b border-zinc-700">
                   <td className="py-3">
                     <div className="flex flex-col">
