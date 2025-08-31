@@ -97,7 +97,15 @@ export default function Chart({ companyId }) {
       })
       .catch((error) => setErr(error.message));
 
-    if (companyId === "NBES" || companyId === "JBES" || companyId === "NTFM")
+    if (
+      companyId === "NBES" ||
+      companyId === "JBES" ||
+      companyId === "NTFM" ||
+      companyId === ".NSEI" ||
+      companyId === ".NN50" ||
+      companyId === ".NIMI150" ||
+      companyId === ".NISM250"
+    )
       return;
 
     axios
@@ -324,7 +332,11 @@ export default function Chart({ companyId }) {
         <div>
           {companyId === "NBES" ||
           companyId === "JBES" ||
-          companyId === "NTFM" ? (
+          companyId === "NTFM" ||
+          companyId === ".NSEI" ||
+          companyId === ".NN50" ||
+          companyId === ".NIMI150" ||
+          companyId === ".NISM250" ? (
             <>
               {companyId === "NBES" && (
                 <h2 className="text-2xl font-bold">NIFTYBEES</h2>
@@ -334,6 +346,18 @@ export default function Chart({ companyId }) {
               )}
               {companyId === "NTFM" && (
                 <h2 className="text-2xl font-bold">MID150BEES</h2>
+              )}
+              {companyId === ".NSEI" && (
+                <h2 className="text-2xl font-bold">Nifty 50</h2>
+              )}
+              {companyId === ".NN50" && (
+                <h2 className="text-2xl font-bold">Nifty Next 50</h2>
+              )}
+              {companyId === ".NIMI150" && (
+                <h2 className="text-2xl font-bold">Nifty Midcap 150</h2>
+              )}
+              {companyId === ".NISM250" && (
+                <h2 className="text-2xl font-bold">Nifty Smallcap 250</h2>
               )}
             </>
           ) : (
@@ -444,7 +468,11 @@ export default function Chart({ companyId }) {
                     </td>
                     {companyId === "NBES" ||
                     companyId === "JBES" ||
-                    companyId === "NTFM" ? (
+                    companyId === "NTFM" ||
+                    companyId === ".NSEI" ||
+                    companyId === ".NN50" ||
+                    companyId === ".NIMI150" ||
+                    companyId === ".NISM250" ? (
                       <td className="border px-4 py-2">
                         {data.points[data.points.length - 1].lp
                           ? `${(
@@ -474,7 +502,13 @@ export default function Chart({ companyId }) {
         </div>
       </div>
 
-      {companyId === "NBES" || companyId === "JBES" || companyId === "NTFM" ? (
+      {companyId === "NBES" ||
+      companyId === "JBES" ||
+      companyId === "NTFM" ||
+      companyId === ".NSEI" ||
+      companyId === ".NN50" ||
+      companyId === ".NIMI150" ||
+      companyId === ".NISM250" ? (
         <></>
       ) : (
         <div>

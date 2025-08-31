@@ -344,7 +344,7 @@ export default function HomePage() {
           </Button>
         </div>
 
-        <div>
+        <div className="mb-4 border-b border-zinc-700 pb-2">
           <Button onClick={() => handleCardClick({ detailsId: "NBES" })}>
             NIFTYBEES Support Levels
           </Button>
@@ -353,6 +353,21 @@ export default function HomePage() {
           </Button>
           <Button onClick={() => handleCardClick({ detailsId: "NTFM" })}>
             MID150BEES Support Levels
+          </Button>
+        </div>
+
+        <div>
+          <Button onClick={() => handleCardClick({ detailsId: ".NSEI" })}>
+            Nifty 50 Support Levels
+          </Button>
+          <Button onClick={() => handleCardClick({ detailsId: ".NN50" })}>
+            Nifty Next 50 Support Levels
+          </Button>
+          <Button onClick={() => handleCardClick({ detailsId: ".NIMI150" })}>
+            Nifty Midcap 150 Support Levels
+          </Button>
+          <Button onClick={() => handleCardClick({ detailsId: ".NISM250" })}>
+            Nifty Smallcap 250 Support Levels
           </Button>
         </div>
       </Dialog>
