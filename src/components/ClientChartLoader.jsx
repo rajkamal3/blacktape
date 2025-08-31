@@ -78,6 +78,7 @@ export default function Chart({ companyId }) {
   });
   const [financals, setFinancials] = useState(null);
   const [financalsQuarterly, setFinancialsQuarterly] = useState(null);
+  const [holding, setHolding] = useState(null);
 
   const companySummary = useGlobalStore((state) => state.companySummary);
 
@@ -107,6 +108,13 @@ export default function Chart({ companyId }) {
       .get(`${base}/api/proxy?id=${companyId}&type=financialsQuarterly`)
       .then((res) => {
         setFinancialsQuarterly(res.data?.data);
+      })
+      .catch((error) => setErr(error.message));
+
+    axios
+      .get(`${base}/api/proxy?id=${companyId}&type=holding`)
+      .then((res) => {
+        setHolding(res.data?.data);
       })
       .catch((error) => setErr(error.message));
   }, [companyId]);
@@ -220,6 +228,87 @@ export default function Chart({ companyId }) {
       },
       y: {
         stacked: true,
+        beginAtZero: true,
+        display: false
+      }
+    }
+  };
+
+  const holdingsData = {
+    labels: holding?.holdings?.holdings?.map((h) => h.date),
+    datasets: [
+      {
+        label: "Promoter",
+        data: holding?.holdings?.holdings?.map((h) => h.data.pmPctT),
+        backgroundColor: "#525252"
+      },
+      {
+        label: "FIIs",
+        data: holding?.holdings?.holdings?.map((h) => h.data.fiPctT),
+        backgroundColor: "#727272"
+      },
+      {
+        label: "DIIs",
+        data: holding?.holdings?.holdings?.map((h) => h.data.othDiPctT),
+        backgroundColor: "#929292"
+      },
+      {
+        label: "Mutual Funds",
+        data: holding?.holdings?.holdings?.map((h) => h.data.mfPctT),
+        backgroundColor: "#a5a5a5"
+      },
+      {
+        label: "Retail",
+        data: holding?.holdings?.holdings?.map((h) => h.data.rOthPctT),
+        backgroundColor: "#b5b5b5"
+      }
+    ]
+  };
+
+  const holdingsOptions = {
+    responsive: true,
+    plugins: {
+      legend: {
+        display: false
+      },
+      tooltip: {
+        displayColors: false,
+        mode: "index",
+        intersect: false,
+        // callbacks: {
+        //   label: function (context) {
+        //     const promoter =
+        //       context.chart.data.datasets[0].data[context.dataIndex];
+        //     const mutualFunds =
+        //       context.chart.data.datasets[1].data[context.dataIndex];
+        //     const fii = context.chart.data.datasets[2].data[context.dataIndex];
+        //     const dii = context.chart.data.datasets[3].data[context.dataIndex];
+        //     const retail =
+        //       context.chart.data.datasets[4].data[context.dataIndex];
+
+        //     // let percentage = 0;
+        //     // if (revenue && netProfit) {
+        //     //   percentage = ((netProfit / revenue) * 100).toFixed(2);
+        //     // }
+
+        //     return context.dataset.label === "Promoter"
+        //       ? `Revenue: ${formatIndianCurrency(promoter)} Cr`
+        //       : `Net Profit: ${formatIndianCurrency(
+        //           mutualFunds
+        //         )} Cr (${fii}% of revenue)`;
+        //   }
+        // },
+        titleFont: { family: "Inter, sans-serif" },
+        bodyFont: { family: "Inter, sans-serif" }
+      }
+    },
+    scales: {
+      x: {
+        stacked: false,
+        display: false
+      },
+      y: {
+        stacked: false,
         beginAtZero: true,
         display: false
       }
@@ -365,6 +454,8 @@ export default function Chart({ companyId }) {
 
       {companySummary.SC_FULLNM && (
         <div className="py-4">
+          <h2 className="text-2xl font-bold mb-4">Snapshot</h2>
+
           <div className="bg-zinc-900 text-white p-6 rounded-xl shadow-lg">
             <h2 className="text-xl font-bold mb-2">
               {companySummary.SC_FULLNM}
@@ -535,6 +626,12 @@ export default function Chart({ companyId }) {
           </div>
         </div>
       )}
+
+      <div className="py-4">
+        <h2 className="text-2xl font-bold mb-4">Holding</h2>
+
+        <Bar data={holdingsData} options={holdingsOptions} />
+      </div>
     </div>
   );
 }

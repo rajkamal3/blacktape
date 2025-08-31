@@ -35,6 +35,8 @@ export async function GET(req) {
     url = `https://api.tickertape.in/stocks/financials/income/${id}/annual/normal?count=10`;
   } else if (type === "financialsQuarterly") {
     url = `https://api.tickertape.in/stocks/financials/income/${id}/interim/normal?count=10`;
+  } else if (type === "holding") {
+    url = `https://analyze.api.tickertape.in/v2/stocks/summary/${id}`;
   } else {
     return new Response(JSON.stringify({ error: "Invalid type" }), {
       status: 400,
