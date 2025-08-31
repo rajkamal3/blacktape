@@ -203,8 +203,10 @@ export default function Chart({ companyId }) {
             }
 
             return context.dataset.label === "Revenue"
-              ? `Revenue: ${revenue.toLocaleString()}`
-              : `Net Profit: ${netProfit.toLocaleString()} (${percentage}% of revenue)`;
+              ? `Revenue: ${formatIndianCurrency(revenue)} Cr`
+              : `Net Profit: ${formatIndianCurrency(
+                  netProfit
+                )} Cr (${percentage}% of revenue)`;
           }
         },
         titleFont: { family: "Inter, sans-serif" },
