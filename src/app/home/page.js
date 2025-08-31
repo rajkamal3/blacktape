@@ -15,7 +15,7 @@ import { niftyMidcap150 } from "@/data/niftyMidcap150";
 import { niftySmallCap250 } from "@/data/niftySmallcap250";
 import { watchlist } from "@/data/watchlist";
 import { Button } from "primereact/button";
-import "@/utils/loader.css";
+import Spinner from "@/components/Spinner";
 import { formatIndianCurrency } from "@/utils/formatIndianCurrency";
 import { Dialog } from "primereact/dialog";
 
@@ -188,13 +188,21 @@ export default function HomePage() {
           flexDirection: "column"
         }}
       >
-        <div className="loader"></div>
-
-        <div>Loading companies...</div>
+        <Spinner />
       </div>
     );
 
-  if (isPending) return <div>Fetching shit...</div>;
+  if (isPending)
+    return (
+      <div
+        className="flex justify-center items-center"
+        style={{
+          height: "calc(100vh - 50px)"
+        }}
+      >
+        <Spinner />
+      </div>
+    );
 
   const Stat = ({ label, value, valueClass = "" }) => (
     <div className="grid grid-cols-[140px_1fr]">

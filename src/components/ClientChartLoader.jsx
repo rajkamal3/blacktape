@@ -19,6 +19,7 @@ import { findSupportLevels } from "@/utils/findSupportLevels";
 import { formatIndianCurrency } from "@/utils/formatIndianCurrency";
 import annotationPlugin from "chartjs-plugin-annotation";
 import { useGlobalStore } from "@/store/globalStore";
+import Spinner from "@/components/Spinner";
 
 const crosshairLinePlugin = {
   id: "crosshairLine",
@@ -111,7 +112,17 @@ export default function Chart({ companyId }) {
   }, [companyId]);
 
   if (err) return <div>Error: {err}</div>;
-  if (!data) return <div>Loading...</div>;
+  if (!data)
+    return (
+      <div
+        className="flex justify-center items-center"
+        style={{
+          height: "calc(100vh - 50px)"
+        }}
+      >
+        <Spinner />
+      </div>
+    );
 
   const labels = data.points.map((d) =>
     new Date(d.ts).toLocaleDateString("en-IN")

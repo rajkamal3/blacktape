@@ -5,7 +5,7 @@ import { onAuthStateChanged } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import { auth } from "@/lib/firebase";
 import Header from "@/components/Header";
-import "@/utils/loader.css";
+import Spinner from "@/components/Spinner";
 
 export default function AuthLayout({ children }) {
   const [user, setUser] = useState(null);
@@ -25,8 +25,13 @@ export default function AuthLayout({ children }) {
 
   if (!user)
     return (
-      <div className="flex justify-center items-center h-[100vh]">
-        <div className="loader"></div>
+      <div
+        className="flex justify-center items-center"
+        style={{
+          height: "calc(100vh - 50px)"
+        }}
+      >
+        <Spinner />
       </div>
     );
 
