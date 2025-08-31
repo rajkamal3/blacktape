@@ -632,6 +632,26 @@ export default function Chart({ companyId }) {
 
         <Bar data={holdingsData} options={holdingsOptions} />
       </div>
+
+      {summary?.brands.length > 0 && (
+        <div className="py-4">
+          <h2 className="text-2xl font-bold mb-4">Brands</h2>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {summary?.brands.map((brand) => (
+              <div
+                key={brand.brandId}
+                className="rounded-2xl p-4 bg-zinc-900 text-white"
+              >
+                <h2 className="text-m font-semibold">{brand.name}</h2>
+                <p className="text-xs text-gray-400 mt-1">
+                  {brand.description}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
