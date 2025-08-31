@@ -310,10 +310,20 @@ export default function HomePage() {
           height: "60px",
           width: "60px",
           backgroundColor: "#d60017",
-          borderRadius: "100px"
+          borderRadius: "100px",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center"
         }}
         onClick={() => setFiltersVisible(true)}
-      ></div>
+      >
+        <Button
+          icon="pi pi-sliders-h"
+          text
+          style={{ color: "#ededed" }}
+          size="large"
+        />
+      </div>
 
       <AddCompanyDialog
         visible={visible}

@@ -58,10 +58,20 @@ const Header = ({ user }) => {
               </div>
             </Sidebar>
 
-            <Button icon="pi pi-arrow-right" onClick={() => setVisible(true)} />
+            <Button
+              icon="pi pi-equals"
+              text
+              style={{ color: "#ededed" }}
+              onClick={() => setVisible(true)}
+            />
           </>
         ) : (
-          <Button icon="pi pi-arrow-left" onClick={handleBack} />
+          <Button
+            icon="pi pi-chevron-left"
+            text
+            style={{ color: "#ededed" }}
+            onClick={handleBack}
+          />
         )}
       </div>
 
