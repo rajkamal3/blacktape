@@ -1,4 +1,4 @@
-export const formatIndianCurrency = (amount) => {
+export const formatIndianCurrency = (amount, rupeeSymbol = true) => {
   if (amount === null || amount === undefined || isNaN(amount)) {
     return "₹0.00";
   }
@@ -36,6 +36,8 @@ export const formatIndianCurrency = (amount) => {
     }
   }
 
-  const formattedAmount = `₹ ${formattedInteger}.${decimalPart}`;
+  const formattedAmount = rupeeSymbol
+    ? `₹ ${formattedInteger}.${decimalPart}`
+    : `${formattedInteger}.${decimalPart}`;
   return isNegative ? `-${formattedAmount}` : formattedAmount;
 };

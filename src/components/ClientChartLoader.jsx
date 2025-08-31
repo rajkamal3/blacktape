@@ -368,13 +368,25 @@ export default function Chart({ companyId }) {
         </div>
 
         <div>
-          <h2 className="text-lg font-bold mb-4">
-            {companySummary.pricecurrent
-              ? `${formatIndianCurrency(companySummary.pricecurrent)} (${Number(
-                  companySummary.pricepercentchange
-                ).toFixed(2)}%)`
-              : formatIndianCurrency(data.points[data.points.length - 1].lp)}
-          </h2>
+          {companyId === ".NSEI" ||
+          companyId === ".NN50" ||
+          companyId === ".NIMI150" ||
+          companyId === ".NISM250" ? (
+            <h2 className="text-lg font-bold mb-4">
+              {formatIndianCurrency(
+                data.points[data.points.length - 1].lp,
+                false
+              )}
+            </h2>
+          ) : (
+            <h2 className="text-lg font-bold mb-4">
+              {companySummary.pricecurrent
+                ? `${formatIndianCurrency(
+                    companySummary.pricecurrent
+                  )} (${Number(companySummary.pricepercentchange).toFixed(2)}%)`
+                : formatIndianCurrency(data.points[data.points.length - 1].lp)}
+            </h2>
+          )}
         </div>
 
         <div className="bg-white rounded-xl shadow-xl">
@@ -450,7 +462,7 @@ export default function Chart({ companyId }) {
               <thead>
                 <tr className="bg-green-200">
                   <th className="border px-4 py-2">Zone</th>
-                  <th className="border px-4 py-2">From Current Price</th>
+                  <th className="border px-4 py-2">From Current Level</th>
                 </tr>
               </thead>
               <tbody>
@@ -463,9 +475,19 @@ export default function Chart({ companyId }) {
                         : ""
                     }`}
                   >
-                    <td className="border px-4 py-2">
-                      {formatIndianCurrency(zone.zone)}
-                    </td>
+                    {companyId === ".NSEI" ||
+                    companyId === ".NN50" ||
+                    companyId === ".NIMI150" ||
+                    companyId === ".NISM250" ? (
+                      <td className="border px-4 py-2">
+                        {formatIndianCurrency(zone.zone, false)}
+                      </td>
+                    ) : (
+                      <td className="border px-4 py-2">
+                        {formatIndianCurrency(zone.zone)}
+                      </td>
+                    )}
+
                     {companyId === "NBES" ||
                     companyId === "JBES" ||
                     companyId === "NTFM" ||
