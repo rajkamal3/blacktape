@@ -27,13 +27,32 @@ const indices = [
   { name: "Nifty Smallcap 250", code: "NS250" }
 ];
 
+const nifty500 = [
+  ...nifty50,
+  ...niftyNext50,
+  ...niftyMidcap150,
+  ...niftySmallCap250
+];
+
+const filterByName = (list, query) => {
+  if (!query || query.length <= 2) return [];
+
+  return list.filter((item) =>
+    item.name.toLowerCase().includes(query.toLowerCase())
+  );
+};
+
 export default function HomePage() {
   const [user, setUser] = useState(null);
   const [dataList, setDataList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [visible, setVisible] = useState(false);
   const [filtersVisible, setFiltersVisible] = useState(false);
+  const [searchVisible, setSearchVisible] = useState(false);
   const [sortOrderAsc, setSortOrderAsc] = useState(true);
+  const [query, setQuery] = useState("");
+
+  const filteredData = filterByName(nifty500, query);
 
   const indexGlobal = useGlobalStore((state) => state.indexGlobal);
   const setIndexGlobal = useGlobalStore((state) => state.setIndexGlobal);
@@ -342,6 +361,10 @@ export default function HomePage() {
         breakpoints={{ "960px": "75vw", "641px": "90vw" }}
       >
         <div className="mb-4 border-b border-zinc-700 pb-2">
+          <Button onClick={() => setSearchVisible(true)}>Search</Button>
+        </div>
+
+        <div className="mb-4 border-b border-zinc-700 pb-2">
           <Button onClick={() => sortBy("name")}>Sort by name</Button>
           <Button onClick={() => sortBy("change")}>Sort by day change</Button>
           <Button onClick={() => sortBy("valuation")}>
@@ -379,6 +402,47 @@ export default function HomePage() {
           <Button onClick={() => handleCardClick({ detailsId: ".NISM250" })}>
             Nifty Smallcap 250 Support Levels
           </Button>
+        </div>
+      </Dialog>
+
+      <Dialog
+        header={"Search"}
+        visible={searchVisible}
+        onHide={() => {
+          if (!searchVisible) return;
+          setSearchVisible(false);
+        }}
+        style={{ width: "50vw" }}
+        breakpoints={{ "960px": "75vw", "641px": "90vw" }}
+      >
+        <div className="p-4 max-w-md mx-auto">
+          <input
+            type="text"
+            placeholder="Search by name..."
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            className="w-full p-2 border rounded-lg mb-4"
+          />
+
+          <ul className="space-y-2">
+            {filteredData.length > 0 ? (
+              filteredData.map((item) => (
+                <li
+                  key={item.summaryId}
+                  className="p-3 border rounded-lg shadow-sm hover:bg-gray-100"
+                  onClick={() => handleCardClick(item)}
+                >
+                  <div className="font-semibold">{item.name}</div>
+                </li>
+              ))
+            ) : (
+              <>
+                {query.length >= 2 && (
+                  <li className="text-gray-500">No results found</li>
+                )}
+              </>
+            )}
+          </ul>
         </div>
       </Dialog>
 
