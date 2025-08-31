@@ -218,7 +218,7 @@ export default function Chart({ companyId }) {
       },
       y: {
         stacked: true,
-        beginAtZero: false,
+        beginAtZero: true,
         display: false
       }
     }
