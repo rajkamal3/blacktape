@@ -331,14 +331,30 @@ export default function HomePage() {
         style={{ width: "50vw" }}
         breakpoints={{ "960px": "75vw", "641px": "90vw" }}
       >
-        <Button onClick={() => sortBy("name")}>Sort by name</Button>
-        <Button onClick={() => sortBy("change")}>Sort by day change</Button>
-        <Button onClick={() => sortBy("valuation")}>Sort by market Cap</Button>
-        <Button onClick={() => sortBy("pe")}>Sort by PE</Button>
-        <Button onClick={() => sortBy("sectorPe")}>Sort by sector PE</Button>
-        <Button onClick={() => sortBy("closenessToLow")}>
-          Sort by closeness to 52W low
-        </Button>
+        <div className="mb-4 border-b border-zinc-700 pb-2">
+          <Button onClick={() => sortBy("name")}>Sort by name</Button>
+          <Button onClick={() => sortBy("change")}>Sort by day change</Button>
+          <Button onClick={() => sortBy("valuation")}>
+            Sort by market Cap
+          </Button>
+          <Button onClick={() => sortBy("pe")}>Sort by PE</Button>
+          <Button onClick={() => sortBy("sectorPe")}>Sort by sector PE</Button>
+          <Button onClick={() => sortBy("closenessToLow")}>
+            Sort by closeness to 52W low
+          </Button>
+        </div>
+
+        <div>
+          <Button onClick={() => handleCardClick({ detailsId: "NBES" })}>
+            NIFTYBEES Support Levels
+          </Button>
+          <Button onClick={() => handleCardClick({ detailsId: "JBES" })}>
+            JUNIORBEES Support Levels
+          </Button>
+          <Button onClick={() => handleCardClick({ detailsId: "NTFM" })}>
+            MID150BEES Support Levels
+          </Button>
+        </div>
       </Dialog>
 
       <div
