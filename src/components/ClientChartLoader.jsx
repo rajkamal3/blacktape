@@ -78,7 +78,7 @@ export default function Chart({ companyId }) {
   });
   const [financals, setFinancials] = useState(null);
   const [financalsQuarterly, setFinancialsQuarterly] = useState(null);
-  const [holding, setHolding] = useState(null);
+  const [summary, setSummary] = useState(null);
 
   const companySummary = useGlobalStore((state) => state.companySummary);
 
@@ -114,7 +114,7 @@ export default function Chart({ companyId }) {
     axios
       .get(`${base}/api/proxy?id=${companyId}&type=holding`)
       .then((res) => {
-        setHolding(res.data?.data);
+        setSummary(res.data?.data);
       })
       .catch((error) => setErr(error.message));
   }, [companyId]);
@@ -235,31 +235,31 @@ export default function Chart({ companyId }) {
   };
 
   const holdingsData = {
-    labels: holding?.holdings?.holdings?.map((h) => h.date),
+    labels: summary?.holdings?.holdings?.map((h) => h.date),
     datasets: [
       {
         label: "Promoter",
-        data: holding?.holdings?.holdings?.map((h) => h.data.pmPctT),
+        data: summary?.holdings?.holdings?.map((h) => h.data.pmPctT),
         backgroundColor: "#525252"
       },
       {
         label: "FIIs",
-        data: holding?.holdings?.holdings?.map((h) => h.data.fiPctT),
+        data: summary?.holdings?.holdings?.map((h) => h.data.fiPctT),
         backgroundColor: "#727272"
       },
       {
         label: "DIIs",
-        data: holding?.holdings?.holdings?.map((h) => h.data.othDiPctT),
+        data: summary?.holdings?.holdings?.map((h) => h.data.othDiPctT),
         backgroundColor: "#929292"
       },
       {
         label: "Mutual Funds",
-        data: holding?.holdings?.holdings?.map((h) => h.data.mfPctT),
+        data: summary?.holdings?.holdings?.map((h) => h.data.mfPctT),
         backgroundColor: "#a5a5a5"
       },
       {
         label: "Retail",
-        data: holding?.holdings?.holdings?.map((h) => h.data.rOthPctT),
+        data: summary?.holdings?.holdings?.map((h) => h.data.rOthPctT),
         backgroundColor: "#b5b5b5"
       }
     ]
