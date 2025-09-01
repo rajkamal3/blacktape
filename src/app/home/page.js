@@ -383,53 +383,105 @@ export default function HomePage() {
         style={{ width: "50vw" }}
         breakpoints={{ "960px": "75vw", "641px": "90vw" }}
       >
-        <div className="mb-4 border-b border-zinc-700 pb-2">
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-1 max-w-5xl mx-auto mb-4">
           <Button
             label="Search"
             onClick={() => setSearchVisible(true)}
             icon="pi pi-search"
             iconPos="right"
+            size="small"
+          />
+
+          <Button
+            label="Random stock"
+            onClick={() =>
+              handleCardClick(
+                nifty500[Math.floor(Math.random() * 500)],
+                "search"
+              )
+            }
+            icon="pi pi-compass"
+            iconPos="right"
+            size="small"
           />
         </div>
 
-        <div className="mb-4 border-b border-zinc-700 pb-2">
-          <Button onClick={() => sortBy("name")}>Sort by name</Button>
-          <Button onClick={() => sortBy("change")}>Sort by day change</Button>
-          <Button onClick={() => sortBy("valuation")}>
-            Sort by market Cap
-          </Button>
-          <Button onClick={() => sortBy("pe")}>Sort by PE</Button>
-          <Button onClick={() => sortBy("sectorPe")}>Sort by sector PE</Button>
-          <Button onClick={() => sortBy("closenessToLow")}>
-            Sort by closeness to 52W low
-          </Button>
+        <div className="mb-4">
+          <h2 className="text-m font-bold mb-1">Sort By</h2>
+
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-1 max-w-5xl mx-auto">
+            <Button onClick={() => sortBy("name")} label="Name" size="small" />
+            <Button
+              onClick={() => sortBy("change")}
+              label="Day's change"
+              size="small"
+            />
+            <Button
+              onClick={() => sortBy("valuation")}
+              label="Market Cap"
+              size="small"
+            />
+
+            <Button onClick={() => sortBy("pe")} label="PE" size="small" />
+            <Button
+              onClick={() => sortBy("sectorPe")}
+              label="Sector PE"
+              size="small"
+            />
+            <Button
+              onClick={() => sortBy("closenessToLow")}
+              label="From to 52W Low"
+              size="small"
+            />
+          </div>
         </div>
 
-        <div className="mb-4 border-b border-zinc-700 pb-2">
-          <Button onClick={() => handleCardClick({ detailsId: "NBES" })}>
-            NIFTYBEES Support Levels
-          </Button>
-          <Button onClick={() => handleCardClick({ detailsId: "JBES" })}>
-            JUNIORBEES Support Levels
-          </Button>
-          <Button onClick={() => handleCardClick({ detailsId: "NTFM" })}>
-            MID150BEES Support Levels
-          </Button>
-        </div>
+        <div className="mb-4">
+          <h2 className="text-m font-bold mb-1">Support Levels</h2>
 
-        <div>
-          <Button onClick={() => handleCardClick({ detailsId: ".NSEI" })}>
-            Nifty 50 Support Levels
-          </Button>
-          <Button onClick={() => handleCardClick({ detailsId: ".NN50" })}>
-            Nifty Next 50 Support Levels
-          </Button>
-          <Button onClick={() => handleCardClick({ detailsId: ".NIMI150" })}>
-            Nifty Midcap 150 Support Levels
-          </Button>
-          <Button onClick={() => handleCardClick({ detailsId: ".NISM250" })}>
-            Nifty Smallcap 250 Support Levels
-          </Button>
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-1 max-w-5xl mx-auto">
+            <Button
+              onClick={() => handleCardClick({ detailsId: ".NSEI" })}
+              size="small"
+              label="Nifty 50"
+            />
+
+            <Button
+              onClick={() => handleCardClick({ detailsId: ".NN50" })}
+              size="small"
+              label="Nifty Next 50"
+            />
+
+            <Button
+              onClick={() => handleCardClick({ detailsId: ".NIMI150" })}
+              size="small"
+              label="Nifty Midcap 150"
+            />
+
+            <Button
+              onClick={() => handleCardClick({ detailsId: ".NISM250" })}
+              size="small"
+              label="Nifty Smallcap 250"
+            />
+
+            <Button
+              onClick={() => handleCardClick({ detailsId: "NBES" })}
+              size="small"
+              label="NIFTYBEES"
+            />
+
+            <Button
+              onClick={() => handleCardClick({ detailsId: "JBES" })}
+              size="small"
+              label="JUNIORBEES"
+            />
+
+            <Button
+              onClick={() => handleCardClick({ detailsId: "NTFM" })}
+              size="small"
+              label="MID150BEES"
+            />
+          </div>
         </div>
       </Dialog>
 
@@ -450,21 +502,6 @@ export default function HomePage() {
             onChange={(e) => setQuery(e.target.value)}
             className="w-full p-2 border rounded-lg mb-4"
           />
-
-          {query.length === 0 && (
-            <Button
-              label="Random company"
-              onClick={() =>
-                handleCardClick(
-                  nifty500[Math.floor(Math.random() * 500)],
-                  "search"
-                )
-              }
-              icon="pi pi-compass"
-              iconPos="right"
-              size="small"
-            />
-          )}
 
           <ul className="space-y-2">
             {filteredData.length > 0 ? (
