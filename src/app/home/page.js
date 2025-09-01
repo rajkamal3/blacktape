@@ -18,6 +18,7 @@ import { Button } from "primereact/button";
 import Spinner from "@/components/Spinner";
 import { formatIndianCurrency } from "@/utils/formatIndianCurrency";
 import { Dialog } from "primereact/dialog";
+import { InputText } from "primereact/inputtext";
 
 const indices = [
   { name: "Watchlist 1", code: "WL1" },
@@ -373,7 +374,7 @@ export default function HomePage() {
       />
 
       <Dialog
-        header={"Filter and sort"}
+        header={"Search and sort"}
         visible={filtersVisible}
         onHide={() => {
           if (!filtersVisible) return;
@@ -383,7 +384,12 @@ export default function HomePage() {
         breakpoints={{ "960px": "75vw", "641px": "90vw" }}
       >
         <div className="mb-4 border-b border-zinc-700 pb-2">
-          <Button onClick={() => setSearchVisible(true)}>Search</Button>
+          <Button
+            label="Search"
+            onClick={() => setSearchVisible(true)}
+            icon="pi pi-search"
+            iconPos="right"
+          />
         </div>
 
         <div className="mb-4 border-b border-zinc-700 pb-2">
@@ -438,20 +444,34 @@ export default function HomePage() {
         breakpoints={{ "960px": "75vw", "641px": "90vw" }}
       >
         <div className="p-4 max-w-md mx-auto">
-          <input
-            type="text"
+          <InputText
             placeholder="Search by name..."
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             className="w-full p-2 border rounded-lg mb-4"
           />
 
+          {query.length === 0 && (
+            <Button
+              label="Random company"
+              onClick={() =>
+                handleCardClick(
+                  nifty500[Math.floor(Math.random() * 500)],
+                  "search"
+                )
+              }
+              icon="pi pi-compass"
+              iconPos="right"
+              size="small"
+            />
+          )}
+
           <ul className="space-y-2">
             {filteredData.length > 0 ? (
               filteredData.map((item) => (
                 <li
                   key={item.summaryId}
-                  className="p-3 border rounded-lg shadow-sm hover:bg-gray-100"
+                  className="p-3 border rounded-lg shadow-sm hover:bg-gray-600"
                   onClick={() => handleCardClick(item, "search")}
                 >
                   <div className="font-semibold">{item.name}</div>
@@ -459,7 +479,7 @@ export default function HomePage() {
               ))
             ) : (
               <>
-                {query.length >= 2 && (
+                {query.length >= 3 && (
                   <li className="text-gray-500">No results found</li>
                 )}
               </>
