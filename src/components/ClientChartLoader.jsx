@@ -551,23 +551,24 @@ export default function Chart({ companyId }) {
               <h2 className="text-2xl font-bold mb-4">Snapshot</h2>
 
               <div className="bg-zinc-900 text-white p-6 rounded-xl shadow-lg">
-                <h2 className="text-xl font-bold mb-2">
+                <h2 className="text-l font-bold mb-1">
                   {companySummary.SC_FULLNM}
+                </h2>
+
+                <h2 className="text-sm font-bold mb-1">
+                  {companySummary.pricecurrent
+                    ? `${formatIndianCurrency(
+                        companySummary.pricecurrent
+                      )} (${Number(companySummary.pricepercentchange).toFixed(
+                        2
+                      )}%)`
+                    : formatIndianCurrency(
+                        data.points[data.points.length - 1].lp
+                      )}
                 </h2>
 
                 <table className="w-full text-xs">
                   <tbody>
-                    {/* <tr className="border-b border-zinc-700">
-                  <td colSpan={2} className="py-3">
-                    <div className="flex flex-col">
-                      <span className="text-gray-400 text-xxs">Price</span>
-                      <span className="font-semibold">
-                        {formatIndianCurrency(companySummary.pricecurrent)} (
-                        {Number(companySummary.pricepercentchange).toFixed(2)}%)
-                      </span>
-                    </div>
-                  </td>
-                </tr> */}
                     <tr className="border-b border-zinc-700">
                       <td className="py-3 w-1/3">
                         <div className="flex flex-col">
@@ -730,7 +731,7 @@ export default function Chart({ companyId }) {
                     </tr>
 
                     <tr>
-                      <td colSpan={2} className="py-3">
+                      <td colSpan={6} className="py-3">
                         <div className="flex flex-col">
                           <span className="text-gray-400 text-xxs">Sector</span>
                           <span>{companySummary.SC_SUBSEC}</span>
