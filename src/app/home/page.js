@@ -374,13 +374,16 @@ export default function HomePage() {
       />
 
       <Dialog
-        header={"Search and sort"}
+        header={"Search and Sort"}
         visible={filtersVisible}
         onHide={() => {
           if (!filtersVisible) return;
           setFiltersVisible(false);
         }}
-        style={{ width: "50vw" }}
+        style={{
+          width: "50vw",
+          border: "none"
+        }}
         breakpoints={{ "960px": "75vw", "641px": "90vw" }}
       >
         <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-1 max-w-5xl mx-auto mb-4">

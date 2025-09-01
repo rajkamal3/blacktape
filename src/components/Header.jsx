@@ -42,7 +42,8 @@ const Header = ({ user }) => {
               visible={visible}
               onHide={() => setVisible(false)}
               style={{
-                backgroundColor: "#2e2e2e"
+                backgroundColor: "#2e2e2e",
+                border: "none"
               }}
             >
               <h1 className="text-2xl mb-2">
