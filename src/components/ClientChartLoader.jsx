@@ -264,7 +264,7 @@ export default function Chart({ companyId }) {
         backgroundColor: "#929292"
       },
       {
-        label: "Mutual Funds",
+        label: "MFs",
         data: summary?.holdings?.holdings?.map((h) => h.data.mfPctT),
         backgroundColor: "#a5a5a5"
       },
@@ -299,7 +299,7 @@ export default function Chart({ companyId }) {
           label: (context) => {
             const value = context.parsed.y;
 
-            return `${context.dataset.label || "Value"}: ${value.toFixed(2)}`;
+            return `${context.dataset.label || "Value"}: ${value.toFixed(2)}%`;
           }
         },
         titleFont: { family: "Inter, sans-serif" },
