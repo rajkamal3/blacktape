@@ -396,7 +396,7 @@ export default function HomePage() {
           />
 
           <Button
-            label="Random stock"
+            label="Random Stock"
             onClick={() =>
               handleCardClick(
                 nifty500[Math.floor(Math.random() * 500)],
@@ -416,7 +416,7 @@ export default function HomePage() {
             <Button onClick={() => sortBy("name")} label="Name" size="small" />
             <Button
               onClick={() => sortBy("change")}
-              label="Day's change"
+              label="1 Day Change"
               size="small"
             />
             <Button
@@ -433,7 +433,7 @@ export default function HomePage() {
             />
             <Button
               onClick={() => sortBy("closenessToLow")}
-              label="From to 52W Low"
+              label="From 52W Low"
               size="small"
             />
           </div>
@@ -447,42 +447,49 @@ export default function HomePage() {
               onClick={() => handleCardClick({ detailsId: ".NSEI" })}
               size="small"
               label="Nifty 50"
-            />
-
-            <Button
-              onClick={() => handleCardClick({ detailsId: ".NN50" })}
-              size="small"
-              label="Nifty Next 50"
-            />
-
-            <Button
-              onClick={() => handleCardClick({ detailsId: ".NIMI150" })}
-              size="small"
-              label="Nifty Midcap 150"
-            />
-
-            <Button
-              onClick={() => handleCardClick({ detailsId: ".NISM250" })}
-              size="small"
-              label="Nifty Smallcap 250"
+              className="whitespace-nowrap"
             />
 
             <Button
               onClick={() => handleCardClick({ detailsId: "NBES" })}
               size="small"
               label="NIFTYBEES"
+              className="whitespace-nowrap"
+            />
+
+            <Button
+              onClick={() => handleCardClick({ detailsId: ".NN50" })}
+              size="small"
+              label="Nifty Next 50"
+              className="whitespace-nowrap"
             />
 
             <Button
               onClick={() => handleCardClick({ detailsId: "JBES" })}
               size="small"
               label="JUNIORBEES"
+              className="whitespace-nowrap"
+            />
+
+            <Button
+              onClick={() => handleCardClick({ detailsId: ".NIMI150" })}
+              size="small"
+              label="Nifty Midcap 150"
+              className="whitespace-nowrap"
             />
 
             <Button
               onClick={() => handleCardClick({ detailsId: "NTFM" })}
               size="small"
               label="MID150BEES"
+              className="whitespace-nowrap"
+            />
+
+            <Button
+              onClick={() => handleCardClick({ detailsId: ".NISM250" })}
+              size="small"
+              label="Nifty Smallcap 250"
+              className="whitespace-nowrap"
             />
           </div>
         </div>
