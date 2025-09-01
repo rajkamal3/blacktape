@@ -85,12 +85,34 @@ export default function HomePage() {
     return () => unsubscribe();
   }, [router]);
 
-  const handleCardClick = (item) => {
-    startTransition(() => {
-      router.push(`/home/${item.detailsId}`);
-    });
+  const handleCardClick = async (item, source = "home") => {
+    if (source === "search") {
+      try {
+        const res = await axios.get(
+          `https://priceapi.moneycontrol.com/pricefeed/nse/equitycash/${item.summaryId}`
+        );
 
-    setCompanySummary(item);
+        if (res?.data?.data && typeof res.data.data === "object") {
+          setCompanySummary(res.data.data);
+        } else {
+          console.warn(`🟡 No usable data for ID: ${company.summaryId}`);
+          failedIds.push(item.summaryId);
+        }
+      } catch (err) {
+        console.warn(`❌ Failed for ID: ${company.summaryId}`, err.message);
+        failedIds.push(company.summaryId);
+      }
+
+      startTransition(() => {
+        router.push(`/home/${item.detailsId}`);
+      });
+    } else {
+      startTransition(() => {
+        router.push(`/home/${item.detailsId}`);
+      });
+
+      setCompanySummary(item);
+    }
   };
 
   const sortByProximityTo52WeekLow = (results) => {
@@ -430,7 +452,7 @@ export default function HomePage() {
                 <li
                   key={item.summaryId}
                   className="p-3 border rounded-lg shadow-sm hover:bg-gray-100"
-                  onClick={() => handleCardClick(item)}
+                  onClick={() => handleCardClick(item, "search")}
                 >
                   <div className="font-semibold">{item.name}</div>
                 </li>

@@ -626,7 +626,13 @@ export default function Chart({ companyId }) {
                             From 52W Low
                           </span>
                           <span>
-                            {companySummary.closenessToLowPct.toFixed(2)}%
+                            {(
+                              ((companySummary.pricecurrent -
+                                companySummary["52L"]) /
+                                companySummary["52L"]) *
+                              100
+                            ).toFixed(2)}
+                            %
                           </span>
                         </div>
                       </td>
