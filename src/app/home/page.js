@@ -246,12 +246,12 @@ export default function HomePage() {
       </div>
     );
 
-  const Stat = ({ label, value, valueClass = "" }) => (
-    <div className="grid grid-cols-[140px_1fr]">
-      <span className="text-gray-400">{label}</span>
-      <span className={`${valueClass}`}>{value ?? "N/A"}</span>
-    </div>
-  );
+  // const Stat = ({ label, value, valueClass = "" }) => (
+  //   <div className="grid grid-cols-[140px_1fr]">
+  //     <span className="text-gray-400">{label}</span>
+  //     <span className={`${valueClass}`}>{value ?? "N/A"}</span>
+  //   </div>
+  // );
 
   const handleChangeIndex = (value) => {
     setDropdownActiveIndex(value);
