@@ -456,7 +456,15 @@ export default function Chart({ companyId }) {
                 <tr className="bg-green-200">
                   <th className="border px-4 py-2">Zone</th>
                   <th className="border px-4 py-2">Fall</th>
-                  <th className="border px-4 py-2">PE</th>
+                  {!(
+                    companyId === "NBES" ||
+                    companyId === "JBES" ||
+                    companyId === "NTFM" ||
+                    companyId === ".NSEI" ||
+                    companyId === ".NN50" ||
+                    companyId === ".NIMI150" ||
+                    companyId === ".NISM250"
+                  ) && <th className="border px-4 py-2">PE</th>}
                 </tr>
               </thead>
               <tbody>
@@ -511,14 +519,24 @@ export default function Chart({ companyId }) {
                       </td>
                     )}
 
-                    <td className="border px-4 py-2">
-                      {(
-                        companySummary.PE -
-                        (companySummary.PE *
-                          (companySummary.pricecurrent - zone.zone)) /
-                          companySummary.pricecurrent
-                      ).toFixed(2)}
-                    </td>
+                    {!(
+                      companyId === "NBES" ||
+                      companyId === "JBES" ||
+                      companyId === "NTFM" ||
+                      companyId === ".NSEI" ||
+                      companyId === ".NN50" ||
+                      companyId === ".NIMI150" ||
+                      companyId === ".NISM250"
+                    ) && (
+                      <td className="border px-4 py-2">
+                        {(
+                          companySummary.PE -
+                          (companySummary.PE *
+                            (companySummary.pricecurrent - zone.zone)) /
+                            companySummary.pricecurrent
+                        ).toFixed(2)}
+                      </td>
+                    )}
                   </tr>
                 ))}
               </tbody>
