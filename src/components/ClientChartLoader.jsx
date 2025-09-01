@@ -286,29 +286,22 @@ export default function Chart({ companyId }) {
         displayColors: false,
         mode: "index",
         intersect: false,
-        // callbacks: {
-        //   label: function (context) {
-        //     const promoter =
-        //       context.chart.data.datasets[0].data[context.dataIndex];
-        //     const mutualFunds =
-        //       context.chart.data.datasets[1].data[context.dataIndex];
-        //     const fii = context.chart.data.datasets[2].data[context.dataIndex];
-        //     const dii = context.chart.data.datasets[3].data[context.dataIndex];
-        //     const retail =
-        //       context.chart.data.datasets[4].data[context.dataIndex];
+        callbacks: {
+          title: (tooltipItems) => {
+            const date = new Date(tooltipItems[0].label);
 
-        //     // let percentage = 0;
-        //     // if (revenue && netProfit) {
-        //     //   percentage = ((netProfit / revenue) * 100).toFixed(2);
-        //     // }
+            return date.toLocaleDateString("en-US", {
+              month: "short",
+              day: "2-digit",
+              year: "numeric"
+            });
+          },
+          label: (context) => {
+            const value = context.parsed.y;
 
-        //     return context.dataset.label === "Promoter"
-        //       ? `Revenue: ${formatIndianCurrency(promoter)} Cr`
-        //       : `Net Profit: ${formatIndianCurrency(
-        //           mutualFunds
-        //         )} Cr (${fii}% of revenue)`;
-        //   }
-        // },
+            return `${context.dataset.label || "Value"}: ${value.toFixed(2)}`;
+          }
+        },
         titleFont: { family: "Inter, sans-serif" },
         bodyFont: { family: "Inter, sans-serif" }
       }
