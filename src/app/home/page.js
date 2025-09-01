@@ -635,46 +635,12 @@ export default function HomePage() {
                   <tr>
                     <td className="py-3 pt-0 w-1/3">
                       <div className="flex flex-col">
-                        <span className="text-gray-400 text-xxs">
-                          Valuation (Cr)
-                        </span>
-                        <span>{formatIndianCurrency(item.MKTCAP)}</span>
-                      </div>
-                    </td>
-
-                    <td className="py-3 pt-0 w-1/3">
-                      <div className="flex flex-col">
-                        <span className="text-gray-400 text-xxs">PE</span>
-                        <span>{item.PE}</span>
-                      </div>
-                    </td>
-
-                    <td className="py-3 pt-0 w-1/3">
-                      <div className="flex flex-col">
-                        <span className="text-gray-400 text-xxs">
-                          Sector PE
-                        </span>
-                        <span>{item.IND_PE}</span>
-                      </div>
-                    </td>
-                  </tr>
-
-                  <tr>
-                    <td className="py-3 pb-0 pt-0 w-1/3">
-                      <div className="flex flex-col">
-                        <span className="text-gray-400 text-xxs">52W High</span>
-                        <span>{formatIndianCurrency(item["52H"])}</span>
-                      </div>
-                    </td>
-
-                    <td className="py-3 pb-0 pt-0 w-1/3">
-                      <div className="flex flex-col">
                         <span className="text-gray-400 text-xxs">52W Low</span>
                         <span>{formatIndianCurrency(item["52L"])}</span>
                       </div>
                     </td>
 
-                    <td className="py-3 pb-0 pt-0 w-1/3">
+                    <td className="py-3 pt-0 w-1/3">
                       <div className="flex flex-col">
                         <span className="text-gray-400 text-xxs">
                           From 52W Low
@@ -686,6 +652,40 @@ export default function HomePage() {
                           ).toFixed(2)}
                           %
                         </span>
+                      </div>
+                    </td>
+
+                    <td className="py-3 pt-0 w-1/3">
+                      <div className="flex flex-col">
+                        <span className="text-gray-400 text-xxs">52W High</span>
+                        <span>{formatIndianCurrency(item["52H"])}</span>
+                      </div>
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td className="py-3 pb-0 pt-0 w-1/3">
+                      <div className="flex flex-col">
+                        <span className="text-gray-400 text-xxs">
+                          Valuation (Cr)
+                        </span>
+                        <span>{formatIndianCurrency(item.MKTCAP)}</span>
+                      </div>
+                    </td>
+
+                    <td className="py-3 pb-0 pt-0 w-1/3">
+                      <div className="flex flex-col">
+                        <span className="text-gray-400 text-xxs">PE</span>
+                        <span>{item.PE}</span>
+                      </div>
+                    </td>
+
+                    <td className="py-3 pb-0 pt-0 w-1/3">
+                      <div className="flex flex-col">
+                        <span className="text-gray-400 text-xxs">
+                          Sector PE
+                        </span>
+                        <span>{item.IND_PE}</span>
                       </div>
                     </td>
                   </tr>
