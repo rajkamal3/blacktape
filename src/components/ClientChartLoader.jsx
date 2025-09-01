@@ -455,7 +455,8 @@ export default function Chart({ companyId }) {
               <thead>
                 <tr className="bg-green-200">
                   <th className="border px-4 py-2">Zone</th>
-                  <th className="border px-4 py-2">From Current Level</th>
+                  <th className="border px-4 py-2">Fall</th>
+                  <th className="border px-4 py-2">PE</th>
                 </tr>
               </thead>
               <tbody>
@@ -509,6 +510,15 @@ export default function Chart({ companyId }) {
                           : `-`}
                       </td>
                     )}
+
+                    <td className="border px-4 py-2">
+                      {(
+                        companySummary.PE -
+                        (companySummary.PE *
+                          (companySummary.pricecurrent - zone.zone)) /
+                          companySummary.pricecurrent
+                      ).toFixed(2)}
+                    </td>
                   </tr>
                 ))}
               </tbody>
