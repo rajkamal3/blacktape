@@ -771,6 +771,42 @@ export default function Chart({ companyId }) {
             <Bar data={holdingsData} options={holdingsOptions} />
           </div>
 
+          {summary?.aboutAndPeers.length > 0 && (
+            <div className="py-4">
+              <h2 className="text-2xl font-bold mb-4">Peers</h2>
+
+              <div className="overflow-x-auto rounded-lg shadow text-sm">
+                <table className="min-w-full bg-gray-900 text-gray-100">
+                  <thead className="bg-[#2d2d2d]">
+                    <tr>
+                      <th className="px-4 py-3 text-left font-semibold">
+                        Name
+                      </th>
+                      <th className="px-4 py-3 text-right font-semibold">
+                        Valuation (Cr)
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="bg-[#101010]">
+                    {summary.aboutAndPeers.map((stock) => (
+                      <tr
+                        key={stock.sid}
+                        className="border-t border-[#2d2d2d] hover:bg-gray-800"
+                      >
+                        <td className="px-4 py-3">
+                          {stock.name.replace("Ltd", "")}
+                        </td>
+                        <td className="px-4 py-3 text-right">
+                          {formatIndianCurrency(stock.ratios.marketCap / 10)}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+
           {summary?.brands.length > 0 && (
             <div className="py-4">
               <h2 className="text-2xl font-bold mb-4">Brands</h2>
