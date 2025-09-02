@@ -26,7 +26,7 @@ export default function AuthLayout({ children }) {
   if (!user)
     return (
       <div
-        className="flex justify-center items-center"
+        className="flex justify-center items-center bg-[var(--background)]"
         style={{
           height: "calc(100vh - 50px)"
         }}

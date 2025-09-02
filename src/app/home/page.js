@@ -222,7 +222,7 @@ export default function HomePage() {
   if (!user || loading)
     return (
       <div
-        className="flex justify-center items-center"
+        className="flex justify-center items-center bg-[var(--background)]"
         style={{
           height: "calc(100vh - 50px)",
           fontSize: "12px",
@@ -237,7 +237,7 @@ export default function HomePage() {
   if (isPending)
     return (
       <div
-        className="flex justify-center items-center"
+        className="flex justify-center items-center bg-[var(--background)]"
         style={{
           height: "calc(100vh - 50px)"
         }}
