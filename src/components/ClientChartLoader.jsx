@@ -320,7 +320,7 @@ export default function Chart({ companyId }) {
   };
 
   return (
-    <div className="p-4">
+    <div className="p-4 bg-[var(--background)]">
       <div>
         <div>
           {companyId === "NBES" ||
@@ -571,7 +571,7 @@ export default function Chart({ companyId }) {
             <div className="py-4">
               <h2 className="text-2xl font-bold mb-4">Snapshot</h2>
 
-              <div className="bg-zinc-900 text-white p-6 rounded-xl shadow-lg">
+              <div className="bg-[#101010] text-white p-6 rounded-xl shadow-lg">
                 <h2 className="text-l font-bold mb-1">
                   {companySummary.SC_FULLNM}
                 </h2>
@@ -779,7 +779,7 @@ export default function Chart({ companyId }) {
                 {summary?.brands.map((brand) => (
                   <div
                     key={brand.brandId}
-                    className="rounded-2xl p-4 bg-zinc-900 text-white"
+                    className="rounded-2xl p-4 bg-[#101010] text-white"
                   >
                     <h2 className="text-m font-semibold">{brand.name}</h2>
                     <p className="text-xs text-gray-400 mt-1">

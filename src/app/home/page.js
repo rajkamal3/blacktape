@@ -535,12 +535,7 @@ export default function HomePage() {
         </div>
       </Dialog>
 
-      <div
-        className="p-4"
-        style={{
-          backgroundColor: "#1f1f1f"
-        }}
-      >
+      <div className="p-4 bg-[var(--background)]">
         <div className="card flex justify-content-center mb-3">
           <Dropdown
             value={dropdownActiveIndex}
@@ -550,7 +545,7 @@ export default function HomePage() {
             placeholder="Select an index"
             className="w-full md:w-14rem"
             style={{
-              backgroundColor: "#232323",
+              backgroundColor: "#101010",
               border: "none",
               color: "#ffffff",
               fontWeight: "bold"
@@ -577,7 +572,7 @@ export default function HomePage() {
               className="bg-zinc-900 text-white p-4 rounded-lg"
               onClick={() => handleCardClick(item)}
               style={{
-                backgroundColor: "#232323",
+                backgroundColor: "#101010",
                 color: "#ffffff"
               }}
             >

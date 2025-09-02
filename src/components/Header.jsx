@@ -76,7 +76,7 @@ const Header = ({ user }) => {
         )}
       </div>
 
-      <h1 className="font-bold">Blacktape</h1>
+      <h1 className="font-bold text-[var(--foreground)]">Blacktape</h1>
 
       <div>
         {user.photoURL && (
