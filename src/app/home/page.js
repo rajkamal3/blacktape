@@ -180,14 +180,27 @@ export default function HomePage() {
         setDataList(sortedResults);
 
         const now = new Date();
-        const endOfDay = new Date(now);
-        endOfDay.setHours(23, 59, 59, 999);
+        const expiry = new Date(now);
+
+        expiry.setHours(9, 30, 0, 0);
+
+        if (now > expiry) {
+          expiry.setDate(expiry.getDate() + 1);
+        }
+
+        const day = expiry.getDay();
+
+        if (day === 0) {
+          expiry.setDate(expiry.getDate() + 1);
+        } else if (day === 6) {
+          expiry.setDate(expiry.getDate() + 2);
+        }
 
         localStorage.setItem(
           cacheKey,
           JSON.stringify({
             data: sortedResults,
-            expiry: endOfDay.getTime()
+            expiry: expiry.getTime()
           })
         );
 
