@@ -775,7 +775,7 @@ export default function Chart({ companyId }) {
             <div className="py-4">
               <h2 className="text-2xl font-bold mb-4">Peers</h2>
 
-              <div className="overflow-x-auto rounded-lg shadow text-sm">
+              <div className="overflow-x-auto rounded-lg shadow text-xs">
                 <table className="min-w-full bg-gray-900 text-gray-100">
                   <thead className="bg-[#2d2d2d]">
                     <tr>
@@ -785,6 +785,7 @@ export default function Chart({ companyId }) {
                       <th className="px-4 py-3 text-right font-semibold">
                         Valuation (Cr)
                       </th>
+                      <th className="px-4 py-3 text-right font-semibold">PE</th>
                     </tr>
                   </thead>
                   <tbody className="bg-[#101010]">
@@ -798,6 +799,9 @@ export default function Chart({ companyId }) {
                         </td>
                         <td className="px-4 py-3 text-right">
                           {formatIndianCurrency(stock.ratios.marketCap / 10)}
+                        </td>
+                        <td className="px-4 py-3 text-right">
+                          {stock.ratios.apef.toFixed(2)}
                         </td>
                       </tr>
                     ))}
