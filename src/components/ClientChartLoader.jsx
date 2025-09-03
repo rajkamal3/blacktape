@@ -789,10 +789,19 @@ export default function Chart({ companyId }) {
                     </tr>
                   </thead>
                   <tbody className="bg-[#101010]">
-                    {summary.aboutAndPeers.map((stock) => (
+                    {summary.aboutAndPeers.map((stock, index) => (
                       <tr
                         key={stock.sid}
-                        className="border-t border-[#2d2d2d] hover:bg-gray-800"
+                        className={`border-t border-[#2d2d2d] ${
+                          index === 0
+                            ? "bg-[#5d5d5d] hover:bg-[#5d5d5d]"
+                            : "hover:bg-gray-800"
+                        }`}
+                        onClick={() => {
+                          if (index === 0) return;
+
+                          console.log("Clicked:", stock.sid);
+                        }}
                       >
                         <td className="px-4 py-3">
                           {stock.name.replace("Ltd", "")}
