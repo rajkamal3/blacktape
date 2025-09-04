@@ -79,6 +79,7 @@ export default function Chart({ companyId }) {
   const [financals, setFinancials] = useState(null);
   const [financalsQuarterly, setFinancialsQuarterly] = useState(null);
   const [summary, setSummary] = useState(null);
+  const [info, setInfo] = useState(null);
 
   const companySummary = useGlobalStore((state) => state.companySummary);
 
@@ -123,15 +124,23 @@ export default function Chart({ companyId }) {
       .catch((error) => setErr(error.message));
 
     axios
-      .get(`${base}/api/proxy?id=${companyId}&type=holding`)
+      .get(`${base}/api/proxy?id=${companyId}&type=summary`)
       .then((res) => {
         setSummary(res.data?.data);
+      })
+      .catch((error) => setErr(error.message));
+
+    axios
+      .get(`${base}/api/proxy?id=${companyId}&type=info`)
+      .then((res) => {
+        setInfo(res.data?.data);
       })
       .catch((error) => setErr(error.message));
   }, [companyId]);
 
   if (err) return <div>Error: {err}</div>;
-  if (!data)
+
+  if (!data || !summary || !info)
     return (
       <div
         className="flex justify-center items-center bg-[var(--background)]"
@@ -355,7 +364,7 @@ export default function Chart({ companyId }) {
             </>
           ) : (
             <h2 className="text-2xl font-bold">
-              {companySummary.SC_FULLNM || data.sid}&nbsp;&nbsp;
+              {info.info.name.replace("Ltd", "") || data.sid}
             </h2>
           )}
         </div>
@@ -373,11 +382,9 @@ export default function Chart({ companyId }) {
             </h2>
           ) : (
             <h2 className="text-lg font-bold mb-4">
-              {companySummary.pricecurrent
-                ? `${formatIndianCurrency(
-                    companySummary.pricecurrent
-                  )} (${Number(companySummary.pricepercentchange).toFixed(2)}%)`
-                : formatIndianCurrency(data.points[data.points.length - 1].lp)}
+              {formatIndianCurrency(info.ratios.lastPrice)}
+              {companySummary.pricepercentchange &&
+                ` (${Number(companySummary.pricepercentchange).toFixed(2)}%)`}
             </h2>
           )}
         </div>
@@ -509,10 +516,10 @@ export default function Chart({ companyId }) {
                       </td>
                     ) : (
                       <td className="border px-4 py-2">
-                        {companySummary.pricecurrent
+                        {info.ratios.lastPrice
                           ? `${(
-                              ((companySummary.pricecurrent - zone.zone) /
-                                companySummary.pricecurrent) *
+                              ((info.ratios.lastPrice - zone.zone) /
+                                info.ratios.lastPrice) *
                               100
                             ).toFixed(2)}%`
                           : `-`}
@@ -530,10 +537,10 @@ export default function Chart({ companyId }) {
                     ) && (
                       <td className="border px-4 py-2">
                         {(
-                          companySummary.PE -
-                          (companySummary.PE *
-                            (companySummary.pricecurrent - zone.zone)) /
-                            companySummary.pricecurrent
+                          info.ratios.apef.toFixed(2) -
+                          (info.ratios.apef.toFixed(2) *
+                            (info.ratios.lastPrice - zone.zone)) /
+                            info.ratios.lastPrice
                         ).toFixed(2)}
                       </td>
                     )}
@@ -567,203 +574,203 @@ export default function Chart({ companyId }) {
             <Bar data={financialsQuarterlyData} options={financialsOptions} />
           </div>
 
-          {companySummary.SC_FULLNM && (
-            <div className="py-4">
-              <h2 className="text-2xl font-bold mb-4">Snapshot</h2>
+          <div className="py-4">
+            <h2 className="text-2xl font-bold mb-4">Snapshot</h2>
 
-              <div className="bg-[#101010] text-white p-6 rounded-xl shadow-lg">
-                <h2 className="text-l font-bold mb-1">
-                  {companySummary.SC_FULLNM}
-                </h2>
+            <div className="bg-[#101010] text-white p-6 rounded-xl shadow-lg">
+              <h2 className="text-l font-bold mb-1">
+                {info.info.name.replace("Ltd", "") || data.sid}
+              </h2>
 
-                <h2 className="text-sm font-bold mb-1">
-                  {companySummary.pricecurrent
-                    ? `${formatIndianCurrency(
-                        companySummary.pricecurrent
-                      )} (${Number(companySummary.pricepercentchange).toFixed(
-                        2
-                      )}%)`
-                    : formatIndianCurrency(
-                        data.points[data.points.length - 1].lp
-                      )}
-                </h2>
+              <h2 className="text-sm font-bold mb-1">
+                {formatIndianCurrency(info.ratios.lastPrice)}
+                {companySummary.pricepercentchange &&
+                  ` (${Number(companySummary.pricepercentchange).toFixed(2)}%)`}
+              </h2>
 
-                <table className="w-full text-xs">
-                  <tbody>
-                    <tr className="border-b border-zinc-700">
-                      <td className="py-3 w-1/3">
-                        <div className="flex flex-col">
-                          <span className="text-gray-400 text-xxs">
-                            Valuation (Cr)
-                          </span>
-                          <span>
-                            {formatIndianCurrency(companySummary.MKTCAP)}
-                          </span>
-                        </div>
-                      </td>
+              <table className="w-full text-xs">
+                <tbody>
+                  <tr className="border-b border-zinc-700">
+                    <td className="py-3 w-1/3">
+                      <div className="flex flex-col">
+                        <span className="text-gray-400 text-xxs">
+                          Valuation (Cr)
+                        </span>
+                        <span>
+                          {formatIndianCurrency(info.ratios.marketCap)}
+                        </span>
+                      </div>
+                    </td>
 
-                      <td className="py-3 w-1/3">
-                        <div className="flex flex-col">
-                          <span className="text-gray-400 text-xxs">PE</span>
-                          <span>{companySummary.PE}</span>
-                        </div>
-                      </td>
+                    <td className="py-3 w-1/3">
+                      <div className="flex flex-col">
+                        <span className="text-gray-400 text-xxs">PE</span>
+                        <span>{info.ratios.apef.toFixed(2)}</span>
+                      </div>
+                    </td>
 
-                      <td className="py-3 w-1/3">
-                        <div className="flex flex-col">
-                          <span className="text-gray-400 text-xxs">
-                            Sector PE
-                          </span>
-                          <span>{companySummary.IND_PE}</span>
-                        </div>
-                      </td>
-                    </tr>
+                    <td className="py-3 w-1/3">
+                      <div className="flex flex-col">
+                        <span className="text-gray-400 text-xxs">
+                          Sector PE
+                        </span>
+                        <span>{info.ratios.indpe.toFixed(2)}</span>
+                      </div>
+                    </td>
+                  </tr>
 
-                    <tr className="border-b border-zinc-700">
-                      <td className="py-3 w-1/3">
-                        <div className="flex flex-col">
-                          <span className="text-gray-400 text-xxs">
-                            52W High
-                          </span>
-                          <span>
-                            {formatIndianCurrency(companySummary["52H"])}
-                          </span>
-                        </div>
-                      </td>
+                  <tr className="border-b border-zinc-700">
+                    <td className="py-3 w-1/3">
+                      <div className="flex flex-col">
+                        <span className="text-gray-400 text-xxs">52W High</span>
+                        <span>
+                          {formatIndianCurrency(info.ratios["52wHigh"])}
+                        </span>
+                      </div>
+                    </td>
 
-                      <td className="py-3 w-1/3">
-                        <div className="flex flex-col">
-                          <span className="text-gray-400 text-xxs">
-                            52W Low
-                          </span>
-                          <span>
-                            {formatIndianCurrency(companySummary["52L"])}
-                          </span>
-                        </div>
-                      </td>
+                    <td className="py-3 w-1/3">
+                      <div className="flex flex-col">
+                        <span className="text-gray-400 text-xxs">52W Low</span>
+                        <span>
+                          {formatIndianCurrency(info.ratios["52wLow"])}
+                        </span>
+                      </div>
+                    </td>
 
-                      <td className="py-3 w-1/3">
-                        <div className="flex flex-col">
-                          <span className="text-gray-400 text-xxs">
-                            From 52W Low
-                          </span>
-                          <span>
-                            {(
-                              ((companySummary.pricecurrent -
-                                companySummary["52L"]) /
-                                companySummary["52L"]) *
-                              100
-                            ).toFixed(2)}
-                            %
-                          </span>
-                        </div>
-                      </td>
-                    </tr>
+                    <td className="py-3 w-1/3">
+                      <div className="flex flex-col">
+                        <span className="text-gray-400 text-xxs">
+                          From 52W Low
+                        </span>
+                        <span>
+                          {(
+                            ((info.ratios.lastPrice - info.ratios["52wLow"]) /
+                              info.ratios["52wLow"]) *
+                            100
+                          ).toFixed(2)}
+                          %
+                        </span>
+                      </div>
+                    </td>
+                  </tr>
 
-                    <tr className="border-b border-zinc-700">
-                      <td className="py-3">
-                        <div className="flex flex-col">
-                          <span className="text-gray-400 text-xxs">PB</span>
-                          <span>{formatIndianCurrency(companySummary.PB)}</span>
-                        </div>
-                      </td>
-                      <td className="py-3">
-                        <div className="flex flex-col">
-                          <span className="text-gray-400 text-xxs">BV</span>
-                          <span>{formatIndianCurrency(companySummary.BV)}</span>
-                        </div>
-                      </td>
-                    </tr>
-                    <tr className="border-b border-zinc-700">
-                      <td className="py-3 w-1/3">
-                        <div className="flex flex-col">
-                          <span className="text-gray-400 text-xxs">
-                            1 Month
-                          </span>
-                          <span>
-                            {Number(companySummary.cl1mPerChange).toFixed(2)}%
-                          </span>
-                        </div>
-                      </td>
+                  <tr className="border-b border-zinc-700">
+                    <td className="py-3">
+                      <div className="flex flex-col">
+                        <span className="text-gray-400 text-xxs">PB</span>
+                        <span>{formatIndianCurrency(info.ratios.pb)}</span>
+                      </div>
+                    </td>
+                    <td className="py-3">
+                      <div className="flex flex-col">
+                        <span className="text-gray-400 text-xxs">BV</span>
+                        <span>
+                          {formatIndianCurrency(
+                            info.ratios.lastPrice / info.ratios.pb
+                          )}
+                        </span>
+                      </div>
+                    </td>
+                  </tr>
 
-                      <td className="py-3 w-1/3">
-                        <div className="flex flex-col">
-                          <span className="text-gray-400 text-xxs">
-                            3 Months
-                          </span>
-                          <span>
-                            {Number(companySummary.cl3mPerChange).toFixed(2)}%
-                          </span>
-                        </div>
-                      </td>
+                  {companySummary.SC_FULLNM && (
+                    <>
+                      <tr className="border-b border-zinc-700">
+                        <td className="py-3 w-1/3">
+                          <div className="flex flex-col">
+                            <span className="text-gray-400 text-xxs">
+                              1 Month
+                            </span>
+                            <span>
+                              {Number(companySummary.cl1mPerChange).toFixed(2)}%
+                            </span>
+                          </div>
+                        </td>
 
-                      <td className="py-3 w-1/3">
-                        <div className="flex flex-col">
-                          <span className="text-gray-400 text-xxs">1 Year</span>
-                          <span>
-                            {Number(companySummary.cl1yPerChange).toFixed(2)}%
-                          </span>
-                        </div>
-                      </td>
-                    </tr>
-                    <tr className="border-b border-zinc-700">
-                      <td className="py-3 w-1/4">
-                        <div className="flex flex-col">
-                          <span className="text-gray-400 text-xxs">3Y</span>
-                          <span>
-                            {Number(companySummary.cagr3Y)
-                              ? `${Number(companySummary.cagr3Y).toFixed(2)}%`
-                              : "-"}
-                          </span>
-                        </div>
-                      </td>
+                        <td className="py-3 w-1/3">
+                          <div className="flex flex-col">
+                            <span className="text-gray-400 text-xxs">
+                              3 Months
+                            </span>
+                            <span>
+                              {Number(companySummary.cl3mPerChange).toFixed(2)}%
+                            </span>
+                          </div>
+                        </td>
 
-                      <td className="py-3 w-1/4">
-                        <div className="flex flex-col">
-                          <span className="text-gray-400 text-xxs">5Y</span>
-                          <span>
-                            {Number(companySummary.cagr5Y)
-                              ? `${Number(companySummary.cagr5Y).toFixed(2)}%`
-                              : "-"}
-                          </span>
-                        </div>
-                      </td>
+                        <td className="py-3 w-1/3">
+                          <div className="flex flex-col">
+                            <span className="text-gray-400 text-xxs">
+                              1 Year
+                            </span>
+                            <span>
+                              {Number(companySummary.cl1yPerChange).toFixed(2)}%
+                            </span>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr className="border-b border-zinc-700">
+                        <td className="py-3 w-1/4">
+                          <div className="flex flex-col">
+                            <span className="text-gray-400 text-xxs">3Y</span>
+                            <span>
+                              {Number(companySummary.cagr3Y)
+                                ? `${Number(companySummary.cagr3Y).toFixed(2)}%`
+                                : "-"}
+                            </span>
+                          </div>
+                        </td>
 
-                      <td className="py-3 w-1/4">
-                        <div className="flex flex-col">
-                          <span className="text-gray-400 text-xxs">7Y</span>
-                          <span>
-                            {Number(companySummary.cagr7Y)
-                              ? `${Number(companySummary.cagr7Y).toFixed(2)}%`
-                              : "-"}
-                          </span>
-                        </div>
-                      </td>
-                      <td className="py-3 w-1/4">
-                        <div className="flex flex-col">
-                          <span className="text-gray-400 text-xxs">10Y</span>
-                          <span>
-                            {Number(companySummary.cagr10Y)
-                              ? `${Number(companySummary.cagr10Y).toFixed(2)}%`
-                              : "-"}
-                          </span>
-                        </div>
-                      </td>
-                    </tr>
+                        <td className="py-3 w-1/4">
+                          <div className="flex flex-col">
+                            <span className="text-gray-400 text-xxs">5Y</span>
+                            <span>
+                              {Number(companySummary.cagr5Y)
+                                ? `${Number(companySummary.cagr5Y).toFixed(2)}%`
+                                : "-"}
+                            </span>
+                          </div>
+                        </td>
 
-                    <tr>
-                      <td colSpan={6} className="py-3">
-                        <div className="flex flex-col">
-                          <span className="text-gray-400 text-xxs">Sector</span>
-                          <span>{companySummary.SC_SUBSEC}</span>
-                        </div>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
+                        <td className="py-3 w-1/4">
+                          <div className="flex flex-col">
+                            <span className="text-gray-400 text-xxs">7Y</span>
+                            <span>
+                              {Number(companySummary.cagr7Y)
+                                ? `${Number(companySummary.cagr7Y).toFixed(2)}%`
+                                : "-"}
+                            </span>
+                          </div>
+                        </td>
+                        <td className="py-3 w-1/4">
+                          <div className="flex flex-col">
+                            <span className="text-gray-400 text-xxs">10Y</span>
+                            <span>
+                              {Number(companySummary.cagr10Y)
+                                ? `${Number(companySummary.cagr10Y).toFixed(
+                                    2
+                                  )}%`
+                                : "-"}
+                            </span>
+                          </div>
+                        </td>
+                      </tr>
+                    </>
+                  )}
+
+                  <tr>
+                    <td colSpan={6} className="py-3 pb-0">
+                      <div className="flex flex-col">
+                        <span className="text-gray-400 text-xxs">Sector</span>
+                        <span>{info.info.sector}</span>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
-          )}
+          </div>
 
           <div className="py-4">
             <h2 className="text-2xl font-bold mb-4">Holding</h2>
