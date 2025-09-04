@@ -408,7 +408,7 @@ export default function HomePage() {
             icon="pi pi-search"
             iconPos="right"
             size="small"
-            className="!bg-[#d60017] !text-white !border-none"
+            className="!bg-[#fa233b] !text-white !border-none"
           />
 
           <Button
@@ -422,7 +422,7 @@ export default function HomePage() {
             icon="pi pi-compass"
             iconPos="right"
             size="small"
-            className="!bg-[#d60017] !text-white !border-none"
+            className="!bg-[#fa233b] !text-white !border-none"
           />
         </div>
 
@@ -434,38 +434,38 @@ export default function HomePage() {
               onClick={() => sortBy("name")}
               label="Name"
               size="small"
-              className="!bg-[#d60017] !text-white !border-none"
+              className="!bg-[#fa233b] !text-white !border-none"
             />
             <Button
               onClick={() => sortBy("change")}
               label="1 Day Change"
               size="small"
-              className="!bg-[#d60017] !text-white !border-none"
+              className="!bg-[#fa233b] !text-white !border-none"
             />
             <Button
               onClick={() => sortBy("valuation")}
               label="Market Cap"
               size="small"
-              className="!bg-[#d60017] !text-white !border-none"
+              className="!bg-[#fa233b] !text-white !border-none"
             />
 
             <Button
               onClick={() => sortBy("pe")}
               label="PE"
               size="small"
-              className="!bg-[#d60017] !text-white !border-none"
+              className="!bg-[#fa233b] !text-white !border-none"
             />
             <Button
               onClick={() => sortBy("sectorPe")}
               label="Sector PE"
               size="small"
-              className="!bg-[#d60017] !text-white !border-none"
+              className="!bg-[#fa233b] !text-white !border-none"
             />
             <Button
               onClick={() => sortBy("closenessToLow")}
               label="From 52W Low"
               size="small"
-              className="!bg-[#d60017] !text-white !border-none"
+              className="!bg-[#fa233b] !text-white !border-none"
             />
           </div>
         </div>
