@@ -31,6 +31,10 @@ const Header = ({ user }) => {
         localStorage.removeItem(key);
       }
     });
+
+    setVisible(false);
+
+    window.location.reload();
   };
 
   return (
@@ -42,20 +46,37 @@ const Header = ({ user }) => {
               visible={visible}
               onHide={() => setVisible(false)}
               style={{
-                backgroundColor: "#2e2e2e",
+                backgroundColor: "#101010",
                 border: "none"
               }}
             >
               <h1 className="text-2xl mb-2">
-                Welcome, {user.displayName || user.email}
+                Welcome,{" "}
+                {`${user.displayName.split(" ")[0]}!` || `${user.email}`}
               </h1>
 
-              <div>
-                <Button onClick={clearCache}>Clear Cache</Button>
-              </div>
+              <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-1 max-w-5xl mx-auto mb-4">
+                <Button
+                  label="Clear cache"
+                  onClick={clearCache}
+                  size="small"
+                  style={{
+                    backgroundColor: "#d60017",
+                    color: "#ffffff",
+                    border: "none"
+                  }}
+                />
 
-              <div>
-                <Button onClick={handleLogout}>Logout</Button>
+                <Button
+                  label="Logout"
+                  onClick={handleLogout}
+                  size="small"
+                  style={{
+                    backgroundColor: "#d60017",
+                    color: "#ffffff",
+                    border: "none"
+                  }}
+                />
               </div>
             </Sidebar>
 
