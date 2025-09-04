@@ -18,11 +18,11 @@ const Header = ({ user }) => {
   };
 
   const handleBack = () => {
-    if (window.history.length > 1) {
-      router.back();
-    } else {
-      router.push("/home");
-    }
+    // if (window.history.length > 1) {
+    //   router.back();
+    // } else {
+    router.push("/home");
+    // }
   };
 
   const clearCache = () => {

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useTransition } from "react";
 import axios from "axios";
 import { Line, Bar } from "react-chartjs-2";
 import {
@@ -20,6 +20,7 @@ import { formatIndianCurrency } from "@/utils/formatIndianCurrency";
 import annotationPlugin from "chartjs-plugin-annotation";
 import { useGlobalStore } from "@/store/globalStore";
 import Spinner from "@/components/Spinner";
+import { useRouter } from "next/navigation";
 
 const crosshairLinePlugin = {
   id: "crosshairLine",
@@ -82,6 +83,10 @@ export default function Chart({ companyId }) {
   const [info, setInfo] = useState(null);
 
   const companySummary = useGlobalStore((state) => state.companySummary);
+  const setCompanySummary = useGlobalStore((state) => state.setCompanySummary);
+
+  const [isPending, startTransition] = useTransition();
+  const router = useRouter();
 
   useEffect(() => {
     const base = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
@@ -140,7 +145,7 @@ export default function Chart({ companyId }) {
 
   if (err) return <div>Error: {err}</div>;
 
-  if (!data || !summary || !info)
+  if (!data || !summary || !info || isPending)
     return (
       <div
         className="flex justify-center items-center bg-[var(--background)]"
@@ -326,6 +331,12 @@ export default function Chart({ companyId }) {
         display: false
       }
     }
+  };
+
+  const handleCardClick = async (detailsId) => {
+    startTransition(() => {
+      router.push(`/home/${detailsId}`);
+    });
   };
 
   return (
@@ -807,7 +818,8 @@ export default function Chart({ companyId }) {
                         onClick={() => {
                           if (index === 0) return;
 
-                          console.log("Clicked:", stock.sid);
+                          handleCardClick(stock.sid);
+                          setCompanySummary({});
                         }}
                       >
                         <td className="px-4 py-3">
