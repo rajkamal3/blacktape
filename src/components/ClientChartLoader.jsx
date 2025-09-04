@@ -77,8 +77,8 @@ export default function Chart({ companyId }) {
     resistanceZones: [],
     highlightedZones: []
   });
-  const [financals, setFinancials] = useState(null);
-  const [financalsQuarterly, setFinancialsQuarterly] = useState(null);
+  const [financials, setFinancials] = useState(null);
+  const [financialsQuarterly, setFinancialsQuarterly] = useState(null);
   const [summary, setSummary] = useState(null);
   const [info, setInfo] = useState(null);
 
@@ -145,7 +145,17 @@ export default function Chart({ companyId }) {
 
   if (err) return <div>Error: {err}</div>;
 
-  if (!data || !summary || !info || isPending)
+  if (
+    companyId === "NBES" ||
+    companyId === "JBES" ||
+    companyId === "NTFM" ||
+    companyId === ".NSEI" ||
+    companyId === ".NN50" ||
+    companyId === ".NIMI150" ||
+    companyId === ".NISM250"
+      ? !data
+      : !data || !summary || !info || isPending
+  ) {
     return (
       <div
         className="flex justify-center items-center bg-[var(--background)]"
@@ -156,6 +166,7 @@ export default function Chart({ companyId }) {
         <Spinner />
       </div>
     );
+  }
 
   const labels = data.points.map((d) =>
     new Date(d.ts).toLocaleDateString("en-IN")
@@ -182,32 +193,32 @@ export default function Chart({ companyId }) {
   }));
 
   const financialsData = {
-    labels: financals?.map((d) => d.displayPeriod),
+    labels: financials?.map((d) => d.displayPeriod),
     datasets: [
       {
         label: "Revenue",
-        data: financals?.map((d) => d.incTrev),
+        data: financials?.map((d) => d.incTrev),
         backgroundColor: "#696969"
       },
       {
         label: "Net Income",
-        data: financals?.map((d) => d.incNinc),
+        data: financials?.map((d) => d.incNinc),
         backgroundColor: "#cbcbcb"
       }
     ]
   };
 
   const financialsQuarterlyData = {
-    labels: financalsQuarterly?.map((d) => d.displayPeriod),
+    labels: financialsQuarterly?.map((d) => d.displayPeriod),
     datasets: [
       {
         label: "Revenue",
-        data: financalsQuarterly?.map((d) => d.qIncTrev),
+        data: financialsQuarterly?.map((d) => d.qIncTrev),
         backgroundColor: "#696969"
       },
       {
         label: "Net Income",
-        data: financalsQuarterly?.map((d) => d.qIncNinc),
+        data: financialsQuarterly?.map((d) => d.qIncNinc),
         backgroundColor: "#cbcbcb"
       }
     ]
@@ -381,14 +392,18 @@ export default function Chart({ companyId }) {
         </div>
 
         <div>
-          {companyId === ".NSEI" ||
-          companyId === ".NN50" ||
-          companyId === ".NIMI150" ||
-          companyId === ".NISM250" ? (
+          {[".NSEI", ".NN50", ".NIMI150", ".NISM250"].includes(companyId) ? (
             <h2 className="text-lg font-bold mb-4">
               {formatIndianCurrency(
                 data.points[data.points.length - 1].lp,
                 false
+              )}
+            </h2>
+          ) : ["NBES", "JBES", "NTFM"].includes(companyId) ? (
+            <h2 className="text-lg font-bold mb-4">
+              {formatIndianCurrency(
+                data.points[data.points.length - 1].lp,
+                true
               )}
             </h2>
           ) : (
