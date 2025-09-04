@@ -824,7 +824,7 @@ export default function Chart({ companyId }) {
             <div className="py-4">
               <h2 className="text-2xl font-bold mb-4">Brands</h2>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {summary?.brands.map((brand) => (
                   <div
                     key={brand.brandId}
@@ -836,6 +836,33 @@ export default function Chart({ companyId }) {
                     </p>
                   </div>
                 ))}
+              </div> */}
+              <div className="overflow-x-auto rounded-lg shadow text-xs">
+                <table className="min-w-full bg-gray-900 text-gray-100">
+                  <thead className="bg-[#2d2d2d]">
+                    <tr>
+                      <th className="px-4 py-3 text-left font-semibold">
+                        Brand
+                      </th>
+                      <th className="px-4 py-3 text-left font-semibold">
+                        Category
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="bg-[#101010]">
+                    {summary?.brands.map((brand) => (
+                      <tr
+                        key={brand.brandId}
+                        className="border-t border-[#2d2d2d]"
+                      >
+                        <td className="px-4 py-3">{brand.name}</td>
+                        <td className="px-4 py-3 text-left">
+                          {brand.description}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
             </div>
           )}
