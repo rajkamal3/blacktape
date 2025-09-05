@@ -655,7 +655,14 @@ export default function HomePage() {
                       </div>
                     </td>
 
-                    <td className="py-3 w-1/3"></td>
+                    <td className="py-3 w-1/3">
+                      <div className="flex flex-col">
+                        <span className="text-gray-400 text-xxs">
+                          Book Value
+                        </span>
+                        <span>{formatIndianCurrency(Number(item.BV))}</span>
+                      </div>
+                    </td>
                   </tr>
 
                   <tr>

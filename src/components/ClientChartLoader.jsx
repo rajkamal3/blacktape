@@ -684,18 +684,22 @@ export default function Chart({ companyId }) {
                   <tr className="border-b border-zinc-700">
                     <td className="py-3">
                       <div className="flex flex-col">
-                        <span className="text-gray-400 text-xxs">PB</span>
-                        <span>{formatIndianCurrency(info.ratios.pb)}</span>
-                      </div>
-                    </td>
-                    <td className="py-3">
-                      <div className="flex flex-col">
-                        <span className="text-gray-400 text-xxs">BV</span>
+                        <span className="text-gray-400 text-xxs">
+                          Book Value
+                        </span>
                         <span>
                           {formatIndianCurrency(
                             info.ratios.lastPrice / info.ratios.pb
                           )}
                         </span>
+                      </div>
+                    </td>
+                    <td className="py-3">
+                      <div className="flex flex-col">
+                        <span className="text-gray-400 text-xxs">
+                          P/B Ratio
+                        </span>
+                        <span>{formatIndianCurrency(info.ratios.pb)}</span>
                       </div>
                     </td>
                   </tr>
