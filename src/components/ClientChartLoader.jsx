@@ -483,12 +483,12 @@ export default function Chart({ companyId }) {
 
         <div className="py-4 max-w-6xl mx-auto">
           <h2 className="text-2xl font-bold mb-4">Support Zones</h2>
-          <div className="overflow-x-auto">
-            <table className="table-auto w-full border border-green-500 text-black">
-              <thead>
-                <tr className="bg-green-200">
-                  <th className="border px-4 py-2">Zone</th>
-                  <th className="border px-4 py-2">Fall</th>
+          <div className="overflow-x-auto rounded-lg">
+            <table className="table-auto w-full border-green-500 text-gray-100">
+              <thead className="bg-[#2d2d2d]">
+                <tr>
+                  <th className="px-4 py-2 text-left">Zone</th>
+                  <th className="px-4 py-2 text-left">Fall</th>
                   {!(
                     companyId === "NBES" ||
                     companyId === "JBES" ||
@@ -497,28 +497,28 @@ export default function Chart({ companyId }) {
                     companyId === ".NN50" ||
                     companyId === ".NIMI150" ||
                     companyId === ".NISM250"
-                  ) && <th className="border px-4 py-2">PE</th>}
+                  ) && <th className="px-4 py-2 text-left">PE</th>}
                 </tr>
               </thead>
-              <tbody>
+              <tbody className="bg-[#101010]">
                 {supportLevels.supportZones.map((zone, index) => (
                   <tr
                     key={index}
-                    className={`bg-green-100 text-black ${
+                    className={`${
                       zone.confirmedResistance
-                        ? "border-4 border-green-600"
-                        : ""
+                        ? "border-3 border-[#8cff5c]"
+                        : "border-t border-[#2d2d2d]"
                     }`}
                   >
                     {companyId === ".NSEI" ||
                     companyId === ".NN50" ||
                     companyId === ".NIMI150" ||
                     companyId === ".NISM250" ? (
-                      <td className="border px-4 py-2">
+                      <td className="px-4 py-2">
                         {formatIndianCurrency(zone.zone, false)}
                       </td>
                     ) : (
-                      <td className="border px-4 py-2">
+                      <td className="px-4 py-2">
                         {formatIndianCurrency(zone.zone)}
                       </td>
                     )}
@@ -530,7 +530,7 @@ export default function Chart({ companyId }) {
                     companyId === ".NN50" ||
                     companyId === ".NIMI150" ||
                     companyId === ".NISM250" ? (
-                      <td className="border px-4 py-2">
+                      <td className="px-4 py-2">
                         {data.points[data.points.length - 1].lp
                           ? `${(
                               ((data.points[data.points.length - 1].lp -
@@ -541,7 +541,7 @@ export default function Chart({ companyId }) {
                           : `-`}
                       </td>
                     ) : (
-                      <td className="border px-4 py-2">
+                      <td className="px-4 py-2">
                         {info.ratios.lastPrice
                           ? `${(
                               ((info.ratios.lastPrice - zone.zone) /
@@ -561,7 +561,7 @@ export default function Chart({ companyId }) {
                       companyId === ".NIMI150" ||
                       companyId === ".NISM250"
                     ) && (
-                      <td className="border px-4 py-2">
+                      <td className="px-4 py-2 text-left">
                         {(
                           info.ratios.apef.toFixed(2) -
                           (info.ratios.apef.toFixed(2) *
