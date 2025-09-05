@@ -619,6 +619,42 @@ export default function Chart({ companyId }) {
                   <tr className="border-b border-zinc-700">
                     <td className="py-3 w-1/3">
                       <div className="flex flex-col">
+                        <span className="text-gray-400 text-xxs">52W Low</span>
+                        <span>
+                          {formatIndianCurrency(info.ratios["52wLow"])}
+                        </span>
+                      </div>
+                    </td>
+
+                    <td className="py-3 w-1/3">
+                      <div className="flex flex-col">
+                        <span className="text-gray-400 text-xxs">
+                          From 52W Low
+                        </span>
+                        <span>
+                          {(
+                            ((info.ratios.lastPrice - info.ratios["52wLow"]) /
+                              info.ratios["52wLow"]) *
+                            100
+                          ).toFixed(2)}
+                          %
+                        </span>
+                      </div>
+                    </td>
+
+                    <td className="py-3 w-1/3">
+                      <div className="flex flex-col">
+                        <span className="text-gray-400 text-xxs">52W High</span>
+                        <span>
+                          {formatIndianCurrency(info.ratios["52wHigh"])}
+                        </span>
+                      </div>
+                    </td>
+                  </tr>
+
+                  <tr className="border-b border-zinc-700">
+                    <td className="py-3 w-1/3">
+                      <div className="flex flex-col">
                         <span className="text-gray-400 text-xxs">
                           Valuation (Cr)
                         </span>
@@ -646,42 +682,6 @@ export default function Chart({ companyId }) {
                   </tr>
 
                   <tr className="border-b border-zinc-700">
-                    <td className="py-3 w-1/3">
-                      <div className="flex flex-col">
-                        <span className="text-gray-400 text-xxs">52W High</span>
-                        <span>
-                          {formatIndianCurrency(info.ratios["52wHigh"])}
-                        </span>
-                      </div>
-                    </td>
-
-                    <td className="py-3 w-1/3">
-                      <div className="flex flex-col">
-                        <span className="text-gray-400 text-xxs">52W Low</span>
-                        <span>
-                          {formatIndianCurrency(info.ratios["52wLow"])}
-                        </span>
-                      </div>
-                    </td>
-
-                    <td className="py-3 w-1/3">
-                      <div className="flex flex-col">
-                        <span className="text-gray-400 text-xxs">
-                          From 52W Low
-                        </span>
-                        <span>
-                          {(
-                            ((info.ratios.lastPrice - info.ratios["52wLow"]) /
-                              info.ratios["52wLow"]) *
-                            100
-                          ).toFixed(2)}
-                          %
-                        </span>
-                      </div>
-                    </td>
-                  </tr>
-
-                  <tr className="border-b border-zinc-700">
                     <td className="py-3">
                       <div className="flex flex-col">
                         <span className="text-gray-400 text-xxs">
@@ -694,12 +694,26 @@ export default function Chart({ companyId }) {
                         </span>
                       </div>
                     </td>
+
                     <td className="py-3">
                       <div className="flex flex-col">
                         <span className="text-gray-400 text-xxs">
                           P/B Ratio
                         </span>
                         <span>{formatIndianCurrency(info.ratios.pb)}</span>
+                      </div>
+                    </td>
+
+                    <td className="py-3">
+                      <div className="flex flex-col">
+                        <span className="text-gray-400 text-xxs">
+                          P/B Valuation (Cr)
+                        </span>
+                        <span>
+                          {formatIndianCurrency(
+                            info.ratios.marketCap / info.ratios.pb
+                          )}
+                        </span>
                       </div>
                     </td>
                   </tr>
