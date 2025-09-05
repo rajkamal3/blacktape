@@ -344,6 +344,14 @@ export default function HomePage() {
       setSortOrderAsc(!sortOrderAsc);
     }
 
+    if (target === "pbRatio") {
+      sorted = [...parsedData].sort((a, b) => {
+        return sortOrderAsc ? a.PB - b.PB : b.PB - a.PB;
+      });
+
+      setSortOrderAsc(!sortOrderAsc);
+    }
+
     setDataList(sorted);
 
     localStorage.setItem(
@@ -464,6 +472,12 @@ export default function HomePage() {
             <Button
               onClick={() => sortBy("closenessToLow")}
               label="From 52W Low"
+              size="small"
+              className="!bg-[#252525] !text-white !border-none"
+            />
+            <Button
+              onClick={() => sortBy("pbRatio")}
+              label="P/B Ratio"
               size="small"
               className="!bg-[#252525] !text-white !border-none"
             />
