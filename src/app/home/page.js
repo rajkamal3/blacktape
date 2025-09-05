@@ -408,7 +408,7 @@ export default function HomePage() {
             icon="pi pi-search"
             iconPos="right"
             size="small"
-            className="!bg-[#fa233b] !text-white !border-none"
+            className="!bg-[#252525] !text-white !border-none"
           />
 
           <Button
@@ -422,7 +422,7 @@ export default function HomePage() {
             icon="pi pi-compass"
             iconPos="right"
             size="small"
-            className="!bg-[#fa233b] !text-white !border-none"
+            className="!bg-[#252525] !text-white !border-none"
           />
         </div>
 
@@ -434,38 +434,38 @@ export default function HomePage() {
               onClick={() => sortBy("name")}
               label="Name"
               size="small"
-              className="!bg-[#fa233b] !text-white !border-none"
+              className="!bg-[#252525] !text-white !border-none"
             />
             <Button
               onClick={() => sortBy("change")}
               label="1 Day Change"
               size="small"
-              className="!bg-[#fa233b] !text-white !border-none"
+              className="!bg-[#252525] !text-white !border-none"
             />
             <Button
               onClick={() => sortBy("valuation")}
               label="Market Cap"
               size="small"
-              className="!bg-[#fa233b] !text-white !border-none"
+              className="!bg-[#252525] !text-white !border-none"
             />
 
             <Button
               onClick={() => sortBy("pe")}
               label="PE"
               size="small"
-              className="!bg-[#fa233b] !text-white !border-none"
+              className="!bg-[#252525] !text-white !border-none"
             />
             <Button
               onClick={() => sortBy("sectorPe")}
               label="Sector PE"
               size="small"
-              className="!bg-[#fa233b] !text-white !border-none"
+              className="!bg-[#252525] !text-white !border-none"
             />
             <Button
               onClick={() => sortBy("closenessToLow")}
               label="From 52W Low"
               size="small"
-              className="!bg-[#fa233b] !text-white !border-none"
+              className="!bg-[#252525] !text-white !border-none"
             />
           </div>
         </div>
@@ -478,49 +478,49 @@ export default function HomePage() {
               onClick={() => handleCardClick({ detailsId: ".NSEI" })}
               size="small"
               label="Nifty 50"
-              className="whitespace-nowrap !bg-[#d60017] !text-white !border-none"
+              className="whitespace-nowrap !bg-[#252525] !text-white !border-none"
             />
 
             <Button
               onClick={() => handleCardClick({ detailsId: "NBES" })}
               size="small"
               label="NIFTYBEES"
-              className="whitespace-nowrap !bg-[#d60017] !text-white !border-none"
+              className="whitespace-nowrap !bg-[#252525] !text-white !border-none"
             />
 
             <Button
               onClick={() => handleCardClick({ detailsId: ".NN50" })}
               size="small"
               label="Nifty Next 50"
-              className="whitespace-nowrap !bg-[#d60017] !text-white !border-none"
+              className="whitespace-nowrap !bg-[#252525] !text-white !border-none"
             />
 
             <Button
               onClick={() => handleCardClick({ detailsId: "JBES" })}
               size="small"
               label="JUNIORBEES"
-              className="whitespace-nowrap !bg-[#d60017] !text-white !border-none"
+              className="whitespace-nowrap !bg-[#252525] !text-white !border-none"
             />
 
             <Button
               onClick={() => handleCardClick({ detailsId: ".NIMI150" })}
               size="small"
               label="Nifty Midcap 150"
-              className="whitespace-nowrap !bg-[#d60017] !text-white !border-none"
+              className="whitespace-nowrap !bg-[#252525] !text-white !border-none"
             />
 
             <Button
               onClick={() => handleCardClick({ detailsId: "NTFM" })}
               size="small"
               label="MID150BEES"
-              className="whitespace-nowrap !bg-[#d60017] !text-white !border-none"
+              className="whitespace-nowrap !bg-[#252525] !text-white !border-none"
             />
 
             <Button
               onClick={() => handleCardClick({ detailsId: ".NISM250" })}
               size="small"
               label="Nifty Smallcap 250"
-              className="whitespace-nowrap !bg-[#d60017] !text-white !border-none"
+              className="whitespace-nowrap !bg-[#252525] !text-white !border-none"
             />
           </div>
         </div>
