@@ -722,6 +722,17 @@ export default function HomePage() {
                         <span>{item.PB}</span>
                       </div>
                     </td>
+
+                    <td className="py-3 pb-0 pt-0 w-1/3">
+                      <div className="flex flex-col">
+                        <span className="text-gray-400 text-xxs">
+                          P/B Valuation (Cr)
+                        </span>
+                        <span>
+                          {formatIndianCurrency(item.MKTCAP / item.PB)}
+                        </span>
+                      </div>
+                    </td>
                   </tr>
                 </tbody>
               </table>
