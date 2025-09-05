@@ -607,9 +607,17 @@ export default function HomePage() {
                 color: "#ffffff"
               }}
             >
-              <h2 className="text-md font-semibold border-b border-zinc-700 pb-2">
-                {item.SC_FULLNM || "Unnamed Entity"}
-              </h2>
+              <div className="border-b border-zinc-700 pb-2">
+                <h2 className="text-md font-semibold">
+                  {item.SC_FULLNM || "Unnamed Entity"}
+                </h2>
+
+                <h2 className="text-xs font-semibold">
+                  {`${formatIndianCurrency(item.pricecurrent)} (${Number(
+                    item.pricepercentchange
+                  ).toFixed(2)}%)`}
+                </h2>
+              </div>
 
               {/* <div className="grid gap-y-2 text-sm">
                 <Stat
@@ -641,31 +649,38 @@ export default function HomePage() {
                   <tr>
                     <td className="py-3 w-1/3">
                       <div className="flex flex-col">
-                        <span className="text-gray-400 text-xxs">LTP</span>
-                        <span>{formatIndianCurrency(item.pricecurrent)}</span>
+                        <span className="text-gray-400 text-xxs">
+                          Valuation (Cr)
+                        </span>
+                        <span>{formatIndianCurrency(item.MKTCAP)}</span>
                       </div>
                     </td>
 
                     <td className="py-3 w-1/3">
                       <div className="flex flex-col">
-                        <span className="text-gray-400 text-xxs">Change</span>
-                        <span>
-                          {Number(item.pricepercentchange).toFixed(2)}%
-                        </span>
+                        <span className="text-gray-400 text-xxs">PE</span>
+                        <span>{item.PE}</span>
                       </div>
                     </td>
 
                     <td className="py-3 w-1/3">
                       <div className="flex flex-col">
                         <span className="text-gray-400 text-xxs">
-                          Book Value
+                          Sector PE
                         </span>
-                        <span>{formatIndianCurrency(Number(item.BV))}</span>
+                        <span>{item.IND_PE}</span>
                       </div>
                     </td>
                   </tr>
 
                   <tr>
+                    <td className="py-3 pt-0 w-1/3">
+                      <div className="flex flex-col">
+                        <span className="text-gray-400 text-xxs">52W High</span>
+                        <span>{formatIndianCurrency(item["52H"])}</span>
+                      </div>
+                    </td>
+
                     <td className="py-3 pt-0 w-1/3">
                       <div className="flex flex-col">
                         <span className="text-gray-400 text-xxs">52W Low</span>
@@ -687,38 +702,24 @@ export default function HomePage() {
                         </span>
                       </div>
                     </td>
-
-                    <td className="py-3 pt-0 w-1/3">
-                      <div className="flex flex-col">
-                        <span className="text-gray-400 text-xxs">52W High</span>
-                        <span>{formatIndianCurrency(item["52H"])}</span>
-                      </div>
-                    </td>
                   </tr>
 
                   <tr>
                     <td className="py-3 pb-0 pt-0 w-1/3">
                       <div className="flex flex-col">
                         <span className="text-gray-400 text-xxs">
-                          Valuation (Cr)
+                          Book Value
                         </span>
-                        <span>{formatIndianCurrency(item.MKTCAP)}</span>
-                      </div>
-                    </td>
-
-                    <td className="py-3 pb-0 pt-0 w-1/3">
-                      <div className="flex flex-col">
-                        <span className="text-gray-400 text-xxs">PE</span>
-                        <span>{item.PE}</span>
+                        <span>{formatIndianCurrency(Number(item.BV))}</span>
                       </div>
                     </td>
 
                     <td className="py-3 pb-0 pt-0 w-1/3">
                       <div className="flex flex-col">
                         <span className="text-gray-400 text-xxs">
-                          Sector PE
+                          P/B Ratio
                         </span>
-                        <span>{item.IND_PE}</span>
+                        <span>{item.PB}</span>
                       </div>
                     </td>
                   </tr>
