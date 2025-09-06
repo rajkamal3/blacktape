@@ -2,8 +2,6 @@ import React from "react";
 import { Dialog } from "primereact/dialog";
 
 const AddCompanyDialog = ({ visible, selectedIndex, setVisible }) => {
-  console.log(selectedIndex);
-
   return (
     <div className="card flex justify-content-center">
       <Dialog

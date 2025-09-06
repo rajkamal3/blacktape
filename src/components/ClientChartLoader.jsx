@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useTransition } from "react";
 import axios from "axios";
-import { Line } from "react-chartjs-2";
+import { Line, Bar } from "react-chartjs-2";
 import {
   Chart as ChartJS,
   LineElement,
@@ -10,23 +10,46 @@ import {
   LinearScale,
   PointElement,
   Tooltip,
-  Legend
+  Legend,
+  Filler,
+  BarElement,
+  Title
 } from "chart.js";
+import { findSupportLevels } from "@/utils/findSupportLevels";
+import { formatIndianCurrency } from "@/utils/formatIndianCurrency";
+import annotationPlugin from "chartjs-plugin-annotation";
+import { useGlobalStore } from "@/store/globalStore";
+import Spinner from "@/components/Spinner";
+import { useRouter } from "next/navigation";
 
-const horizontalLinePlugin = {
-  id: "horizontalLine",
+const crosshairLinePlugin = {
+  id: "crosshairLine",
   afterDraw: (chart) => {
     if (chart.tooltip?._active && chart.tooltip._active.length) {
       const ctx = chart.ctx;
-      const y = chart.tooltip._active[0].element.y;
+      const activePoint = chart.tooltip._active[0].element;
+
+      if (!activePoint) return;
+
+      const x = activePoint.x;
+      const y = activePoint.y;
 
       ctx.save();
+
       ctx.beginPath();
       ctx.moveTo(chart.chartArea.left, y);
       ctx.lineTo(chart.chartArea.right, y);
       ctx.lineWidth = 1;
-      ctx.strokeStyle = "green";
+      ctx.strokeStyle = "#505050";
       ctx.stroke();
+
+      ctx.beginPath();
+      ctx.moveTo(x, chart.chartArea.top);
+      ctx.lineTo(x, chart.chartArea.bottom);
+      ctx.lineWidth = 1;
+      ctx.strokeStyle = "#505050";
+      ctx.stroke();
+
       ctx.restore();
     }
   }
@@ -36,70 +59,895 @@ ChartJS.register(
   LineElement,
   CategoryScale,
   LinearScale,
+  BarElement,
+  Title,
   PointElement,
   Tooltip,
   Legend,
-  horizontalLinePlugin
+  Filler,
+  crosshairLinePlugin,
+  annotationPlugin
 );
 
 export default function Chart({ companyId }) {
   const [data, setData] = useState(null);
   const [err, setErr] = useState(null);
+  const [supportLevels, setSupportLevels] = useState({
+    supportZones: [],
+    resistanceZones: [],
+    highlightedZones: []
+  });
+  const [financials, setFinancials] = useState(null);
+  const [financialsQuarterly, setFinancialsQuarterly] = useState(null);
+  const [summary, setSummary] = useState(null);
+  const [info, setInfo] = useState(null);
+
+  const companySummary = useGlobalStore((state) => state.companySummary);
+  const setCompanySummary = useGlobalStore((state) => state.setCompanySummary);
+
+  const [isPending, startTransition] = useTransition();
+  const router = useRouter();
 
   useEffect(() => {
     const base = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+
     axios
-      .get(`${base}/api/proxy?id=${companyId}`)
-      .then((res) => setData(res.data?.data?.[0]))
+      .get(`${base}/api/proxy?id=${companyId}&type=chart`)
+      .then((res) => {
+        setData(res.data?.data?.[0]);
+        return res.data?.data?.[0];
+      })
+      .then((res) => {
+        const supports = findSupportLevels(res.points);
+        setSupportLevels(supports);
+      })
+      .catch((error) => setErr(error.message));
+
+    if (
+      companyId === "NBES" ||
+      companyId === "JBES" ||
+      companyId === "NTFM" ||
+      companyId === ".NSEI" ||
+      companyId === ".NN50" ||
+      companyId === ".NIMI150" ||
+      companyId === ".NISM250"
+    )
+      return;
+
+    axios
+      .get(`${base}/api/proxy?id=${companyId}&type=financials`)
+      .then((res) => {
+        setFinancials(res.data?.data);
+      })
+      .catch((error) => setErr(error.message));
+
+    axios
+      .get(`${base}/api/proxy?id=${companyId}&type=financialsQuarterly`)
+      .then((res) => {
+        setFinancialsQuarterly(res.data?.data);
+      })
+      .catch((error) => setErr(error.message));
+
+    axios
+      .get(`${base}/api/proxy?id=${companyId}&type=summary`)
+      .then((res) => {
+        setSummary(res.data?.data);
+      })
+      .catch((error) => setErr(error.message));
+
+    axios
+      .get(`${base}/api/proxy?id=${companyId}&type=info`)
+      .then((res) => {
+        setInfo(res.data?.data);
+      })
       .catch((error) => setErr(error.message));
   }, [companyId]);
 
   if (err) return <div>Error: {err}</div>;
-  if (!data) return <div>Loading...</div>;
+
+  if (
+    companyId === "NBES" ||
+    companyId === "JBES" ||
+    companyId === "NTFM" ||
+    companyId === ".NSEI" ||
+    companyId === ".NN50" ||
+    companyId === ".NIMI150" ||
+    companyId === ".NISM250"
+      ? !data
+      : !data || !summary || !info || isPending
+  ) {
+    return (
+      <div
+        className="flex justify-center items-center bg-[var(--background)]"
+        style={{
+          height: "calc(100vh - 50px)"
+        }}
+      >
+        <Spinner />
+      </div>
+    );
+  }
 
   const labels = data.points.map((d) =>
     new Date(d.ts).toLocaleDateString("en-IN")
   );
+
   const prices = data.points.map((d) => d.lp);
 
-  return (
-    <div className="p-4 bg-white rounded-xl shadow-xl">
-      <h1>{data.r}</h1>
-      <h2>{data.sid}</h2>
-      <Line
-        data={{
-          labels,
-          datasets: [
-            {
-              label: "Closing Price (₹)",
-              data: prices,
-              borderColor: "#36A2EB",
-              backgroundColor: "rgba(54,162,235,0.2)",
-              fill: true,
-              tension: 0.4,
-              pointRadius: 0,
-              pointHoverRadius: 0,
-              borderWidth: 2
+  const supportAnnotations = supportLevels.supportZones.map((zone, idx) => ({
+    type: "line",
+    yMin: parseFloat(zone.zone),
+    yMax: parseFloat(zone.zone),
+    borderColor: zone.confirmedResistance
+      ? "rgba(0, 0, 0, 0.5)"
+      : "rgba(0, 0, 0, 0.25)",
+    borderWidth: zone.confirmedResistance ? 1 : 0.5,
+    label: {
+      display: true,
+      content: `${formatIndianCurrency(zone.zone)}`,
+      position: "start",
+      backgroundColor: "rgba(0, 0, 0, 0.0)",
+      color: "#000",
+      font: { size: 7 }
+    }
+  }));
+
+  const financialsData = {
+    labels: financials?.map((d) => d.displayPeriod),
+    datasets: [
+      {
+        label: "Revenue",
+        data: financials?.map((d) => d.incTrev),
+        backgroundColor: "#696969"
+      },
+      {
+        label: "Net Income",
+        data: financials?.map((d) => d.incNinc),
+        backgroundColor: "#cbcbcb"
+      }
+    ]
+  };
+
+  const financialsQuarterlyData = {
+    labels: financialsQuarterly?.map((d) => d.displayPeriod),
+    datasets: [
+      {
+        label: "Revenue",
+        data: financialsQuarterly?.map((d) => d.qIncTrev),
+        backgroundColor: "#696969"
+      },
+      {
+        label: "Net Income",
+        data: financialsQuarterly?.map((d) => d.qIncNinc),
+        backgroundColor: "#cbcbcb"
+      }
+    ]
+  };
+
+  const financialsOptions = {
+    responsive: true,
+    plugins: {
+      legend: {
+        display: false
+      },
+      tooltip: {
+        displayColors: false,
+        mode: "index",
+        intersect: false,
+        callbacks: {
+          label: function (context) {
+            const revenue =
+              context.chart.data.datasets[0].data[context.dataIndex];
+            const netProfit =
+              context.chart.data.datasets[1].data[context.dataIndex];
+
+            let percentage = 0;
+            if (revenue && netProfit) {
+              percentage = ((netProfit / revenue) * 100).toFixed(2);
             }
-          ]
-        }}
-        options={{
-          responsive: true,
-          plugins: {
-            legend: { display: false },
-            tooltip: { mode: "index", intersect: false }
-          },
-          scales: {
-            x: {
-              display: false
-            },
-            y: {
-              beginAtZero: false,
-              display: false
-            }
+
+            return context.dataset.label === "Revenue"
+              ? `Revenue: ${formatIndianCurrency(revenue)} Cr`
+              : `Net Profit: ${formatIndianCurrency(
+                  netProfit
+                )} Cr (${percentage}% of revenue)`;
           }
-        }}
-      />
+        },
+        titleFont: { family: "Inter, sans-serif" },
+        bodyFont: { family: "Inter, sans-serif" }
+      }
+    },
+    scales: {
+      x: {
+        stacked: true,
+        display: false
+      },
+      y: {
+        stacked: true,
+        beginAtZero: true,
+        display: false
+      }
+    }
+  };
+
+  const holdingsData = {
+    labels: summary?.holdings?.holdings?.map((h) => h.date),
+    datasets: [
+      {
+        label: "Promoter",
+        data: summary?.holdings?.holdings?.map((h) => h.data.pmPctT),
+        backgroundColor: "#525252"
+      },
+      {
+        label: "FIIs",
+        data: summary?.holdings?.holdings?.map((h) => h.data.fiPctT),
+        backgroundColor: "#727272"
+      },
+      {
+        label: "DIIs",
+        data: summary?.holdings?.holdings?.map((h) => h.data.othDiPctT),
+        backgroundColor: "#929292"
+      },
+      {
+        label: "MFs",
+        data: summary?.holdings?.holdings?.map((h) => h.data.mfPctT),
+        backgroundColor: "#a5a5a5"
+      },
+      {
+        label: "Retail",
+        data: summary?.holdings?.holdings?.map((h) => h.data.rOthPctT),
+        backgroundColor: "#b5b5b5"
+      }
+    ]
+  };
+
+  const holdingsOptions = {
+    responsive: true,
+    plugins: {
+      legend: {
+        display: false
+      },
+      tooltip: {
+        displayColors: false,
+        mode: "index",
+        intersect: false,
+        callbacks: {
+          title: (tooltipItems) => {
+            const date = new Date(tooltipItems[0].label);
+
+            return date.toLocaleDateString("en-US", {
+              month: "short",
+              day: "2-digit",
+              year: "numeric"
+            });
+          },
+          label: (context) => {
+            const value = context.parsed.y;
+
+            return `${context.dataset.label || "Value"}: ${value.toFixed(2)}%`;
+          }
+        },
+        titleFont: { family: "Inter, sans-serif" },
+        bodyFont: { family: "Inter, sans-serif" }
+      }
+    },
+    scales: {
+      x: {
+        stacked: false,
+        display: false
+      },
+      y: {
+        stacked: false,
+        beginAtZero: true,
+        display: false
+      }
+    }
+  };
+
+  const handleCardClick = async (detailsId) => {
+    startTransition(() => {
+      router.push(`/home/${detailsId}`);
+    });
+  };
+
+  return (
+    <div className="p-4 bg-[var(--background)]">
+      <div>
+        <div>
+          {companyId === "NBES" ||
+          companyId === "JBES" ||
+          companyId === "NTFM" ||
+          companyId === ".NSEI" ||
+          companyId === ".NN50" ||
+          companyId === ".NIMI150" ||
+          companyId === ".NISM250" ? (
+            <>
+              {companyId === "NBES" && (
+                <h2 className="text-2xl font-bold">NIFTYBEES</h2>
+              )}
+              {companyId === "JBES" && (
+                <h2 className="text-2xl font-bold">JUNIORBEES</h2>
+              )}
+              {companyId === "NTFM" && (
+                <h2 className="text-2xl font-bold">MID150BEES</h2>
+              )}
+              {companyId === ".NSEI" && (
+                <h2 className="text-2xl font-bold">Nifty 50</h2>
+              )}
+              {companyId === ".NN50" && (
+                <h2 className="text-2xl font-bold">Nifty Next 50</h2>
+              )}
+              {companyId === ".NIMI150" && (
+                <h2 className="text-2xl font-bold">Nifty Midcap 150</h2>
+              )}
+              {companyId === ".NISM250" && (
+                <h2 className="text-2xl font-bold">Nifty Smallcap 250</h2>
+              )}
+            </>
+          ) : (
+            <h2 className="text-2xl font-bold">
+              {info.info.name.replace("Ltd", "") || data.sid}
+            </h2>
+          )}
+        </div>
+
+        <div>
+          {[".NSEI", ".NN50", ".NIMI150", ".NISM250"].includes(companyId) ? (
+            <h2 className="text-lg font-bold mb-4">
+              {formatIndianCurrency(
+                data.points[data.points.length - 1].lp,
+                false
+              )}
+            </h2>
+          ) : ["NBES", "JBES", "NTFM"].includes(companyId) ? (
+            <h2 className="text-lg font-bold mb-4">
+              {formatIndianCurrency(
+                data.points[data.points.length - 1].lp,
+                true
+              )}
+            </h2>
+          ) : (
+            <h2 className="text-lg font-bold mb-4">
+              {formatIndianCurrency(info.ratios.lastPrice)}
+              {companySummary.pricepercentchange &&
+                ` (${Number(companySummary.pricepercentchange).toFixed(2)}%)`}
+            </h2>
+          )}
+        </div>
+
+        <div className="bg-white rounded-xl shadow-xl">
+          <Line
+            data={{
+              labels,
+              datasets: [
+                {
+                  label: "Closing Price (₹)",
+                  data: prices,
+                  borderColor: "#000000",
+                  backgroundColor: "rgba(30, 0, 0, 0.1)",
+                  fill: true,
+                  tension: 0.4,
+                  pointRadius: 0,
+                  pointHoverRadius: 0,
+                  borderWidth: 2
+                }
+              ]
+            }}
+            options={{
+              responsive: true,
+              plugins: {
+                legend: { display: false },
+                tooltip: {
+                  mode: "index",
+                  intersect: false,
+                  displayColors: false,
+                  backgroundColor: "rgba(0, 0, 0, 0.3)",
+                  titleColor: "#fff",
+                  bodyColor: "#fff",
+                  titleFont: {
+                    family: "Inter",
+                    size: 10
+                  },
+                  bodyFont: {
+                    family: "Inter",
+                    size: 10
+                  },
+                  callbacks: {
+                    label: function (context) {
+                      const price = context.formattedValue;
+                      return `₹${price}`;
+                    }
+                  }
+                },
+                annotation: {
+                  annotations: {
+                    ...supportAnnotations.reduce((acc, cur, i) => {
+                      acc[`support_${i}`] = cur;
+                      return acc;
+                    }, {})
+                  }
+                }
+              },
+              scales: {
+                x: {
+                  display: false
+                },
+                y: {
+                  beginAtZero: false,
+                  display: false
+                }
+              }
+            }}
+          />
+        </div>
+
+        <div className="py-4 max-w-6xl mx-auto">
+          <h2 className="text-2xl font-bold mb-4">Support Zones</h2>
+          <div className="overflow-x-auto rounded-lg">
+            <table className="table-auto w-full border-green-500 text-gray-100">
+              <thead className="bg-[#2d2d2d]">
+                <tr>
+                  <th className="px-4 py-2 text-left">Zone</th>
+                  <th className="px-4 py-2 text-left">Fall</th>
+                  {!(
+                    companyId === "NBES" ||
+                    companyId === "JBES" ||
+                    companyId === "NTFM" ||
+                    companyId === ".NSEI" ||
+                    companyId === ".NN50" ||
+                    companyId === ".NIMI150" ||
+                    companyId === ".NISM250"
+                  ) && <th className="px-4 py-2 text-left">PE</th>}
+                </tr>
+              </thead>
+              <tbody className="bg-[#101010]">
+                {supportLevels.supportZones.map((zone, index) => (
+                  <tr
+                    key={index}
+                    className={`${
+                      zone.confirmedResistance
+                        ? "border-3 border-[#8cff5c]"
+                        : "border-t border-[#2d2d2d]"
+                    }`}
+                  >
+                    {companyId === ".NSEI" ||
+                    companyId === ".NN50" ||
+                    companyId === ".NIMI150" ||
+                    companyId === ".NISM250" ? (
+                      <td className="px-4 py-2">
+                        {formatIndianCurrency(zone.zone, false)}
+                      </td>
+                    ) : (
+                      <td className="px-4 py-2">
+                        {formatIndianCurrency(zone.zone)}
+                      </td>
+                    )}
+
+                    {companyId === "NBES" ||
+                    companyId === "JBES" ||
+                    companyId === "NTFM" ||
+                    companyId === ".NSEI" ||
+                    companyId === ".NN50" ||
+                    companyId === ".NIMI150" ||
+                    companyId === ".NISM250" ? (
+                      <td className="px-4 py-2">
+                        {data.points[data.points.length - 1].lp
+                          ? `${(
+                              ((data.points[data.points.length - 1].lp -
+                                zone.zone) /
+                                data.points[data.points.length - 1].lp) *
+                              100
+                            ).toFixed(2)}%`
+                          : `-`}
+                      </td>
+                    ) : (
+                      <td className="px-4 py-2">
+                        {info.ratios.lastPrice
+                          ? `${(
+                              ((info.ratios.lastPrice - zone.zone) /
+                                info.ratios.lastPrice) *
+                              100
+                            ).toFixed(2)}%`
+                          : `-`}
+                      </td>
+                    )}
+
+                    {!(
+                      companyId === "NBES" ||
+                      companyId === "JBES" ||
+                      companyId === "NTFM" ||
+                      companyId === ".NSEI" ||
+                      companyId === ".NN50" ||
+                      companyId === ".NIMI150" ||
+                      companyId === ".NISM250"
+                    ) && (
+                      <td className="px-4 py-2 text-left">
+                        {(
+                          info.ratios.apef.toFixed(2) -
+                          (info.ratios.apef.toFixed(2) *
+                            (info.ratios.lastPrice - zone.zone)) /
+                            info.ratios.lastPrice
+                        ).toFixed(2)}
+                      </td>
+                    )}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      {companyId === "NBES" ||
+      companyId === "JBES" ||
+      companyId === "NTFM" ||
+      companyId === ".NSEI" ||
+      companyId === ".NN50" ||
+      companyId === ".NIMI150" ||
+      companyId === ".NISM250" ? (
+        <></>
+      ) : (
+        <div>
+          <div className="py-4">
+            <h2 className="text-2xl font-bold mb-4">Yearly Financials</h2>
+
+            <Bar data={financialsData} options={financialsOptions} />
+          </div>
+
+          <div className="py-4">
+            <h2 className="text-2xl font-bold mb-4">Quarterly Financials</h2>
+
+            <Bar data={financialsQuarterlyData} options={financialsOptions} />
+          </div>
+
+          <div className="py-4">
+            <h2 className="text-2xl font-bold mb-4">Snapshot</h2>
+
+            <div className="bg-[#101010] text-white p-6 rounded-xl shadow-lg">
+              <h2 className="text-l font-bold mb-1">
+                {info.info.name.replace("Ltd", "") || data.sid}
+              </h2>
+
+              <h2 className="text-sm font-bold mb-1">
+                {formatIndianCurrency(info.ratios.lastPrice)}
+                {companySummary.pricepercentchange &&
+                  ` (${Number(companySummary.pricepercentchange).toFixed(2)}%)`}
+              </h2>
+
+              <table className="w-full text-xs">
+                <tbody>
+                  <tr className="border-b border-zinc-700">
+                    <td className="py-3 w-1/3">
+                      <div className="flex flex-col">
+                        <span className="text-gray-400 text-xxs">52W Low</span>
+                        <span>
+                          {formatIndianCurrency(info.ratios["52wLow"])}
+                        </span>
+                      </div>
+                    </td>
+
+                    <td className="py-3 w-1/3">
+                      <div className="flex flex-col">
+                        <span className="text-gray-400 text-xxs">
+                          From 52W Low
+                        </span>
+                        <span>
+                          {(
+                            ((info.ratios.lastPrice - info.ratios["52wLow"]) /
+                              info.ratios["52wLow"]) *
+                            100
+                          ).toFixed(2)}
+                          %
+                        </span>
+                      </div>
+                    </td>
+
+                    <td className="py-3 w-1/3">
+                      <div className="flex flex-col">
+                        <span className="text-gray-400 text-xxs">52W High</span>
+                        <span>
+                          {formatIndianCurrency(info.ratios["52wHigh"])}
+                        </span>
+                      </div>
+                    </td>
+                  </tr>
+
+                  <tr className="border-b border-zinc-700">
+                    <td className="py-3 w-1/3">
+                      <div className="flex flex-col">
+                        <span className="text-gray-400 text-xxs">
+                          Valuation (Cr)
+                        </span>
+                        <span>
+                          {formatIndianCurrency(info.ratios.marketCap)}
+                        </span>
+                      </div>
+                    </td>
+
+                    <td className="py-3 w-1/3">
+                      <div className="flex flex-col">
+                        <span className="text-gray-400 text-xxs">PE</span>
+                        <span>{info.ratios.apef.toFixed(2)}</span>
+                      </div>
+                    </td>
+
+                    <td className="py-3 w-1/3">
+                      <div className="flex flex-col">
+                        <span className="text-gray-400 text-xxs">
+                          Sector PE
+                        </span>
+                        <span>{info.ratios.indpe.toFixed(2)}</span>
+                      </div>
+                    </td>
+                  </tr>
+
+                  <tr className="border-b border-zinc-700">
+                    <td className="py-3">
+                      <div className="flex flex-col">
+                        <span className="text-gray-400 text-xxs">
+                          Book Value
+                        </span>
+                        <span>
+                          {formatIndianCurrency(
+                            info.ratios.lastPrice / info.ratios.pb
+                          )}
+                        </span>
+                      </div>
+                    </td>
+
+                    <td className="py-3">
+                      <div className="flex flex-col">
+                        <span className="text-gray-400 text-xxs">
+                          P/B Ratio
+                        </span>
+                        <span>{formatIndianCurrency(info.ratios.pb)}</span>
+                      </div>
+                    </td>
+
+                    <td className="py-3">
+                      <div className="flex flex-col">
+                        <span className="text-gray-400 text-xxs">
+                          P/B Valuation (Cr)
+                        </span>
+                        <span>
+                          {formatIndianCurrency(
+                            info.ratios.marketCap / info.ratios.pb
+                          )}
+                        </span>
+                      </div>
+                    </td>
+                  </tr>
+
+                  {companySummary.SC_FULLNM && (
+                    <>
+                      <tr className="border-b border-zinc-700">
+                        <td className="py-3 w-1/3">
+                          <div className="flex flex-col">
+                            <span className="text-gray-400 text-xxs">
+                              1 Month
+                            </span>
+                            <span>
+                              {Number(companySummary.cl1mPerChange).toFixed(2)}%
+                            </span>
+                          </div>
+                        </td>
+
+                        <td className="py-3 w-1/3">
+                          <div className="flex flex-col">
+                            <span className="text-gray-400 text-xxs">
+                              3 Months
+                            </span>
+                            <span>
+                              {Number(companySummary.cl3mPerChange).toFixed(2)}%
+                            </span>
+                          </div>
+                        </td>
+
+                        <td className="py-3 w-1/3">
+                          <div className="flex flex-col">
+                            <span className="text-gray-400 text-xxs">
+                              1 Year
+                            </span>
+                            <span>
+                              {Number(companySummary.cl1yPerChange).toFixed(2)}%
+                            </span>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr className="border-b border-zinc-700">
+                        <td className="py-3 w-1/4">
+                          <div className="flex flex-col">
+                            <span className="text-gray-400 text-xxs">3Y</span>
+                            <span>
+                              {Number(companySummary.cagr3Y)
+                                ? `${Number(companySummary.cagr3Y).toFixed(2)}%`
+                                : "-"}
+                            </span>
+                          </div>
+                        </td>
+
+                        <td className="py-3 w-1/4">
+                          <div className="flex flex-col">
+                            <span className="text-gray-400 text-xxs">5Y</span>
+                            <span>
+                              {Number(companySummary.cagr5Y)
+                                ? `${Number(companySummary.cagr5Y).toFixed(2)}%`
+                                : "-"}
+                            </span>
+                          </div>
+                        </td>
+
+                        <td className="py-3 w-1/4">
+                          <div className="flex flex-col">
+                            <span className="text-gray-400 text-xxs">7Y</span>
+                            <span>
+                              {Number(companySummary.cagr7Y)
+                                ? `${Number(companySummary.cagr7Y).toFixed(2)}%`
+                                : "-"}
+                            </span>
+                          </div>
+                        </td>
+                        <td className="py-3 w-1/4">
+                          <div className="flex flex-col">
+                            <span className="text-gray-400 text-xxs">10Y</span>
+                            <span>
+                              {Number(companySummary.cagr10Y)
+                                ? `${Number(companySummary.cagr10Y).toFixed(
+                                    2
+                                  )}%`
+                                : "-"}
+                            </span>
+                          </div>
+                        </td>
+                      </tr>
+                    </>
+                  )}
+
+                  <tr>
+                    <td colSpan={6} className="py-3 pb-0">
+                      <div className="flex flex-col">
+                        <span className="text-gray-400 text-xxs">Sector</span>
+                        <span>{info.info.sector}</span>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div className="py-4">
+            <h2 className="text-2xl font-bold mb-4">Holding</h2>
+
+            <Bar data={holdingsData} options={holdingsOptions} />
+          </div>
+
+          {summary?.aboutAndPeers.length > 0 && (
+            <div className="py-4">
+              <h2 className="text-2xl font-bold mb-4">Peers</h2>
+
+              <div className="overflow-x-auto rounded-lg shadow text-xs">
+                <table className="min-w-full table-fixed bg-gray-900 text-gray-100 border-collapse w-[850px]">
+                  <thead className="bg-[#2d2d2d]">
+                    <tr>
+                      <th className="px-4 py-3 text-left font-semibold sticky left-0 bg-[#2d2d2d] z-10 w-[35px]">
+                        Name
+                      </th>
+                      <th className="px-4 py-3 text-right font-semibold w-[20px]">
+                        Valuation (Cr)
+                      </th>
+                      <th className="px-4 py-3 text-right font-semibold w-[20px]">
+                        P/B Valuation (Cr)
+                      </th>
+                      <th className="px-4 py-3 text-right font-semibold w-[20px]">
+                        P/B Ratio
+                      </th>
+                      <th className="px-4 py-3 text-right font-semibold w-[20px]">
+                        PE
+                      </th>
+                      <th className="px-4 py-3 text-right font-semibold w-[20px]">
+                        1 Year Returns
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="bg-[#101010]">
+                    {summary.aboutAndPeers.map((stock, index) => (
+                      <tr
+                        key={stock.sid}
+                        className={`border-t border-[#2d2d2d] ${
+                          index === 0
+                            ? "bg-[#5d5d5d] hover:bg-[#5d5d5d]"
+                            : "hover:bg-[#101010]"
+                        }`}
+                        onClick={() => {
+                          if (index === 0) return;
+
+                          handleCardClick(stock.sid);
+                          setCompanySummary({});
+                        }}
+                      >
+                        <td
+                          className={`px-4 py-3 sticky left-0 z-10 border-t border-[#2d2d2d] truncate ${
+                            index === 0
+                              ? "bg-[#5d5d5d] hover:bg-[#5d5d5d]"
+                              : "bg-[#101010] hover:bg-[#101010]"
+                          }`}
+                        >
+                          {stock.name.replace("Ltd", "")}
+                        </td>
+                        <td className="px-4 py-3 text-right">
+                          {formatIndianCurrency(stock.ratios.marketCap / 10)}
+                        </td>
+                        <td className="px-4 py-3 text-right">
+                          {formatIndianCurrency(
+                            stock.ratios.marketCap / 10 / stock.ratios.pbr
+                          )}
+                        </td>
+                        <td className="px-4 py-3 text-right">
+                          {stock.ratios.pbr.toFixed(2)}
+                        </td>
+                        <td className="px-4 py-3 text-right">
+                          {stock.ratios.apef.toFixed(2)}
+                        </td>
+                        <td className="px-4 py-3 text-right">
+                          {stock.ratios["52wpct"].toFixed(2)}%
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+
+          {summary?.brands.length > 0 && (
+            <div className="py-4">
+              <h2 className="text-2xl font-bold mb-4">Brands</h2>
+
+              {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {summary?.brands.map((brand) => (
+                  <div
+                    key={brand.brandId}
+                    className="rounded-2xl p-4 bg-[#101010] text-white"
+                  >
+                    <h2 className="text-m font-semibold">{brand.name}</h2>
+                    <p className="text-xs text-gray-400 mt-1">
+                      {brand.description}
+                    </p>
+                  </div>
+                ))}
+              </div> */}
+              <div className="overflow-x-auto rounded-lg shadow text-xs">
+                <table className="min-w-full bg-gray-900 text-gray-100">
+                  <thead className="bg-[#2d2d2d]">
+                    <tr>
+                      <th className="px-4 py-3 text-left font-semibold">
+                        Brand
+                      </th>
+                      <th className="px-4 py-3 text-left font-semibold">
+                        Category
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="bg-[#101010]">
+                    {summary?.brands.map((brand) => (
+                      <tr
+                        key={brand.brandId}
+                        className="border-t border-[#2d2d2d]"
+                      >
+                        <td className="px-4 py-3">{brand.name}</td>
+                        <td className="px-4 py-3 text-left">
+                          {brand.description}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }

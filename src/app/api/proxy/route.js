@@ -1,39 +1,97 @@
+const allowedOrigins = [
+  "https://blacktape.vercel.app",
+  "https://dev-blacktape.vercel.app"
+];
+
+function getCORSHeaders(origin) {
+  const isAllowed = allowedOrigins.includes(origin);
+  return {
+    "Access-Control-Allow-Origin": isAllowed ? origin : "",
+    "Access-Control-Allow-Methods": "GET, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type"
+  };
+}
+
 export async function GET(req) {
+  const origin = req.headers.get("origin");
+  const corsHeaders = getCORSHeaders(origin);
+
   const { searchParams } = new URL(req.url, "http://localhost");
   const id = searchParams.get("id");
+  const type = searchParams.get("type");
 
-  if (!id) {
-    return new Response(JSON.stringify({ error: "Missing ID" }), {
-      status: 400
+  if (!id || !type) {
+    return new Response(JSON.stringify({ error: "Missing id or type" }), {
+      status: 400,
+      headers: corsHeaders
+    });
+  }
+
+  let url;
+
+  if (type === "chart") {
+    url = `https://api.tickertape.in/stocks/charts/inter/${id}?duration=5y`;
+  } else if (type === "financials") {
+    url = `https://api.tickertape.in/stocks/financials/income/${id}/annual/normal?count=10`;
+  } else if (type === "financialsQuarterly") {
+    url = `https://api.tickertape.in/stocks/financials/income/${id}/interim/normal?count=10`;
+  } else if (type === "summary") {
+    url = `https://analyze.api.tickertape.in/v2/stocks/summary/${id}`;
+  } else if (type === "info") {
+    url = `https://api.tickertape.in/stocks/info/${id}`;
+  } else {
+    return new Response(JSON.stringify({ error: "Invalid type" }), {
+      status: 400,
+      headers: corsHeaders
     });
   }
 
   try {
-    const url = `https://api.tickertape.in/stocks/charts/inter/${id}?duration=5y`;
-    console.log("🔍 Proxying to:", url);
-
     const response = await fetch(url, {
       headers: {
-        Accept: "application/json"
+        Accept: "application/json, text/plain, */*",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Cache-Control": "no-cache",
+        Pragma: "no-cache",
+        "User-Agent":
+          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 " +
+          "(KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
       }
     });
 
     const rawData = await response.text();
-    console.log("📦 Raw Response:", rawData);
 
     try {
       const data = JSON.parse(rawData);
-      return Response.json(data);
+
+      return new Response(JSON.stringify(data), {
+        status: 200,
+        headers: corsHeaders
+      });
     } catch (err) {
-      console.error("❌ Failed to parse JSON", err);
+      console.error("❌ JSON parse failed:", err);
+
       return new Response(JSON.stringify({ error: "Invalid JSON" }), {
-        status: 500
+        status: 500,
+        headers: corsHeaders
       });
     }
   } catch (err) {
-    console.error("❌ Proxy error:", err);
+    console.error("❌ Proxy fetch failed:", err);
+
     return new Response(JSON.stringify({ error: "Proxy failure" }), {
-      status: 500
+      status: 500,
+      headers: corsHeaders
     });
   }
+}
+
+export async function OPTIONS(req) {
+  const origin = req.headers.get("origin");
+  const corsHeaders = getCORSHeaders(origin);
+
+  return new Response(null, {
+    status: 204,
+    headers: corsHeaders
+  });
 }
