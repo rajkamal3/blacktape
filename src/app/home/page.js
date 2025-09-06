@@ -259,13 +259,6 @@ export default function HomePage() {
       </div>
     );
 
-  // const Stat = ({ label, value, valueClass = "" }) => (
-  //   <div className="grid grid-cols-[140px_1fr]">
-  //     <span className="text-gray-400">{label}</span>
-  //     <span className={`${valueClass}`}>{value ?? "N/A"}</span>
-  //   </div>
-  // );
-
   const handleChangeIndex = (value) => {
     setDropdownActiveIndex(value);
     setLoading(true);
@@ -637,31 +630,6 @@ export default function HomePage() {
                   ).toFixed(2)}%)`}
                 </h2>
               </div>
-
-              {/* <div className="grid gap-y-2 text-sm">
-                <Stat
-                  label="Price"
-                  value={`${formatIndianCurrency(item.pricecurrent)} ${Number(
-                    item.pricepercentchange
-                  ).toFixed(2)}%`}
-                />
-
-                <Stat
-                  label="52WL | From 52WL"
-                  value={`${formatIndianCurrency(item["52L"])} | ${(
-                    ((item.pricecurrent - item["52L"]) / item["52L"]) *
-                    100
-                  ).toFixed(2)}%`}
-                />
-                <Stat
-                  label="Market Cap"
-                  value={`${formatIndianCurrency(item.MKTCAP)} Cr`}
-                />
-                <Stat
-                  label="PE | Sector PE"
-                  value={`${item.PE} | ${item.IND_PE}`}
-                />
-              </div> */}
 
               <table className="w-full text-xs">
                 <tbody>
