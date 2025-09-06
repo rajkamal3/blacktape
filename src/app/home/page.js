@@ -547,7 +547,12 @@ export default function HomePage() {
           if (!searchVisible) return;
           setSearchVisible(false);
         }}
-        style={{ width: "50vw" }}
+        style={{
+          width: "50vw",
+          border: "none"
+        }}
+        headerClassName="!bg-[#101010] !text-white !border-none"
+        contentClassName="!bg-[#101010] !text-white !border-none"
         breakpoints={{ "960px": "75vw", "641px": "90vw" }}
       >
         <div className="p-4 max-w-md mx-auto">
@@ -555,15 +560,15 @@ export default function HomePage() {
             placeholder="Search by name..."
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            className="w-full p-2 border rounded-lg mb-4"
+            className="w-full p-2 border-none !border-0 !bg-[#252525] rounded-lg mb-4"
           />
 
-          <ul className="space-y-2">
+          <ul className="space-y-2 mt-2">
             {filteredData.length > 0 ? (
               filteredData.map((item) => (
                 <li
                   key={item.summaryId}
-                  className="p-3 border rounded-lg shadow-sm hover:bg-gray-600"
+                  className="p-3 bg-[#252525] rounded-lg hover:bg-gray-600"
                   onClick={() => handleCardClick(item, "search")}
                 >
                   <div className="font-semibold">{item.name}</div>
