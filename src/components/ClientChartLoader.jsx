@@ -827,16 +827,27 @@ export default function Chart({ companyId }) {
               <h2 className="text-2xl font-bold mb-4">Peers</h2>
 
               <div className="overflow-x-auto rounded-lg shadow text-xs">
-                <table className="min-w-full bg-gray-900 text-gray-100">
+                <table className="min-w-full table-fixed bg-gray-900 text-gray-100 border-collapse w-[850px]">
                   <thead className="bg-[#2d2d2d]">
                     <tr>
-                      <th className="px-4 py-3 text-left font-semibold">
+                      <th className="px-4 py-3 text-left font-semibold sticky left-0 bg-[#2d2d2d] z-10 w-[35px]">
                         Name
                       </th>
-                      <th className="px-4 py-3 text-right font-semibold">
+                      <th className="px-4 py-3 text-right font-semibold w-[20px]">
                         Valuation (Cr)
                       </th>
-                      <th className="px-4 py-3 text-right font-semibold">PE</th>
+                      <th className="px-4 py-3 text-right font-semibold w-[20px]">
+                        P/B Valuation (Cr)
+                      </th>
+                      <th className="px-4 py-3 text-right font-semibold w-[20px]">
+                        P/B Ratio
+                      </th>
+                      <th className="px-4 py-3 text-right font-semibold w-[20px]">
+                        PE
+                      </th>
+                      <th className="px-4 py-3 text-right font-semibold w-[20px]">
+                        1 Year Returns
+                      </th>
                     </tr>
                   </thead>
                   <tbody className="bg-[#101010]">
@@ -846,7 +857,7 @@ export default function Chart({ companyId }) {
                         className={`border-t border-[#2d2d2d] ${
                           index === 0
                             ? "bg-[#5d5d5d] hover:bg-[#5d5d5d]"
-                            : "hover:bg-gray-800"
+                            : "hover:bg-[#101010]"
                         }`}
                         onClick={() => {
                           if (index === 0) return;
@@ -855,14 +866,31 @@ export default function Chart({ companyId }) {
                           setCompanySummary({});
                         }}
                       >
-                        <td className="px-4 py-3">
+                        <td
+                          className={`px-4 py-3 sticky left-0 z-10 border-t border-[#2d2d2d] truncate ${
+                            index === 0
+                              ? "bg-[#5d5d5d] hover:bg-[#5d5d5d]"
+                              : "bg-[#101010] hover:bg-[#101010]"
+                          }`}
+                        >
                           {stock.name.replace("Ltd", "")}
                         </td>
                         <td className="px-4 py-3 text-right">
                           {formatIndianCurrency(stock.ratios.marketCap / 10)}
                         </td>
                         <td className="px-4 py-3 text-right">
+                          {formatIndianCurrency(
+                            stock.ratios.marketCap / 10 / stock.ratios.pbr
+                          )}
+                        </td>
+                        <td className="px-4 py-3 text-right">
+                          {stock.ratios.pbr.toFixed(2)}
+                        </td>
+                        <td className="px-4 py-3 text-right">
                           {stock.ratios.apef.toFixed(2)}
+                        </td>
+                        <td className="px-4 py-3 text-right">
+                          {stock.ratios["52wpct"].toFixed(2)}%
                         </td>
                       </tr>
                     ))}
