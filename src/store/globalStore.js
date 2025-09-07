@@ -5,8 +5,10 @@ export const useGlobalStore = create((set) => ({
   indexGlobal: watchlist,
   dropdownActiveIndex: { name: "Watchlist 1", code: "WL1" },
   companySummary: {},
+  country: "india",
 
   setIndexGlobal: (indexGlobal) => set({ indexGlobal }),
   setDropdownActiveIndex: (dropdownActiveIndex) => set({ dropdownActiveIndex }),
-  setCompanySummary: (companySummary) => set({ companySummary })
+  setCompanySummary: (companySummary) => set({ companySummary }),
+  setCountry: (country) => set({ country })
 }));

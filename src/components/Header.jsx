@@ -5,9 +5,13 @@ import { signOut } from "firebase/auth";
 import { useRouter, usePathname } from "next/navigation";
 import { auth } from "@/lib/firebase";
 import "./Header.css";
+import { useGlobalStore } from "@/store/globalStore";
 
 const Header = ({ user }) => {
   const [visible, setVisible] = useState(false);
+
+  const country = useGlobalStore((state) => state.country);
+  const setCountry = useGlobalStore((state) => state.setCountry);
 
   const router = useRouter();
   const pathname = usePathname();
@@ -37,6 +41,11 @@ const Header = ({ user }) => {
     window.location.reload();
   };
 
+  const changeCountry = (country) => {
+    setCountry(country);
+    setVisible(false);
+  };
+
   return (
     <div className="header-container flex justify-between items-center">
       <div className="card flex justify-content-center">
@@ -54,6 +63,21 @@ const Header = ({ user }) => {
                 Welcome,{" "}
                 {`${user.displayName.split(" ")[0]}!` || `${user.email}`}
               </h1>
+
+              <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-3 gap-1 max-w-5xl mx-auto mb-1">
+                <Button
+                  label={`Go to ${country === "india" ? "USA" : "India"}`}
+                  onClick={() =>
+                    changeCountry(country === "india" ? "usa" : "india")
+                  }
+                  size="small"
+                  style={{
+                    backgroundColor: "#d60017",
+                    color: "#ffffff",
+                    border: "none"
+                  }}
+                />
+              </div>
 
               <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-1 max-w-5xl mx-auto mb-4">
                 <Button
