@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useTransition } from "react";
+import { useState, useEffect, useRef, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { auth } from "@/lib/firebase";
 import { onAuthStateChanged } from "firebase/auth";
@@ -9,6 +9,9 @@ import Spinner from "@/components/Spinner";
 import { Dialog } from "primereact/dialog";
 import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";
+import { Toast } from "primereact/toast";
+import axios from "axios";
+import { formatUSCurrency } from "@/utils/formatUSCurrency";
 
 const filterByName = (list, query) => {
   if (!query || query.length <= 2) return [];
@@ -20,13 +23,79 @@ const filterByName = (list, query) => {
 
 export default function HomeUSA() {
   const [user, setUser] = useState(null);
+  const [dataList, setDataList] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [filtersVisible, setFiltersVisible] = useState(false);
   const [searchVisible, setSearchVisible] = useState(false);
   const [isPending, startTransition] = useTransition();
   const [query, setQuery] = useState("");
   const router = useRouter();
+  const toast = useRef(null);
 
   const filteredData = filterByName(nasdaq100, query);
+
+  console.log(dataList);
+
+  useEffect(() => {
+    if (!user) return;
+
+    const fetchAll = async () => {
+      const base = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+
+      const results = [];
+      let failedIds = [];
+
+      try {
+        for (const company of nasdaq100) {
+          try {
+            const res = await axios.get(
+              `${base}/api/proxy?id=${company.detailsId}&type=usSummary`
+            );
+
+            if (res?.data && typeof res === "object") {
+              results.push({
+                ...res?.data.FormattedQuoteResult.FormattedQuote[0],
+                detailsId: company.detailsId
+              });
+            } else {
+              console.warn(`🟡 No usable data for ID: ${company.detailsId}`);
+              failedIds.push(company.detailsId);
+            }
+          } catch (err) {
+            console.warn(`❌ Failed for ID: ${company.detailsId}`, err.message);
+            failedIds.push(company.detailsId);
+          }
+        }
+
+        setDataList(results);
+
+        if (failedIds.length > 0 && toast.current) {
+          toast.current.show({
+            severity: "warn",
+            summary: "Some IDs failed",
+            detail: `Failed for ${failedIds.length} compan${
+              failedIds.length === 1 ? "y" : "ies"
+            }:\n${failedIds.join(", ")}`,
+            life: 5000
+          });
+        }
+      } catch (critical) {
+        console.error("🔥 CRITICAL failure in fetchAll:", critical.message);
+        if (toast.current) {
+          toast.current.show({
+            severity: "error",
+            summary: "Unexpected Crash",
+            detail: "Something went terribly wrong while fetching data.",
+            life: 5000
+          });
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAll();
+  }, [user]);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -46,7 +115,7 @@ export default function HomeUSA() {
     });
   };
 
-  if (isPending)
+  if (isPending || loading)
     return (
       <div
         className="flex justify-center items-center bg-[var(--background)]"
@@ -60,6 +129,8 @@ export default function HomeUSA() {
 
   return (
     <div className="p-4 bg-[var(--background)]">
+      <Toast ref={toast} position="top-right" />
+
       <div
         style={{
           position: "fixed",
@@ -171,7 +242,7 @@ export default function HomeUSA() {
       </Dialog>
 
       <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
-        {nasdaq100.map((item, index) => (
+        {dataList.map((item, index) => (
           <div
             key={index}
             className="bg-zinc-900 text-white p-4 rounded-lg"
@@ -181,17 +252,14 @@ export default function HomeUSA() {
               color: "#ffffff"
             }}
           >
-            {/* <div className="border-b border-zinc-700 pb-2"> */}
-            <div>
+            <div className="border-b border-zinc-700 pb-2">
               <h2 className="text-md font-semibold">
                 {item.name || "Unnamed Entity"}
               </h2>
 
-              {/* <h2 className="text-xs font-semibold">
-                {`${formatIndianCurrency(item.pricecurrent)} (${Number(
-                  item.pricepercentchange
-                ).toFixed(2)}%)`}
-              </h2> */}
+              <h2 className="text-xs font-semibold">
+                {`${formatUSCurrency(item.last)} (${Number(item.change)}%)`}
+              </h2>
             </div>
           </div>
         ))}
