@@ -80,11 +80,11 @@ export default function CompanyDetailsUS({ companyId }) {
 
   useEffect(() => {
     const base = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
-    const cacheKey = `usChart_${companyId}`;
+    const chartCacheKey = `cache_us_chart_${companyId}`;
 
     const readCache = () => {
       try {
-        const s = localStorage.getItem(cacheKey);
+        const s = localStorage.getItem(chartCacheKey);
 
         return s ? JSON.parse(s) : null;
       } catch (e) {
@@ -97,7 +97,7 @@ export default function CompanyDetailsUS({ companyId }) {
     const writeCache = (data) => {
       try {
         localStorage.setItem(
-          cacheKey,
+          chartCacheKey,
           JSON.stringify({ data, savedAt: Date.now() })
         );
       } catch (e) {
