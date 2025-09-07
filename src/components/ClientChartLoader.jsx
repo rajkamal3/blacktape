@@ -91,17 +91,57 @@ export default function Chart({ companyId }) {
   useEffect(() => {
     const base = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
 
-    axios
-      .get(`${base}/api/proxy?id=${companyId}&type=chart`)
-      .then((res) => {
-        setData(res.data?.data?.[0]);
-        return res.data?.data?.[0];
+    const shouldRefresh = (key, ruleFn) => {
+      const cached = localStorage.getItem(key);
+
+      if (!cached) return true;
+
+      const { timestamp } = JSON.parse(cached);
+
+      return ruleFn(new Date(timestamp));
+    };
+
+    const setCache = (key, data) => {
+      localStorage.setItem(
+        key,
+        JSON.stringify({ data, timestamp: new Date().toISOString() })
+      );
+    };
+
+    // refreshes every 7 days based on last point date
+    const chartKey = `${companyId}_chart`;
+
+    if (
+      shouldRefresh(chartKey, (ts) => {
+        const lastPointDate = new Date(data?.points?.at(-1)?.ts || ts);
+        const diffDays =
+          (new Date() - new Date(lastPointDate)) / (1000 * 60 * 60 * 24);
+
+        return diffDays >= 7;
       })
-      .then((res) => {
-        const supports = findSupportLevels(res.points);
-        setSupportLevels(supports);
-      })
-      .catch((error) => setErr(error.message));
+    ) {
+      axios
+        .get(`${base}/api/proxy?id=${companyId}&type=chart`)
+        .then((res) => {
+          const chartData = res.data?.data?.[0];
+
+          setData(chartData);
+          setCache(chartKey, chartData);
+
+          const supports = findSupportLevels(chartData.points);
+
+          setSupportLevels(supports);
+        })
+        .catch((error) => setErr(error.message));
+    } else {
+      const cached = JSON.parse(localStorage.getItem(chartKey));
+
+      setData(cached.data);
+
+      const supports = findSupportLevels(cached.data.points);
+
+      setSupportLevels(supports);
+    }
 
     if (
       companyId === "NBES" ||
@@ -114,33 +154,96 @@ export default function Chart({ companyId }) {
     )
       return;
 
-    axios
-      .get(`${base}/api/proxy?id=${companyId}&type=financials`)
-      .then((res) => {
-        setFinancials(res.data?.data);
-      })
-      .catch((error) => setErr(error.message));
+    // refresh on 15th every 2 months
+    const twoMonthRule = (ts) => {
+      const now = new Date();
+      const last = new Date(ts);
 
-    axios
-      .get(`${base}/api/proxy?id=${companyId}&type=financialsQuarterly`)
-      .then((res) => {
-        setFinancialsQuarterly(res.data?.data);
-      })
-      .catch((error) => setErr(error.message));
+      return (
+        now.getMonth() % 2 === 0 &&
+        now.getDate() >= 15 &&
+        (last.getMonth() !== now.getMonth() ||
+          last.getFullYear() !== now.getFullYear())
+      );
+    };
 
-    axios
-      .get(`${base}/api/proxy?id=${companyId}&type=summary`)
-      .then((res) => {
-        setSummary(res.data?.data);
-      })
-      .catch((error) => setErr(error.message));
+    const financialsKey = `${companyId}_financials`;
 
-    axios
-      .get(`${base}/api/proxy?id=${companyId}&type=info`)
-      .then((res) => {
-        setInfo(res.data?.data);
+    if (shouldRefresh(financialsKey, twoMonthRule)) {
+      axios
+        .get(`${base}/api/proxy?id=${companyId}&type=financials`)
+        .then((res) => {
+          setFinancials(res.data?.data);
+          setCache(financialsKey, res.data?.data);
+        })
+        .catch((error) => setErr(error.message));
+    } else {
+      setFinancials(JSON.parse(localStorage.getItem(financialsKey)).data);
+    }
+
+    const qFinancialsKey = `${companyId}_financialsQuarterly`;
+
+    if (shouldRefresh(qFinancialsKey, twoMonthRule)) {
+      axios
+        .get(`${base}/api/proxy?id=${companyId}&type=financialsQuarterly`)
+        .then((res) => {
+          setFinancialsQuarterly(res.data?.data);
+          setCache(qFinancialsKey, res.data?.data);
+        })
+        .catch((error) => setErr(error.message));
+    } else {
+      setFinancialsQuarterly(
+        JSON.parse(localStorage.getItem(qFinancialsKey)).data
+      );
+    }
+
+    // refresh every 3 days
+    const summaryKey = `${companyId}_summary`;
+
+    if (
+      shouldRefresh(summaryKey, (ts) => {
+        const diffDays = (new Date() - new Date(ts)) / (1000 * 60 * 60 * 24);
+        return diffDays >= 3;
       })
-      .catch((error) => setErr(error.message));
+    ) {
+      axios
+        .get(`${base}/api/proxy?id=${companyId}&type=summary`)
+        .then((res) => {
+          setSummary(res.data?.data);
+          setCache(summaryKey, res.data?.data);
+        })
+        .catch((error) => setErr(error.message));
+    } else {
+      setSummary(JSON.parse(localStorage.getItem(summaryKey)).data);
+    }
+
+    // refresh at 9:30 AM Mon–Fri only
+    const infoKey = `${companyId}_info`;
+
+    if (
+      shouldRefresh(infoKey, (ts) => {
+        const now = new Date();
+        const last = new Date(ts);
+        const isWeekend = now.getDay() === 0 || now.getDay() === 6;
+        const passed930 =
+          now.getHours() > 9 ||
+          (now.getHours() === 9 && now.getMinutes() >= 30);
+
+        return (
+          !isWeekend && passed930 && now.toDateString() !== last.toDateString()
+        );
+      })
+    ) {
+      axios
+        .get(`${base}/api/proxy?id=${companyId}&type=info`)
+        .then((res) => {
+          setInfo(res.data?.data);
+          setCache(infoKey, res.data?.data);
+        })
+        .catch((error) => setErr(error.message));
+    } else {
+      setInfo(JSON.parse(localStorage.getItem(infoKey)).data);
+    }
   }, [companyId]);
 
   if (err) return <div>Error: {err}</div>;
