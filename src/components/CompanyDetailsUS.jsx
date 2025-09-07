@@ -80,16 +80,86 @@ export default function CompanyDetailsUS({ companyId }) {
 
   useEffect(() => {
     const base = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+    const cacheKey = `usChart_${companyId}`;
+
+    const readCache = () => {
+      try {
+        const s = localStorage.getItem(cacheKey);
+
+        return s ? JSON.parse(s) : null;
+      } catch (e) {
+        console.error("readCache error", e);
+
+        return null;
+      }
+    };
+
+    const writeCache = (data) => {
+      try {
+        localStorage.setItem(
+          cacheKey,
+          JSON.stringify({ data, savedAt: Date.now() })
+        );
+      } catch (e) {
+        console.error("writeCache error", e);
+      }
+    };
+
+    const estNow = new Date(
+      new Date().toLocaleString("en-US", { timeZone: "America/New_York" })
+    );
+    const isWeekend = estNow.getDay() === 0 || estNow.getDay() === 6;
+    const today10amEst = new Date(
+      estNow.getFullYear(),
+      estNow.getMonth(),
+      estNow.getDate(),
+      10,
+      0,
+      0
+    ).getTime();
+
+    const cached = readCache();
+
+    if (cached && cached.data) {
+      try {
+        setData(cached.data);
+        setSupportLevels(findSupportLevels(cached.data.priceBars));
+      } catch (e) {
+        console.error("apply cache error", e);
+      }
+    }
+
+    const needFetch = (() => {
+      if (!cached || !cached.data) return true;
+      if (isWeekend) return false;
+      if (estNow.getTime() < today10amEst) return false;
+
+      const savedAt = cached.savedAt || 0;
+
+      return savedAt < today10amEst;
+    })();
+
+    if (!needFetch) return;
+
+    let cancelled = false;
 
     axios
       .get(`${base}/api/proxy?id=${companyId}&type=usChart`)
       .then((res) => {
+        if (cancelled) return;
+
+        const chart = res?.data?.data?.chartData;
+
+        if (!chart || !Array.isArray(chart.priceBars)) {
+          throw new Error("Invalid chart data");
+        }
+
         const fiveYearsAgo = new Date();
         fiveYearsAgo.setFullYear(fiveYearsAgo.getFullYear() - 5);
 
         const transformedPriceData = {
-          ...res.data.data.chartData,
-          priceBars: res.data.data.chartData.priceBars
+          ...chart,
+          priceBars: chart.priceBars
             .filter(
               (item) => Number(item.tradeTimeinMills) >= fiveYearsAgo.getTime()
             )
@@ -104,11 +174,19 @@ export default function CompanyDetailsUS({ companyId }) {
         };
 
         setData(transformedPriceData);
-
-        const supports = findSupportLevels(transformedPriceData.priceBars);
-        setSupportLevels(supports);
+        setSupportLevels(findSupportLevels(transformedPriceData.priceBars));
+        writeCache(transformedPriceData);
       })
-      .catch((error) => setErr(error.message));
+      .catch((err) => {
+        if (!cancelled) {
+          console.error("fetch usChart failed", err);
+          setErr(err.message || "usChart fetch failed");
+        }
+      });
+
+    return () => {
+      cancelled = true;
+    };
   }, [companyId]);
 
   if (err) return <div>Error: {err}</div>;
