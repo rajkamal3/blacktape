@@ -308,6 +308,44 @@ export default function CompanyDetailsUS({ companyId }) {
             }}
           />
         </div>
+
+        <div className="py-4 max-w-6xl mx-auto">
+          <h2 className="text-2xl font-bold mb-4">Support Zones</h2>
+          <div className="overflow-x-auto rounded-lg">
+            <table className="table-auto w-full border-green-500 text-gray-100">
+              <thead className="bg-[#2d2d2d]">
+                <tr>
+                  <th className="px-4 py-2 text-left">Zone</th>
+                  <th className="px-4 py-2 text-left">Fall</th>
+                </tr>
+              </thead>
+              <tbody className="bg-[#101010]">
+                {supportLevels.supportZones.map((zone, index) => (
+                  <tr
+                    key={index}
+                    className={`${
+                      zone.confirmedResistance
+                        ? "border-3 border-[#8cff5c]"
+                        : "border-t border-[#2d2d2d]"
+                    }`}
+                  >
+                    <td className="px-4 py-2">{formatUSCurrency(zone.zone)}</td>
+
+                    <td className="px-4 py-2">
+                      {Number(data.allSymbols[0].last)
+                        ? `${(
+                            ((Number(data.allSymbols[0].last) - zone.zone) /
+                              Number(data.allSymbols[0].last)) *
+                            100
+                          ).toFixed(2)}%`
+                        : `-`}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
     </div>
   );
