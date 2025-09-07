@@ -258,9 +258,70 @@ export default function HomeUSA() {
               </h2>
 
               <h2 className="text-xs font-semibold">
-                {`${formatUSCurrency(item.last)} (${Number(item.change)}%)`}
+                {`${formatUSCurrency(item.last)} (${item.change_pct})`}
               </h2>
             </div>
+
+            <table className="w-full text-xs">
+              <tbody>
+                <tr>
+                  <td className="py-3 w-1/3">
+                    <div className="flex flex-col">
+                      <span className="text-gray-400 text-xxs">52W Low</span>
+                      <span>{formatUSCurrency(Number(item.yrloprice))}</span>
+                    </div>
+                  </td>
+
+                  <td className="py-3 w-1/3">
+                    <div className="flex flex-col">
+                      <span className="text-gray-400 text-xxs">
+                        From 52W Low
+                      </span>
+                      <span>
+                        {(
+                          ((Number(item.last) - Number(item.yrloprice)) /
+                            Number(item.yrloprice)) *
+                          100
+                        ).toFixed(2)}
+                        %
+                      </span>
+                    </div>
+                  </td>
+
+                  <td className="py-3 w-1/3">
+                    <div className="flex flex-col">
+                      <span className="text-gray-400 text-xxs">52W High</span>
+                      <span>{formatUSCurrency(Number(item.yrhiprice))}</span>
+                    </div>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td className="py-3 pt-0 w-1/3 pb-0">
+                    <div className="flex flex-col">
+                      <span className="text-gray-400 text-xxs">Valuation</span>
+                      <span>{item.mktcapView}</span>
+                    </div>
+                  </td>
+
+                  <td className="py-3 pt-0 w-1/3 pb-0">
+                    <div className="flex flex-col">
+                      <span className="text-gray-400 text-xxs">
+                        Revenue (TTM)
+                      </span>
+                      <span>{item.revenuettm}</span>
+                    </div>
+                  </td>
+
+                  <td className="py-3 pt-0 w-1/3 pb-0">
+                    <div className="flex flex-col">
+                      <span className="text-gray-400 text-xxs">PE</span>
+                      <span>{item.pe}</span>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         ))}
       </div>
