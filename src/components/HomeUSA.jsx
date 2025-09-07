@@ -36,6 +36,8 @@ export default function HomeUSA() {
 
   console.log(dataList);
 
+  const summaryCacheKey = `cache_us_summary`;
+
   useEffect(() => {
     if (!user) return;
 
@@ -69,6 +71,14 @@ export default function HomeUSA() {
 
         setDataList(results);
 
+        localStorage.setItem(
+          summaryCacheKey,
+          JSON.stringify({
+            timestamp: Date.now(),
+            data: results
+          })
+        );
+
         if (failedIds.length > 0 && toast.current) {
           toast.current.show({
             severity: "warn",
@@ -94,7 +104,40 @@ export default function HomeUSA() {
       }
     };
 
-    fetchAll();
+    const shouldRefreshCache = () => {
+      const cache = JSON.parse(localStorage.getItem(summaryCacheKey) || "null");
+      if (!cache) return true;
+
+      const now = new Date();
+
+      const estNow = new Date(
+        now.toLocaleString("en-US", { timeZone: "America/New_York" })
+      );
+
+      const lastFetch = new Date(cache.timestamp);
+
+      const isMonday = estNow.getDay() === 1;
+      const isAfter10AM = estNow.getHours() >= 10;
+
+      const monday10am = new Date(estNow);
+      monday10am.setHours(10, 0, 0, 0);
+
+      if (isMonday && isAfter10AM && lastFetch < monday10am) {
+        return true;
+      }
+
+      return false;
+    };
+
+    const cache = JSON.parse(localStorage.getItem(summaryCacheKey) || "null");
+
+    if (cache && !shouldRefreshCache()) {
+      console.log("📦 Using cached usSummary data");
+      setDataList(cache.data);
+      setLoading(false);
+    } else {
+      fetchAll();
+    }
   }, [user]);
 
   useEffect(() => {
