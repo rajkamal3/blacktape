@@ -1,12 +1,7 @@
-// import Chart from "@/components/ClientChartLoader";
+import CompanyDetailsUS from "@/components/CompanyDetailsUS";
 
 export default async function USCompanyPage(props) {
   const { companyId } = await props.params;
 
-  //   return <Chart companyId={companyId} />;
-  return (
-    <div>
-      <h1>{companyId}</h1>
-    </div>
-  );
+  return <CompanyDetailsUS companyId={companyId} />;
 }
