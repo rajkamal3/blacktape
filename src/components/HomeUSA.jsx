@@ -27,14 +27,14 @@ export default function HomeUSA() {
   const [loading, setLoading] = useState(true);
   const [filtersVisible, setFiltersVisible] = useState(false);
   const [searchVisible, setSearchVisible] = useState(false);
-  const [isPending, startTransition] = useTransition();
   const [query, setQuery] = useState("");
+  const [sortOrderAsc, setSortOrderAsc] = useState(true);
+
+  const [isPending, startTransition] = useTransition();
   const router = useRouter();
   const toast = useRef(null);
 
   const filteredData = filterByName(nasdaq100, query);
-
-  console.log(dataList);
 
   const summaryCacheKey = `cache_us_summary`;
 
@@ -170,6 +170,139 @@ export default function HomeUSA() {
       </div>
     );
 
+  const sortBy = (target) => {
+    const raw = localStorage.getItem(summaryCacheKey);
+    const parsed = JSON.parse(raw);
+    const parsedData = parsed.data;
+
+    let sorted;
+
+    if (target === "name") {
+      sorted = [...parsedData].sort((a, b) => {
+        return sortOrderAsc
+          ? a.name.localeCompare(b.name)
+          : b.name.localeCompare(a.name);
+      });
+
+      setSortOrderAsc(!sortOrderAsc);
+    }
+
+    if (target === "change") {
+      const parsePct = (val) => {
+        if (val == null) return 0;
+        if (typeof val === "number") return val;
+        if (typeof val === "string") {
+          return parseFloat(val.replace("%", "").replace("+", "").trim()) || 0;
+        }
+        return 0;
+      };
+
+      sorted = [...parsedData].sort((a, b) => {
+        const aVal = parsePct(a.change_pct);
+        const bVal = parsePct(b.change_pct);
+
+        return sortOrderAsc ? aVal - bVal : bVal - aVal;
+      });
+
+      setSortOrderAsc(!sortOrderAsc);
+    }
+
+    if (target === "valuation") {
+      const parseMktCap = (val) => {
+        if (!val) return 0;
+        if (typeof val === "number") return val;
+
+        let str = val.toString().trim().toUpperCase();
+
+        let num = parseFloat(str.replace(/[^0-9.]/g, ""));
+        if (isNaN(num)) return 0;
+
+        if (str.endsWith("T")) {
+          return num * 1e12;
+        } else if (str.endsWith("B")) {
+          return num * 1e9;
+        } else if (str.endsWith("M")) {
+          return num * 1e6;
+        } else if (str.endsWith("K")) {
+          return num * 1e3;
+        }
+
+        return num;
+      };
+
+      sorted = [...parsedData].sort((a, b) => {
+        const aVal = parseMktCap(a.mktcapView);
+        const bVal = parseMktCap(b.mktcapView);
+
+        return sortOrderAsc ? aVal - bVal : bVal - aVal;
+      });
+
+      setSortOrderAsc(!sortOrderAsc);
+    }
+
+    if (target === "pe") {
+      sorted = [...parsedData].sort((a, b) => {
+        return sortOrderAsc
+          ? Number(a.pe) - Number(b.pe)
+          : Number(b.pe) - Number(a.pe);
+      });
+
+      setSortOrderAsc(!sortOrderAsc);
+    }
+
+    if (target === "revenue") {
+      const parseRevenue = (val) => {
+        if (!val) return 0;
+        if (typeof val === "number") return val;
+
+        let str = val.toString().trim().toUpperCase();
+
+        let num = parseFloat(str.replace(/[^0-9.]/g, ""));
+        if (isNaN(num)) return 0;
+
+        if (str.endsWith("T")) {
+          return num * 1e12;
+        } else if (str.endsWith("B")) {
+          return num * 1e9;
+        } else if (str.endsWith("M")) {
+          return num * 1e6;
+        } else if (str.endsWith("K")) {
+          return num * 1e3;
+        }
+
+        return num;
+      };
+
+      sorted = [...parsedData].sort((a, b) => {
+        const aVal = parseRevenue(a.revenuettm);
+        const bVal = parseRevenue(b.revenuettm);
+
+        return sortOrderAsc ? aVal - bVal : bVal - aVal;
+      });
+
+      setSortOrderAsc(!sortOrderAsc);
+    }
+
+    if (target === "closenessToLow") {
+      sorted = [...parsedData].sort((a, b) => {
+        return sortOrderAsc
+          ? (Number(a.last) - Number(a.yrloprice)) / Number(a.yrloprice) -
+              (Number(b.last) - Number(b.yrloprice)) / Number(b.yrloprice)
+          : (Number(b.last) - Number(b.yrloprice)) / Number(b.yrloprice) -
+              (Number(a.last) - Number(a.yrloprice)) / Number(a.yrloprice);
+      });
+
+      setSortOrderAsc(!sortOrderAsc);
+    }
+
+    setDataList(sorted);
+
+    localStorage.setItem(
+      summaryCacheKey,
+      JSON.stringify({ data: sorted, expiry: parsed.expiry })
+    );
+  };
+
   return (
     <div className="p-4 bg-[var(--background)]">
       <Toast ref={toast} position="top-right" />
@@ -237,6 +370,50 @@ export default function HomeUSA() {
             className="!bg-[#252525] !text-white !border-none"
           />
         </div>
+
+        <div className="mb-4">
+          <h2 className="text-m font-bold mb-1">Sort By</h2>
+
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-1 max-w-5xl mx-auto">
+            <Button
+              onClick={() => sortBy("name")}
+              label="Name"
+              size="small"
+              className="!bg-[#252525] !text-white !border-none"
+            />
+            <Button
+              onClick={() => sortBy("change")}
+              label="Day Change"
+              size="small"
+              className="!bg-[#252525] !text-white !border-none"
+            />
+            <Button
+              onClick={() => sortBy("valuation")}
+              label="Valuation"
+              size="small"
+              className="!bg-[#252525] !text-white !border-none"
+            />
+
+            <Button
+              onClick={() => sortBy("pe")}
+              label="PE"
+              size="small"
+              className="!bg-[#252525] !text-white !border-none"
+            />
+            <Button
+              onClick={() => sortBy("revenue")}
+              label="Revenue"
+              size="small"
+              className="!bg-[#252525] !text-white !border-none"
+            />
+            <Button
+              onClick={() => sortBy("closenessToLow")}
+              label="From 52W Low"
+              size="small"
+              className="!bg-[#252525] !text-white !border-none"
+            />
+          </div>
+        </div>
       </Dialog>
 
       <Dialog
@@ -301,7 +478,7 @@ export default function HomeUSA() {
               </h2>
 
               <h2 className="text-xs font-semibold">
-                {`${formatUSCurrency(item.last)} (${item.change_pct})`}
+                {`${formatUSCurrency(item.last)} (${item.change_pct})` || ``}
               </h2>
             </div>
 
@@ -311,7 +488,9 @@ export default function HomeUSA() {
                   <td className="py-3 w-1/3">
                     <div className="flex flex-col">
                       <span className="text-gray-400 text-xxs">52W Low</span>
-                      <span>{formatUSCurrency(Number(item.yrloprice))}</span>
+                      <span>
+                        {formatUSCurrency(Number(item.yrloprice)) || `-`}
+                      </span>
                     </div>
                   </td>
 
@@ -334,7 +513,9 @@ export default function HomeUSA() {
                   <td className="py-3 w-1/3">
                     <div className="flex flex-col">
                       <span className="text-gray-400 text-xxs">52W High</span>
-                      <span>{formatUSCurrency(Number(item.yrhiprice))}</span>
+                      <span>
+                        {formatUSCurrency(Number(item.yrhiprice)) || `-`}
+                      </span>
                     </div>
                   </td>
                 </tr>
@@ -343,7 +524,7 @@ export default function HomeUSA() {
                   <td className="py-3 pt-0 w-1/3 pb-0">
                     <div className="flex flex-col">
                       <span className="text-gray-400 text-xxs">Valuation</span>
-                      <span>{item.mktcapView}</span>
+                      <span>{item.mktcapView || `-`}</span>
                     </div>
                   </td>
 
@@ -352,14 +533,14 @@ export default function HomeUSA() {
                       <span className="text-gray-400 text-xxs">
                         Revenue (TTM)
                       </span>
-                      <span>{item.revenuettm}</span>
+                      <span>{item.revenuettm || `-`}</span>
                     </div>
                   </td>
 
                   <td className="py-3 pt-0 w-1/3 pb-0">
                     <div className="flex flex-col">
                       <span className="text-gray-400 text-xxs">PE</span>
-                      <span>{item.pe}</span>
+                      <span>{item.pe || `-`}</span>
                     </div>
                   </td>
                 </tr>
