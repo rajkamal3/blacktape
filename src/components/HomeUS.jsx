@@ -21,7 +21,7 @@ const filterByName = (list, query) => {
   );
 };
 
-export default function HomeUSA() {
+export default function HomeUS() {
   const [user, setUser] = useState(null);
   const [dataList, setDataList] = useState([]);
   const [loading, setLoading] = useState(true);

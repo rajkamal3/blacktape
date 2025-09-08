@@ -66,9 +66,9 @@ const Header = ({ user }) => {
 
               <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-3 gap-1 max-w-5xl mx-auto mb-1">
                 <Button
-                  label={`Go to ${country === "india" ? "USA" : "India"}`}
+                  label={`Switch to ${country === "india" ? "US" : "India"}`}
                   onClick={() =>
-                    changeCountry(country === "india" ? "usa" : "india")
+                    changeCountry(country === "india" ? "us" : "india")
                   }
                   size="small"
                   style={{

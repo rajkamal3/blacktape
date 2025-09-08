@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useTransition } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { findSupportLevels } from "@/utils/findSupportLevels";
 import Spinner from "@/components/Spinner";
@@ -75,8 +75,6 @@ export default function CompanyDetailsUS({ companyId }) {
     highlightedZones: []
   });
   const [err, setErr] = useState(null);
-
-  console.log(data);
 
   useEffect(() => {
     const base = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
