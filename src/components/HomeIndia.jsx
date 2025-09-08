@@ -439,13 +439,13 @@ export default function HomeIndia() {
             />
             <Button
               onClick={() => sortBy("change")}
-              label="1 Day Change"
+              label="Day Change"
               size="small"
               className="!bg-[#252525] !text-white !border-none"
             />
             <Button
               onClick={() => sortBy("valuation")}
-              label="Market Cap"
+              label="Valuation"
               size="small"
               className="!bg-[#252525] !text-white !border-none"
             />
