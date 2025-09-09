@@ -4,7 +4,6 @@ import { useState, useEffect, useRef, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { auth } from "@/lib/firebase";
 import { onAuthStateChanged } from "firebase/auth";
-import { nasdaq100 } from "@/data/nasdaq100";
 import Spinner from "@/components/Spinner";
 import { Dialog } from "primereact/dialog";
 import { Button } from "primereact/button";
@@ -12,6 +11,15 @@ import { InputText } from "primereact/inputtext";
 import { Toast } from "primereact/toast";
 import axios from "axios";
 import { formatUSCurrency } from "@/utils/formatUSCurrency";
+import { Dropdown } from "primereact/dropdown";
+import { useGlobalStore } from "@/store/globalStore";
+import { sp500Top100 } from "@/data/sp500Top100";
+import { nasdaq100 } from "@/data/nasdaq100";
+
+const indices = [
+  { name: "S&P 500 (Top 100)", code: "SP500" },
+  { name: "NASDAQ 100", code: "N100" }
+];
 
 const filterByName = (list, query) => {
   if (!query || query.length <= 2) return [];
@@ -36,7 +44,19 @@ export default function HomeUS() {
 
   const filteredData = filterByName(nasdaq100, query);
 
-  const summaryCacheKey = `cache_us_summary`;
+  const usIndexGlobal = useGlobalStore((state) => state.usIndexGlobal);
+  const setUsIndexGlobal = useGlobalStore((state) => state.setUsIndexGlobal);
+
+  const usDropdownActiveIndex = useGlobalStore(
+    (state) => state.usDropdownActiveIndex
+  );
+  const setUsDropdownActiveIndex = useGlobalStore(
+    (state) => state.setUsDropdownActiveIndex
+  );
+
+  const summaryCacheKey = usDropdownActiveIndex
+    ? `cache_us_summary_${usDropdownActiveIndex.code}`
+    : null;
 
   useEffect(() => {
     if (!user) return;
@@ -48,7 +68,7 @@ export default function HomeUS() {
       let failedIds = [];
 
       try {
-        for (const company of nasdaq100) {
+        for (const company of usIndexGlobal) {
           try {
             const res = await axios.get(
               `${base}/api/proxy?id=${company.detailsId}&type=usSummary`
@@ -138,7 +158,7 @@ export default function HomeUS() {
     } else {
       fetchAll();
     }
-  }, [user]);
+  }, [user, usIndexGlobal, usDropdownActiveIndex]);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -303,9 +323,37 @@ export default function HomeUS() {
     );
   };
 
+  const handleChangeIndex = (value) => {
+    setUsDropdownActiveIndex(value);
+    setLoading(true);
+
+    if (value.code === "N100") {
+      setUsIndexGlobal(nasdaq100);
+    } else if (value.code === "SP500") {
+      setUsIndexGlobal(sp500Top100);
+    }
+  };
+
   return (
     <div className="p-4 bg-[var(--background)]">
       <Toast ref={toast} position="top-right" />
+
+      <div className="card flex justify-content-center mb-3">
+        <Dropdown
+          value={usDropdownActiveIndex}
+          onChange={(e) => handleChangeIndex(e.value)}
+          options={indices}
+          optionLabel="name"
+          placeholder="Select an index"
+          className="w-full md:w-14rem"
+          style={{
+            backgroundColor: "#101010",
+            border: "none",
+            color: "#ffffff",
+            fontWeight: "bold"
+          }}
+        />
+      </div>
 
       <div
         style={{
