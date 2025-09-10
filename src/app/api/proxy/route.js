@@ -19,6 +19,8 @@ export async function GET(req) {
   const { searchParams } = new URL(req.url, "http://localhost");
   const id = searchParams.get("id");
   const type = searchParams.get("type");
+  const fromDate = searchParams.get("fromDate");
+  const toDate = searchParams.get("toDate");
 
   if (!id || !type) {
     return new Response(JSON.stringify({ error: "Missing id or type" }), {
@@ -43,6 +45,8 @@ export async function GET(req) {
     url = `https://quote.cnbc.com/quote-html-webservice/restQuote/symbolType/symbol?symbols=${id}`;
   } else if (type === "usChart") {
     url = `https://webql-redesign.cnbcfm.com/graphql?operationName=getQuoteChartData&variables=%7B%22symbol%22%3A%22${id}%22%2C%22timeRange%22%3A%225Y%22%7D&extensions=%7B%22persistedQuery%22%3A%7B%22version%22%3A1%2C%22sha256Hash%22%3A%229e1670c29a10707c417a1efd327d4b2b1d456b77f1426e7e84fb7d399416bb6b%22%7D%7D`;
+  } else if (type === "nasdaqChart") {
+    url = `https://api.nasdaq.com/api/quote/${id}/chart?assetclass=index&fromdate=${fromDate}&todate=${toDate}`;
   } else {
     return new Response(JSON.stringify({ error: "Invalid type" }), {
       status: 400,

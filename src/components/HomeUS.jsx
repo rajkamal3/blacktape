@@ -462,6 +462,19 @@ export default function HomeUS() {
             />
           </div>
         </div>
+
+        <div className="mb-4">
+          <h2 className="text-m font-bold mb-1">Support Levels</h2>
+
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-1 max-w-5xl mx-auto">
+            <Button
+              onClick={() => handleCardClick({ detailsId: "NDX" })}
+              size="small"
+              label="NASDAQ 100"
+              className="whitespace-nowrap !bg-[#252525] !text-white !border-none"
+            />
+          </div>
+        </div>
       </Dialog>
 
       <Dialog

@@ -19,6 +19,7 @@ import {
   Title
 } from "chart.js";
 import annotationPlugin from "chartjs-plugin-annotation";
+import { transformNasdaqChartData, getDateRange } from "@/utils/utils";
 
 const crosshairLinePlugin = {
   id: "crosshairLine",
@@ -79,6 +80,23 @@ export default function CompanyDetailsUS({ companyId }) {
   useEffect(() => {
     const base = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
     const chartCacheKey = `cache_us_chart_${companyId}`;
+
+    const { fromDate, toDate } = getDateRange(5);
+
+    if (companyId === "NDX") {
+      axios
+        .get(
+          `${base}/api/proxy?id=${companyId}&type=nasdaqChart&fromDate=${fromDate}&toDate=${toDate}`
+        )
+        .then((res) => {
+          const transformedData = transformNasdaqChartData(res?.data);
+
+          setSupportLevels(findSupportLevels(transformedData.priceBars));
+          setData(transformedData);
+        });
+
+      return;
+    }
 
     const readCache = () => {
       try {
@@ -218,7 +236,7 @@ export default function CompanyDetailsUS({ companyId }) {
     borderWidth: zone.confirmedResistance ? 1 : 0.5,
     label: {
       display: true,
-      content: `${formatUSCurrency(zone.zone)}`,
+      content: `${formatUSCurrency(Number(zone.zone))}`,
       position: "start",
       backgroundColor: "rgba(0, 0, 0, 0.0)",
       color: "#000",
@@ -327,7 +345,9 @@ export default function CompanyDetailsUS({ companyId }) {
                         : "border-t border-[#2d2d2d]"
                     }`}
                   >
-                    <td className="px-4 py-2">{formatUSCurrency(zone.zone)}</td>
+                    <td className="px-4 py-2">
+                      {formatUSCurrency(Number(zone.zone))}
+                    </td>
 
                     <td className="px-4 py-2">
                       {Number(data.allSymbols[0].last)
