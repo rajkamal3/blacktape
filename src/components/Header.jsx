@@ -30,11 +30,7 @@ const Header = ({ user }) => {
   };
 
   const clearCache = () => {
-    Object.keys(localStorage).forEach((key) => {
-      if (key.startsWith("companies_")) {
-        localStorage.removeItem(key);
-      }
-    });
+    localStorage.clear();
 
     setVisible(false);
 
