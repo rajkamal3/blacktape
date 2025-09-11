@@ -67,3 +67,13 @@ export const getDateRange = (yearsBack) => {
     toDate: formatDate(today)
   };
 };
+
+export const formatDetailedChartData = (data) => {
+  return {
+    points: data.map((item) => ({
+      ts: new Date(item.x).toISOString(),
+      lp: item.y,
+      v: 0
+    }))
+  };
+};

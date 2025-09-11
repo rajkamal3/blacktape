@@ -33,6 +33,8 @@ export async function GET(req) {
 
   if (type === "chart") {
     url = `https://api.tickertape.in/stocks/charts/inter/${id}?duration=5y`;
+  } else if (type === "chartDetailed") {
+    url = `https://api.univest.in/resources/stock-details/${id}/prices/NSE/5Y`;
   } else if (type === "financials") {
     url = `https://api.tickertape.in/stocks/financials/income/${id}/annual/normal?count=10`;
   } else if (type === "financialsQuarterly") {

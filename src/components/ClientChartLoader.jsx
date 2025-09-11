@@ -17,6 +17,7 @@ import {
 } from "chart.js";
 import { findSupportLevels } from "@/utils/findSupportLevels";
 import { formatIndianCurrency } from "@/utils/formatIndianCurrency";
+import { formatDetailedChartData } from "@/utils/utils";
 import annotationPlugin from "chartjs-plugin-annotation";
 import { useGlobalStore } from "@/store/globalStore";
 import Spinner from "@/components/Spinner";
@@ -120,19 +121,58 @@ export default function Chart({ companyId }) {
         return diffDays >= 7;
       })
     ) {
-      axios
-        .get(`${base}/api/proxy?id=${companyId}&type=chart`)
-        .then((res) => {
-          const chartData = res.data?.data?.[0];
+      if (companySummary.detailedChartId) {
+        axios
+          .get(
+            `${base}/api/proxy?id=${companySummary.detailedChartId}&type=chartDetailed`
+          )
+          .then((res) => {
+            const chartDataDetailed = res.data;
+            const formattedChartDataDetailed = chartDataDetailed
+              ? formatDetailedChartData(chartDataDetailed)
+              : null;
 
-          setData(chartData);
-          setCache(chartKey, chartData);
+            if (
+              !formattedChartDataDetailed ||
+              !formattedChartDataDetailed.points ||
+              formattedChartDataDetailed.points.length === 0
+            ) {
+              return axios
+                .get(`${base}/api/proxy?id=${companyId}&type=chart`)
+                .then((res) => {
+                  const chartData = res.data?.data?.[0];
 
-          const supports = findSupportLevels(chartData.points);
+                  setData(chartData);
+                  setCache(chartKey, chartData);
 
-          setSupportLevels(supports);
-        })
-        .catch((error) => setErr(error.message));
+                  const supports = findSupportLevels(chartData.points);
+                  setSupportLevels(supports);
+                });
+            }
+
+            setData(formattedChartDataDetailed);
+            setCache(chartKey, formattedChartDataDetailed);
+
+            const supports = findSupportLevels(
+              formattedChartDataDetailed.points
+            );
+            setSupportLevels(supports);
+          })
+          .catch((error) => setErr(error.message));
+      } else {
+        axios
+          .get(`${base}/api/proxy?id=${companyId}&type=chart`)
+          .then((res) => {
+            const chartData = res.data?.data?.[0];
+
+            setData(chartData);
+            setCache(chartKey, chartData);
+
+            const supports = findSupportLevels(chartData.points);
+            setSupportLevels(supports);
+          })
+          .catch((error) => setErr(error.message));
+      }
     } else {
       const cached = JSON.parse(localStorage.getItem(chartKey));
 
@@ -489,7 +529,7 @@ export default function Chart({ companyId }) {
             </>
           ) : (
             <h2 className="text-2xl font-bold">
-              {info.info.name.replace("Ltd", "") || data.sid}
+              {info.info.name.replace("Ltd", "") || data.sid || "Invalid name"}
             </h2>
           )}
         </div>

@@ -163,7 +163,8 @@ export default function HomeIndia() {
             if (res?.data?.data && typeof res.data.data === "object") {
               results.push({
                 ...res.data.data,
-                detailsId: company.detailsId
+                detailsId: company.detailsId,
+                detailedChartId: company.bseId
               });
             } else {
               console.warn(`🟡 No usable data for ID: ${company.summaryId}`);
