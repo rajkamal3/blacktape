@@ -94,7 +94,10 @@ export default function HomeIndia() {
         );
 
         if (res?.data?.data && typeof res.data.data === "object") {
-          setCompanySummary(res.data.data);
+          setCompanySummary({
+            ...res.data.data,
+            detailedChartId: item.bseId
+          });
         } else {
           console.warn(`🟡 No usable data for ID: ${company.summaryId}`);
           failedIds.push(item.summaryId);
