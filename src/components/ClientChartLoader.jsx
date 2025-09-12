@@ -213,12 +213,20 @@ export default function Chart({ companyId }) {
       axios
         .get(`${base}/api/proxy?id=${companyId}&type=financials`)
         .then((res) => {
-          setFinancials(res.data?.data);
-          setCache(financialsKey, res.data?.data);
+          const trimmed = res.data?.data?.map((item) => ({
+            displayPeriod: item.displayPeriod,
+            incTrev: item.incTrev,
+            incNinc: item.incNinc
+          }));
+
+          setFinancials(trimmed);
+          setCache(financialsKey, trimmed);
         })
         .catch((error) => setErr(error.message));
     } else {
-      setFinancials(JSON.parse(localStorage.getItem(financialsKey)).data);
+      const cached = JSON.parse(localStorage.getItem(financialsKey)).data;
+
+      setFinancials(cached);
     }
 
     const qFinancialsKey = `${companyId}_financialsQuarterly`;
@@ -227,14 +235,20 @@ export default function Chart({ companyId }) {
       axios
         .get(`${base}/api/proxy?id=${companyId}&type=financialsQuarterly`)
         .then((res) => {
-          setFinancialsQuarterly(res.data?.data);
-          setCache(qFinancialsKey, res.data?.data);
+          const trimmed = res.data?.data?.map((item) => ({
+            displayPeriod: item.displayPeriod,
+            qIncTrev: item.qIncTrev,
+            qIncNinc: item.qIncNinc
+          }));
+
+          setFinancialsQuarterly(trimmed);
+          setCache(qFinancialsKey, trimmed);
         })
         .catch((error) => setErr(error.message));
     } else {
-      setFinancialsQuarterly(
-        JSON.parse(localStorage.getItem(qFinancialsKey)).data
-      );
+      const cached = JSON.parse(localStorage.getItem(qFinancialsKey)).data;
+
+      setFinancialsQuarterly(cached);
     }
 
     // refresh every 3 days
