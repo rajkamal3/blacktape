@@ -164,8 +164,27 @@ export default function HomeIndia() {
             );
 
             if (res?.data?.data && typeof res.data.data === "object") {
+              const d = res.data.data;
+
               results.push({
-                ...res.data.data,
+                "52L": d["52L"],
+                "52H": d["52H"],
+                PE: d.PE,
+                IND_PE: d.IND_PE,
+                BV: d.BV,
+                PB: d.PB,
+                SC_FULLNM: d.SC_FULLNM,
+                pricepercentchange: d.pricepercentchange,
+                MKTCAP: d.MKTCAP,
+                cagr3Y: d.cagr3Y,
+                cagr5Y: d.cagr5Y,
+                cagr7Y: d.cagr7Y,
+                cagr10Y: d.cagr10Y,
+                pricecurrent: d.pricecurrent,
+                closenessToLowPct: d.closenessToLowPct,
+                cl1mPerChange: d.cl1mPerChange,
+                cl3mPerChange: d.cl3mPerChange,
+                cl1yPerChange: d.cl1yPerChange,
                 detailsId: company.detailsId,
                 detailedChartId: company.bseId
               });
