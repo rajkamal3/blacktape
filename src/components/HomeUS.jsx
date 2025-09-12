@@ -539,7 +539,9 @@ export default function HomeUS() {
               </h2>
 
               <h2 className="text-xs font-semibold">
-                {`${formatUSCurrency(item.last)} (${item.change_pct})` || ``}
+                {`${formatUSCurrency(
+                  parseFloat(item.last.replace(/,/g, ""))
+                )} (${item.change_pct})` || ``}
               </h2>
             </div>
 
@@ -550,7 +552,9 @@ export default function HomeUS() {
                     <div className="flex flex-col">
                       <span className="text-gray-400 text-xxs">52W Low</span>
                       <span>
-                        {formatUSCurrency(Number(item.yrloprice)) || `-`}
+                        {formatUSCurrency(
+                          parseFloat(item.yrloprice.replace(/,/g, ""))
+                        ) || `-`}
                       </span>
                     </div>
                   </td>
@@ -562,8 +566,9 @@ export default function HomeUS() {
                       </span>
                       <span>
                         {(
-                          ((Number(item.last) - Number(item.yrloprice)) /
-                            Number(item.yrloprice)) *
+                          ((parseFloat(item.last.replace(/,/g, "")) -
+                            parseFloat(item.yrloprice.replace(/,/g, ""))) /
+                            parseFloat(item.yrloprice.replace(/,/g, ""))) *
                           100
                         ).toFixed(2)}
                         %
@@ -575,7 +580,9 @@ export default function HomeUS() {
                     <div className="flex flex-col">
                       <span className="text-gray-400 text-xxs">52W High</span>
                       <span>
-                        {formatUSCurrency(Number(item.yrhiprice)) || `-`}
+                        {formatUSCurrency(
+                          parseFloat(item.yrhiprice.replace(/,/g, ""))
+                        ) || `-`}
                       </span>
                     </div>
                   </td>

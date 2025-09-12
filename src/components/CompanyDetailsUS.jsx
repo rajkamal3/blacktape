@@ -255,7 +255,9 @@ export default function CompanyDetailsUS({ companyId }) {
 
         <div>
           <h2 className="text-lg font-bold mb-4">
-            {formatUSCurrency(data.allSymbols[0].last)}
+            {formatUSCurrency(
+              parseFloat(data.allSymbols[0].last.replace(/,/g, ""))
+            )}
           </h2>
         </div>
 
@@ -350,10 +352,15 @@ export default function CompanyDetailsUS({ companyId }) {
                     </td>
 
                     <td className="px-4 py-2">
-                      {Number(data.allSymbols[0].last)
+                      {data.allSymbols[0].last
                         ? `${(
-                            ((Number(data.allSymbols[0].last) - zone.zone) /
-                              Number(data.allSymbols[0].last)) *
+                            ((parseFloat(
+                              data.allSymbols[0].last.replace(/,/g, "")
+                            ) -
+                              zone.zone) /
+                              parseFloat(
+                                data.allSymbols[0].last.replace(/,/g, "")
+                              )) *
                             100
                           ).toFixed(2)}%`
                         : `-`}
