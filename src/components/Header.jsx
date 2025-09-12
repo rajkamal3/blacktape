@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Sidebar } from "primereact/sidebar";
 import { Button } from "primereact/button";
 import { signOut } from "firebase/auth";
@@ -9,12 +9,39 @@ import { useGlobalStore } from "@/store/globalStore";
 
 const Header = ({ user }) => {
   const [visible, setVisible] = useState(false);
+  const [availableCache, setAvailableCache] = useState(null);
 
   const country = useGlobalStore((state) => state.country);
   const setCountry = useGlobalStore((state) => state.setCountry);
 
   const router = useRouter();
   const pathname = usePathname();
+
+  useEffect(() => {
+    const checkStorage = () => {
+      try {
+        let used = 0;
+
+        for (let key in localStorage) {
+          if (localStorage.hasOwnProperty(key)) {
+            let value = localStorage.getItem(key);
+            used += key.length + (value ? value.length : 0);
+          }
+        }
+
+        const quota = 5 * 1024 * 1024;
+        const free = quota - used;
+        const percent = ((free / quota) * 100).toFixed(2);
+
+        setAvailableCache(percent);
+      } catch (err) {
+        console.error("Error calculating storage:", err);
+        setAvailableCache(null);
+      }
+    };
+
+    checkStorage();
+  }, []);
 
   const handleLogout = async () => {
     await signOut(auth);
@@ -97,6 +124,14 @@ const Header = ({ user }) => {
                     border: "none"
                   }}
                 />
+              </div>
+
+              <div>
+                {availableCache !== null ? (
+                  <p>Available cache: {availableCache}%</p>
+                ) : (
+                  <></>
+                )}
               </div>
             </Sidebar>
 
