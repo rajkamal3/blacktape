@@ -319,8 +319,26 @@ export default function Chart({ companyId }) {
       axios
         .get(`${base}/api/proxy?id=${companyId}&type=info`)
         .then((res) => {
-          setInfo(res.data?.data);
-          setCache(infoKey, res.data?.data);
+          const raw = res.data?.data;
+
+          const trimmed = {
+            info: {
+              name: raw?.info?.name,
+              sector: raw?.info?.sector
+            },
+            ratios: {
+              lastPrice: raw?.ratios?.lastPrice,
+              apef: raw?.ratios?.apef,
+              ["52wLow"]: raw?.ratios?.["52wLow"],
+              ["52wHigh"]: raw?.ratios?.["52wHigh"],
+              marketCap: raw?.ratios?.marketCap,
+              indpe: raw?.ratios?.indpe,
+              pb: raw?.ratios?.pb
+            }
+          };
+
+          setInfo(trimmed);
+          setCache(infoKey, trimmed);
         })
         .catch((error) => setErr(error.message));
     } else {
