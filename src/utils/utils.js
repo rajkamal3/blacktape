@@ -52,10 +52,7 @@ export const transformNasdaqChartData = (apiResponse) => {
 
 export const getDateRange = (yearsBack) => {
   const formatDate = (date) => {
-    return date
-      .toISOString()
-      .split("T")[0]
-      .replace(/(\d{4})-(\d{2})-(\d{2})/, "$1-$3-$2");
+    return date.toISOString().split("T")[0];
   };
 
   const today = new Date();

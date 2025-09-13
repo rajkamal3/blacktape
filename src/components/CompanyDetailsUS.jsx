@@ -255,9 +255,11 @@ export default function CompanyDetailsUS({ companyId }) {
 
         <div>
           <h2 className="text-lg font-bold mb-4">
-            {formatUSCurrency(
-              parseFloat(data.allSymbols[0].last.replace(/,/g, ""))
-            )}
+            {typeof data.allSymbols[0].last === "string"
+              ? formatUSCurrency(
+                  parseFloat(data.allSymbols[0].last.replace(/,/g, ""))
+                )
+              : formatUSCurrency(data.allSymbols[0].last)}
           </h2>
         </div>
 
@@ -354,13 +356,17 @@ export default function CompanyDetailsUS({ companyId }) {
                     <td className="px-4 py-2">
                       {data.allSymbols[0].last
                         ? `${(
-                            ((parseFloat(
-                              data.allSymbols[0].last.replace(/,/g, "")
-                            ) -
+                            (((typeof data.allSymbols[0].last === "number"
+                              ? data.allSymbols[0].last
+                              : parseFloat(
+                                  data.allSymbols[0].last.replace(/,/g, "")
+                                )) -
                               zone.zone) /
-                              parseFloat(
-                                data.allSymbols[0].last.replace(/,/g, "")
-                              )) *
+                              (typeof data.allSymbols[0].last === "number"
+                                ? data.allSymbols[0].last
+                                : parseFloat(
+                                    data.allSymbols[0].last.replace(/,/g, "")
+                                  ))) *
                             100
                           ).toFixed(2)}%`
                         : `-`}
