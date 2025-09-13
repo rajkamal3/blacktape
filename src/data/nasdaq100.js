@@ -1,103 +1,402 @@
 export const nasdaq100 = [
-  { name: "Adobe Inc.", detailsId: "ADBE" },
-  { name: "Advanced Micro Devices Inc.", detailsId: "AMD" },
-  { name: "Airbnb, Inc.", detailsId: "ABNB" },
-  { name: "Alphabet Inc. (Class A)", detailsId: "GOOGL" },
-  { name: "Alphabet Inc. (Class C)", detailsId: "GOOG" },
-  { name: "Amazon.com, Inc.", detailsId: "AMZN" },
-  { name: "American Electric Power Company", detailsId: "AEP" },
-  { name: "Amgen Inc.", detailsId: "AMGN" },
-  { name: "Analog Devices, Inc.", detailsId: "ADI" },
-  { name: "AppLovin Corporation", detailsId: "APP" },
-  { name: "Applied Materials, Inc.", detailsId: "AMAT" },
-  { name: "Apple Inc.", detailsId: "AAPL" },
-  { name: "Arm Holdings plc", detailsId: "ARM" },
-  { name: "ASML Holding N.V.", detailsId: "ASML" },
-  { name: "AstraZeneca PLC", detailsId: "AZN" },
-  { name: "Atlassian Corporation", detailsId: "TEAM" },
-  { name: "Autodesk, Inc.", detailsId: "ADSK" },
-  { name: "Automatic Data Processing, Inc.", detailsId: "ADP" },
-  { name: "Axon Enterprise, Inc.", detailsId: "AXON" },
-  { name: "Baker Hughes Co.", detailsId: "BKR" },
-  { name: "Biogen Inc.", detailsId: "BIIB" },
-  { name: "Booking Holdings Inc.", detailsId: "BKNG" },
-  { name: "Broadcom Inc.", detailsId: "AVGO" },
-  { name: "Cadence Design Systems", detailsId: "CDNS" },
-  { name: "CDW Corporation", detailsId: "CDW" },
-  { name: "Charter Communications", detailsId: "CHTR" },
-  { name: "Cintas Corporation", detailsId: "CTAS" },
-  { name: "Cisco Systems, Inc.", detailsId: "CSCO" },
-  { name: "Coca-Cola Europacific Partners", detailsId: "CCEP" },
-  { name: "Cognizant Technology Solutions", detailsId: "CTSH" },
-  { name: "Comcast Corporation", detailsId: "CMCSA" },
-  { name: "Constellation Energy", detailsId: "CEG" },
-  { name: "Copart, Inc.", detailsId: "CPRT" },
-  { name: "CoStar Group Inc.", detailsId: "CSGP" },
-  { name: "Costco Wholesale", detailsId: "COST" },
-  { name: "CrowdStrike Holdings, Inc.", detailsId: "CRWD" },
-  { name: "CSX Corporation", detailsId: "CSX" },
-  { name: "Datadog, Inc.", detailsId: "DDOG" },
-  { name: "Dexcom", detailsId: "DXCM" },
-  { name: "Diamondback Energy", detailsId: "FANG" },
-  { name: "DoorDash, Inc.", detailsId: "DASH" },
-  { name: "Electronic Arts Inc.", detailsId: "EA" },
-  { name: "Exelon Corporation", detailsId: "EXC" },
-  { name: "Fastenal Company", detailsId: "FAST" },
-  { name: "Fortinet, Inc.", detailsId: "FTNT" },
-  { name: "GE HealthCare", detailsId: "GEHC" },
-  { name: "Gilead Sciences", detailsId: "GILD" },
-  { name: "GlobalFoundries", detailsId: "GFS" },
-  { name: "Honeywell International", detailsId: "HON" },
-  { name: "Idexx Laboratories", detailsId: "IDXX" },
-  { name: "Intel Corporation", detailsId: "INTC" },
-  { name: "Intuit Inc.", detailsId: "INTU" },
-  { name: "Intuitive Surgical, Inc.", detailsId: "ISRG" },
-  { name: "Keurig Dr Pepper Inc.", detailsId: "KDP" },
-  { name: "KLA Corporation", detailsId: "KLAC" },
-  { name: "Kraft Heinz Company", detailsId: "KHC" },
-  { name: "Lam Research Corporation", detailsId: "LRCX" },
-  { name: "Linde plc", detailsId: "LIN" },
-  { name: "Lululemon Athletica", detailsId: "LULU" },
-  { name: "Marriott International", detailsId: "MAR" },
-  { name: "Marvell Technology, Inc.", detailsId: "MRVL" },
-  { name: "MeradoLibre, Inc.", detailsId: "MELI" },
-  { name: "Meta Platforms, Inc.", detailsId: "META" },
-  { name: "Microchip Technology", detailsId: "MCHP" },
-  { name: "Micron Technology, Inc.", detailsId: "MU" },
-  { name: "Microsoft Corporation", detailsId: "MSFT" },
-  { name: "Mondoelz International", detailsId: "MDLZ" },
-  { name: "Monster Beverage", detailsId: "MNST" },
-  { name: "MicroStrategy Incorporated", detailsId: "MSTR" },
-  { name: "Netflix, Inc.", detailsId: "NFLX" },
-  { name: "Nvidia", detailsId: "NVDA" },
-  { name: "NXP Semiconductors N.V.", detailsId: "NXPI" },
-  { name: "O'Reilly Auto Parts", detailsId: "ORLY" },
-  { name: "Old Dominion Freight Line", detailsId: "ODFL" },
-  { name: "ON Semiconductor", detailsId: "ON" },
-  { name: "Paccar", detailsId: "PCAR" },
-  { name: "Palantir Technologies", detailsId: "PLTR" },
-  { name: "Palo Alto Networks", detailsId: "PANW" },
-  { name: "Paychex, Inc.", detailsId: "PAYX" },
-  { name: "PayPal Holdings, Inc.", detailsId: "PYPL" },
-  { name: "PDD Holdings Inc.", detailsId: "PDD" },
-  { name: "PepsiCo", detailsId: "PEP" },
-  { name: "Qualcomm Inc.", detailsId: "QCOM" },
-  { name: "Regeneron Pharmaceuticals", detailsId: "REGN" },
-  { name: "Roper Technologies", detailsId: "ROP" },
-  { name: "Ross Stores", detailsId: "ROST" },
-  { name: "Shopify", detailsId: "SHOP" },
-  { name: "Starbucks", detailsId: "SBUX" },
-  { name: "Synopsys", detailsId: "SNPS" },
-  { name: "T-Mobile US, Inc.", detailsId: "TMUS" },
-  { name: "Take-Two Interactive Software", detailsId: "TTWO" },
-  { name: "Tesla, Inc.", detailsId: "TSLA" },
-  { name: "Texas Instruments", detailsId: "TXN" },
-  { name: "The Trade Desk", detailsId: "TTD" },
-  { name: "Thomson Reuters", detailsId: "TRI" },
-  { name: "Verisk Analytics", detailsId: "VRSK" },
-  { name: "Vertex Pharmaceuticals", detailsId: "VRTX" },
-  { name: "Warner Bros. Discovery", detailsId: "WBD" },
-  { name: "Workday, Inc.", detailsId: "WDAY" },
-  { name: "Xcel Energy", detailsId: "XEL" },
-  { name: "Zscaler", detailsId: "ZS" }
+  {
+    name: "Adobe",
+    detailsId: "ADBE"
+  },
+  {
+    name: "Advanced Micro Devices",
+    detailsId: "AMD"
+  },
+  {
+    name: "Airbnb",
+    detailsId: "ABNB"
+  },
+  {
+    name: "Alphabet",
+    detailsId: "GOOGL"
+  },
+  {
+    name: "Amazon",
+    detailsId: "AMZN"
+  },
+  {
+    name: "American Electric Power Company",
+    detailsId: "AEP"
+  },
+  {
+    name: "Amgen",
+    detailsId: "AMGN"
+  },
+  {
+    name: "Analog Devices",
+    detailsId: "ADI"
+  },
+  {
+    name: "Apple",
+    detailsId: "AAPL"
+  },
+  {
+    name: "Applied Materials",
+    detailsId: "AMAT"
+  },
+  {
+    name: "Applovin",
+    detailsId: "APP"
+  },
+  {
+    name: "Arm Holdings",
+    detailsId: "ARM"
+  },
+  {
+    name: "ASML Holding",
+    detailsId: "ASML"
+  },
+  {
+    name: "AstraZeneca",
+    detailsId: "AZN"
+  },
+  {
+    name: "Atlassian Class A",
+    detailsId: "TEAM"
+  },
+  {
+    name: "Autodesk",
+    detailsId: "ADSK"
+  },
+  {
+    name: "Automatic Data Processing",
+    detailsId: "ADP"
+  },
+  {
+    name: "Axon Enterprise",
+    detailsId: "AXON"
+  },
+  {
+    name: "Baker Hughes Company Class A",
+    detailsId: "BKR"
+  },
+  {
+    name: "Biogen",
+    detailsId: "BIIB"
+  },
+  {
+    name: "Booking Holdings",
+    detailsId: "BKNG"
+  },
+  {
+    name: "Broadcom",
+    detailsId: "AVGO"
+  },
+  {
+    name: "Cadence Design Systems",
+    detailsId: "CDNS"
+  },
+  {
+    name: "CDW",
+    detailsId: "CDW"
+  },
+  {
+    name: "Charter Communications Class A",
+    detailsId: "CHTR"
+  },
+  {
+    name: "Cintas",
+    detailsId: "CTAS"
+  },
+  {
+    name: "Cisco Systems",
+    detailsId: "CSCO"
+  },
+  {
+    name: "Coca-Cola Europacific Partners",
+    detailsId: "CCEP"
+  },
+  {
+    name: "Cognizant Technology Solutions Class A",
+    detailsId: "CTSH"
+  },
+  {
+    name: "Comcast Class A",
+    detailsId: "CMCSA"
+  },
+  {
+    name: "Constellation Energy",
+    detailsId: "CEG"
+  },
+  {
+    name: "Copart",
+    detailsId: "CPRT"
+  },
+  {
+    name: "CoStar Group",
+    detailsId: "CSGP"
+  },
+  {
+    name: "Costco Wholesale",
+    detailsId: "COST"
+  },
+  {
+    name: "CrowdStrike Class A",
+    detailsId: "CRWD"
+  },
+  {
+    name: "CSX",
+    detailsId: "CSX"
+  },
+  {
+    name: "Datadog Class A",
+    detailsId: "DDOG"
+  },
+  {
+    name: "DexCom",
+    detailsId: "DXCM"
+  },
+  {
+    name: "Diamondback Energy",
+    detailsId: "FANG"
+  },
+  {
+    name: "DoorDash Class A",
+    detailsId: "DASH"
+  },
+  {
+    name: "Electronic Arts",
+    detailsId: "EA"
+  },
+  {
+    name: "Exelon",
+    detailsId: "EXC"
+  },
+  {
+    name: "Fastenal",
+    detailsId: "FAST"
+  },
+  {
+    name: "Fortinet",
+    detailsId: "FTNT"
+  },
+  {
+    name: "GE HealthCare Technologies",
+    detailsId: "GEHC"
+  },
+  {
+    name: "Gilead Sciences",
+    detailsId: "GILD"
+  },
+  {
+    name: "GlobalFoundries",
+    detailsId: "GFS"
+  },
+  {
+    name: "Honeywell International",
+    detailsId: "HON"
+  },
+  {
+    name: "IDEXX Laboratories",
+    detailsId: "IDXX"
+  },
+  {
+    name: "Intel",
+    detailsId: "INTC"
+  },
+  {
+    name: "Intuit",
+    detailsId: "INTU"
+  },
+  {
+    name: "Intuitive Surgical",
+    detailsId: "ISRG"
+  },
+  {
+    name: "Keurig Dr Pepper",
+    detailsId: "KDP"
+  },
+  {
+    name: "KLA",
+    detailsId: "KLAC"
+  },
+  {
+    name: "Lam Research",
+    detailsId: "LRCX"
+  },
+  {
+    name: "Linde",
+    detailsId: "LIN"
+  },
+  {
+    name: "lululemon athletica",
+    detailsId: "LULU"
+  },
+  {
+    name: "Marriott International Class A",
+    detailsId: "MAR"
+  },
+  {
+    name: "Marvell Technology",
+    detailsId: "MRVL"
+  },
+  {
+    name: "MercadoLibre",
+    detailsId: "MELI"
+  },
+  {
+    name: "Meta Platforms Class A",
+    detailsId: "META"
+  },
+  {
+    name: "Microchip Technology",
+    detailsId: "MCHP"
+  },
+  {
+    name: "Micron Technology",
+    detailsId: "MU"
+  },
+  {
+    name: "Microsoft",
+    detailsId: "MSFT"
+  },
+  {
+    name: "Mondelez International Class A",
+    detailsId: "MDLZ"
+  },
+  {
+    name: "Monster Beverage",
+    detailsId: "MNST"
+  },
+  {
+    name: "Netflix",
+    detailsId: "NFLX"
+  },
+  {
+    name: "NVIDIA",
+    detailsId: "NVDA"
+  },
+  {
+    name: "NXP Semiconductors",
+    detailsId: "NXPI"
+  },
+  {
+    name: "O'Reilly Automotive",
+    detailsId: "ORLY"
+  },
+  {
+    name: "Old Dominion Freight Line",
+    detailsId: "ODFL"
+  },
+  {
+    name: "ON Semiconductor",
+    detailsId: "ON"
+  },
+  {
+    name: "PACCAR",
+    detailsId: "PCAR"
+  },
+  {
+    name: "Palantir Technologies Class A",
+    detailsId: "PLTR"
+  },
+  {
+    name: "Palo Alto Networks",
+    detailsId: "PANW"
+  },
+  {
+    name: "Paychex",
+    detailsId: "PAYX"
+  },
+  {
+    name: "PayPal Holdings",
+    detailsId: "PYPL"
+  },
+  {
+    name: "PDD Holdings",
+    detailsId: "PDD"
+  },
+  {
+    name: "PepsiCo",
+    detailsId: "PEP"
+  },
+  {
+    name: "QUALCOMM",
+    detailsId: "QCOM"
+  },
+  {
+    name: "Regeneron Pharmaceuticals",
+    detailsId: "REGN"
+  },
+  {
+    name: "Roper Technologies",
+    detailsId: "ROP"
+  },
+  {
+    name: "Ross Stores",
+    detailsId: "ROST"
+  },
+  {
+    name: "Shopify",
+    detailsId: "SHOP"
+  },
+  {
+    name: "Starbucks",
+    detailsId: "SBUX"
+  },
+  {
+    name: "Strategy Class A",
+    detailsId: "MSTR"
+  },
+  {
+    name: "Synopsys",
+    detailsId: "SNPS"
+  },
+  {
+    name: "T-Mobile US",
+    detailsId: "TMUS"
+  },
+  {
+    name: "Take-Two Interactive Software",
+    detailsId: "TTWO"
+  },
+  {
+    name: "Tesla",
+    detailsId: "TSLA"
+  },
+  {
+    name: "Texas Instruments",
+    detailsId: "TXN"
+  },
+  {
+    name: "Kraft Heinz",
+    detailsId: "KHC"
+  },
+  {
+    name: "The Trade Desk Class A",
+    detailsId: "TTD"
+  },
+  {
+    name: "Thomson Reuters",
+    detailsId: "TRI"
+  },
+  {
+    name: "Verisk Analytics",
+    detailsId: "VRSK"
+  },
+  {
+    name: "Vertex Pharmaceuticals",
+    detailsId: "VRTX"
+  },
+  {
+    name: "Warner Bros. Discovery Series A",
+    detailsId: "WBD"
+  },
+  {
+    name: "Workday Class A",
+    detailsId: "WDAY"
+  },
+  {
+    name: "Xcel Energy",
+    detailsId: "XEL"
+  },
+  {
+    name: "Zscaler",
+    detailsId: "ZS"
+  }
 ];
