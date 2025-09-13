@@ -14,11 +14,28 @@ import { formatUSCurrency } from "@/utils/formatUSCurrency";
 import { Dropdown } from "primereact/dropdown";
 import { useGlobalStore } from "@/store/globalStore";
 import { sp500Tier1 } from "@/data/sp500Tier1";
+import { sp500Tier2 } from "@/data/sp500Tier2";
+import { sp500Tier3 } from "@/data/sp500Tier3";
+import { sp500Tier4 } from "@/data/sp500Tier4";
+import { sp500Tier5 } from "@/data/sp500Tier5";
 import { nasdaq100 } from "@/data/nasdaq100";
 
 const indices = [
-  { name: "S&P 500 (Top 100)", code: "SP500" },
+  { name: "S&P 500 - Tier 1 (Top 100)", code: "SP500" },
+  { name: "S&P 500 - Tier 2 (101-200)", code: "SP500-2" },
+  { name: "S&P 500 - Tier 3 (201-300)", code: "SP500-3" },
+  { name: "S&P 500 - Tier 4 (301-400)", code: "SP500-4" },
+  { name: "S&P 500 - Tier 5 (401-500)", code: "SP500-5" },
   { name: "NASDAQ 100", code: "N100" }
+];
+
+const us600 = [
+  ...nasdaq100,
+  ...sp500Tier1,
+  ...sp500Tier2,
+  ...sp500Tier3,
+  ...sp500Tier4,
+  ...sp500Tier5
 ];
 
 const filterByName = (list, query) => {
@@ -331,6 +348,14 @@ export default function HomeUS() {
       setUsIndexGlobal(nasdaq100);
     } else if (value.code === "SP500") {
       setUsIndexGlobal(sp500Tier1);
+    } else if (value.code === "SP500-2") {
+      setUsIndexGlobal(sp500Tier2);
+    } else if (value.code === "SP500-3") {
+      setUsIndexGlobal(sp500Tier3);
+    } else if (value.code === "SP500-4") {
+      setUsIndexGlobal(sp500Tier4);
+    } else if (value.code === "SP500-5") {
+      setUsIndexGlobal(sp500Tier5);
     }
   };
 
@@ -407,10 +432,7 @@ export default function HomeUS() {
           <Button
             label="Random Stock"
             onClick={() =>
-              handleCardClick(
-                nasdaq100[Math.floor(Math.random() * 100)],
-                "search"
-              )
+              handleCardClick(us600[Math.floor(Math.random() * 600)], "search")
             }
             icon="pi pi-compass"
             iconPos="right"

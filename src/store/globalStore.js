@@ -6,7 +6,7 @@ export const useGlobalStore = create((set) => ({
   indexGlobal: watchlist,
   usIndexGlobal: sp500Tier1,
   dropdownActiveIndex: { name: "Watchlist 1", code: "WL1" },
-  usDropdownActiveIndex: { name: "S&P 500 (Top 100)", code: "SP500" },
+  usDropdownActiveIndex: { name: "S&P 500 - Tier 1 (Top 100)", code: "SP500" },
   companySummary: {},
   country: "india",
 
