@@ -263,8 +263,16 @@ export default function Chart({ companyId }) {
       axios
         .get(`${base}/api/proxy?id=${companyId}&type=summary`)
         .then((res) => {
-          setSummary(res.data?.data);
-          setCache(summaryKey, res.data?.data);
+          const raw = res.data?.data;
+
+          const trimmed = {
+            holdings: raw?.holdings,
+            aboutAndPeers: raw?.aboutAndPeers,
+            brands: raw?.brands
+          };
+
+          setSummary(trimmed);
+          setCache(summaryKey, trimmed);
         })
         .catch((error) => setErr(error.message));
     } else {
