@@ -266,8 +266,28 @@ export default function Chart({ companyId }) {
           const raw = res.data?.data;
 
           const trimmed = {
-            holdings: raw?.holdings,
-            aboutAndPeers: raw?.aboutAndPeers,
+            holdings: {
+              holdings: raw?.holdings?.holdings?.map((h) => ({
+                date: h.date,
+                data: {
+                  pmPctT: h.data.pmPctT,
+                  fiPctT: h.data.fiPctT,
+                  othDiPctT: h.data.othDiPctT,
+                  mfPctT: h.data.mfPctT,
+                  rOthPctT: h.data.rOthPctT
+                }
+              }))
+            },
+            aboutAndPeers: raw?.aboutAndPeers?.map((p) => ({
+              name: p.name,
+              sid: p.sid,
+              ratios: {
+                "52wpct": p.ratios["52wpct"],
+                marketCap: p.ratios.marketCap,
+                apef: p.ratios.apef,
+                pbr: p.ratios.pbr
+              }
+            })),
             brands: raw?.brands
           };
 
