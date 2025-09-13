@@ -13,7 +13,7 @@ import axios from "axios";
 import { formatUSCurrency } from "@/utils/formatUSCurrency";
 import { Dropdown } from "primereact/dropdown";
 import { useGlobalStore } from "@/store/globalStore";
-import { sp500Top100 } from "@/data/sp500Top100";
+import { sp500Tier1 } from "@/data/sp500Tier1";
 import { nasdaq100 } from "@/data/nasdaq100";
 
 const indices = [
@@ -330,7 +330,7 @@ export default function HomeUS() {
     if (value.code === "N100") {
       setUsIndexGlobal(nasdaq100);
     } else if (value.code === "SP500") {
-      setUsIndexGlobal(sp500Top100);
+      setUsIndexGlobal(sp500Tier1);
     }
   };
 

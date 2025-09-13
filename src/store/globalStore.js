@@ -1,10 +1,10 @@
 import { create } from "zustand";
 import { watchlist } from "@/data/watchlist";
-import { sp500Top100 } from "@/data/sp500Top100";
+import { sp500Tier1 } from "@/data/sp500Tier1";
 
 export const useGlobalStore = create((set) => ({
   indexGlobal: watchlist,
-  usIndexGlobal: sp500Top100,
+  usIndexGlobal: sp500Tier1,
   dropdownActiveIndex: { name: "Watchlist 1", code: "WL1" },
   usDropdownActiveIndex: { name: "S&P 500 (Top 100)", code: "SP500" },
   companySummary: {},
