@@ -59,7 +59,7 @@ export default function HomeUS() {
   const router = useRouter();
   const toast = useRef(null);
 
-  const filteredData = filterByName(nasdaq100, query);
+  const filteredData = filterByName(us600, query);
 
   const usIndexGlobal = useGlobalStore((state) => state.usIndexGlobal);
   const setUsIndexGlobal = useGlobalStore((state) => state.setUsIndexGlobal);
