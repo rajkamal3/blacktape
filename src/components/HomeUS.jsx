@@ -29,14 +29,18 @@ const indices = [
   { name: "NASDAQ 100", code: "N100" }
 ];
 
-const us600 = [
-  ...nasdaq100,
-  ...sp500Tier1,
-  ...sp500Tier2,
-  ...sp500Tier3,
-  ...sp500Tier4,
-  ...sp500Tier5
-];
+const us600 = Array.from(
+  new Map(
+    [
+      ...nasdaq100,
+      ...sp500Tier1,
+      ...sp500Tier2,
+      ...sp500Tier3,
+      ...sp500Tier4,
+      ...sp500Tier5
+    ].map((item) => [item.detailsId, item])
+  ).values()
+);
 
 const filterByName = (list, query) => {
   if (!query || query.length <= 2) return [];
@@ -524,9 +528,9 @@ export default function HomeUS() {
 
           <ul className="space-y-2 mt-2">
             {filteredData.length > 0 ? (
-              filteredData.map((item) => (
+              filteredData.map((item, index) => (
                 <li
-                  key={item.detailsId}
+                  key={`${item.detailsId}-${index}`}
                   className="p-3 bg-[#252525] rounded-lg hover:bg-gray-600"
                   onClick={() => handleCardClick(item, "search")}
                 >
