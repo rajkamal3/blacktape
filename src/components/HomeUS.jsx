@@ -96,10 +96,22 @@ export default function HomeUS() {
             );
 
             if (res?.data && typeof res === "object") {
-              results.push({
-                ...res?.data.FormattedQuoteResult.FormattedQuote[0],
+              const raw =
+                res?.data.FormattedQuoteResult.FormattedQuote[0] || {};
+
+              const trimmed = {
+                name: raw.name,
+                last: raw.last,
+                change_pct: raw.change_pct,
+                yrloprice: raw.yrloprice,
+                yrhiprice: raw.yrhiprice,
+                mktcapView: raw.mktcapView,
+                revenuettm: raw.revenuettm,
+                pe: raw.pe,
                 detailsId: company.detailsId
-              });
+              };
+
+              results.push(trimmed);
             } else {
               console.warn(`🟡 No usable data for ID: ${company.detailsId}`);
               failedIds.push(company.detailsId);
