@@ -12,7 +12,7 @@ import { Toast } from "primereact/toast";
 import { nifty50 } from "@/data/nifty50";
 import { niftyNext50 } from "@/data/niftyNext50";
 import { niftyMidcap150 } from "@/data/niftyMidcap150";
-import { niftySmallCap250 } from "@/data/niftySmallcap250";
+import { niftySmallcap250 } from "@/data/niftySmallcap250";
 import { watchlist } from "@/data/watchlist";
 import { Button } from "primereact/button";
 import Spinner from "@/components/Spinner";
@@ -32,7 +32,7 @@ const nifty500 = [
   ...nifty50,
   ...niftyNext50,
   ...niftyMidcap150,
-  ...niftySmallCap250
+  ...niftySmallcap250
 ];
 
 const filterByName = (list, query) => {
@@ -293,7 +293,7 @@ export default function HomeIndia() {
     } else if (value.code === "NM150") {
       setIndexGlobal(niftyMidcap150);
     } else if (value.code === "NS250") {
-      setIndexGlobal(niftySmallCap250);
+      setIndexGlobal(niftySmallcap250);
     } else if (value.code === "WL1") {
       setIndexGlobal(watchlist);
     }

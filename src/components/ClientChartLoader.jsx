@@ -22,6 +22,10 @@ import annotationPlugin from "chartjs-plugin-annotation";
 import { useGlobalStore } from "@/store/globalStore";
 import Spinner from "@/components/Spinner";
 import { useRouter } from "next/navigation";
+import { nifty50 } from "@/data/nifty50";
+import { niftyNext50 } from "@/data/niftyNext50";
+import { niftyMidcap150 } from "@/data/niftyMidcap150";
+import { niftySmallcap250 } from "@/data/niftySmallcap250";
 
 const crosshairLinePlugin = {
   id: "crosshairLine",
@@ -89,6 +93,13 @@ export default function Chart({ companyId }) {
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
 
+  const nifty500 = [
+    ...nifty50,
+    ...niftyNext50,
+    ...niftyMidcap150,
+    ...niftySmallcap250
+  ];
+
   useEffect(() => {
     const base = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
 
@@ -121,10 +132,16 @@ export default function Chart({ companyId }) {
         return diffDays >= 7;
       })
     ) {
-      if (companySummary.detailedChartId) {
+      const companyData = nifty500.find(
+        (company) => company.detailsId === companyId
+      );
+
+      if (companySummary.detailedChartId || companyData?.bseId) {
         axios
           .get(
-            `${base}/api/proxy?id=${companySummary.detailedChartId}&type=chartDetailed`
+            `${base}/api/proxy?id=${
+              companySummary.detailedChartId || companyData.bseId
+            }&type=chartDetailed`
           )
           .then((res) => {
             const chartDataDetailed = res.data;

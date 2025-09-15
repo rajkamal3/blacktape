@@ -1,4 +1,4 @@
-export const niftySmallCap250 = [
+export const niftySmallcap250 = [
   {
     name: "Aadhar Housing Finance",
     summaryId: "AHFL",
