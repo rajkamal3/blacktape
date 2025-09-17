@@ -1142,7 +1142,7 @@ export default function Chart({ companyId }) {
                   <thead className="bg-[#2d2d2d]">
                     <tr>
                       <th className="px-4 py-3 text-left font-semibold">
-                        Brand
+                        Name
                       </th>
                       <th className="px-4 py-3 text-left font-semibold">
                         Category
