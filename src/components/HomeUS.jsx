@@ -59,6 +59,8 @@ export default function HomeUS() {
   const [query, setQuery] = useState("");
   const [sortOrderAsc, setSortOrderAsc] = useState(true);
 
+  const scrollKey = "homeUsScroll";
+
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
   const toast = useRef(null);
@@ -205,7 +207,18 @@ export default function HomeUS() {
     return () => unsubscribe();
   }, [router]);
 
+  useEffect(() => {
+    if (!loading) {
+      const saved = localStorage.getItem(scrollKey);
+      if (saved) {
+        window.scrollTo(0, Number(saved));
+      }
+    }
+  }, [loading]);
+
   const handleCardClick = async (item) => {
+    localStorage.setItem(scrollKey, window.scrollY);
+
     startTransition(() => {
       router.push(`/home/us/${item.detailsId}`);
     });
@@ -373,6 +386,8 @@ export default function HomeUS() {
     } else if (value.code === "SP500-5") {
       setUsIndexGlobal(sp500Tier5);
     }
+
+    localStorage.setItem(scrollKey, 0);
   };
 
   return (

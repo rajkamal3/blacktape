@@ -17,6 +17,9 @@ const Header = ({ user }) => {
   const router = useRouter();
   const pathname = usePathname();
 
+  const scrollKeyIndia = "homeIndiaScroll";
+  const scrollKeyUs = "homeUsScroll";
+
   useEffect(() => {
     const checkStorage = () => {
       try {
@@ -67,6 +70,9 @@ const Header = ({ user }) => {
   const changeCountry = (country) => {
     setCountry(country);
     setVisible(false);
+
+    localStorage.setItem(scrollKeyIndia, 0);
+    localStorage.setItem(scrollKeyUs, 0);
   };
 
   return (

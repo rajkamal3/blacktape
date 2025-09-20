@@ -53,6 +53,8 @@ export default function HomeIndia() {
   const [sortOrderAsc, setSortOrderAsc] = useState(true);
   const [query, setQuery] = useState("");
 
+  const scrollKey = "homeIndiaScroll";
+
   const filteredData = filterByName(nifty500, query);
 
   const indexGlobal = useGlobalStore((state) => state.indexGlobal);
@@ -86,7 +88,18 @@ export default function HomeIndia() {
     return () => unsubscribe();
   }, [router]);
 
+  useEffect(() => {
+    if (!loading) {
+      const saved = localStorage.getItem(scrollKey);
+      if (saved) {
+        window.scrollTo(0, Number(saved));
+      }
+    }
+  }, [loading]);
+
   const handleCardClick = async (item, source = "home") => {
+    localStorage.setItem(scrollKey, window.scrollY);
+
     if (source === "search") {
       try {
         const res = await axios.get(
@@ -297,6 +310,8 @@ export default function HomeIndia() {
     } else if (value.code === "WL1") {
       setIndexGlobal(watchlist);
     }
+
+    localStorage.setItem(scrollKey, 0);
   };
 
   const sortBy = (target) => {
