@@ -1104,7 +1104,7 @@ export default function Chart({ companyId }) {
                           )}
                         </td>
                         <td className="px-4 py-3 text-right">
-                          {stock.ratios.pbr.toFixed(2)}
+                          {stock.ratios.pbr?.toFixed(2)}
                         </td>
                         <td className="px-4 py-3 text-right">
                           {stock.ratios.apef.toFixed(2)}
