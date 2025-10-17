@@ -199,7 +199,9 @@ export default function HomeIndia() {
                 cl3mPerChange: d.cl3mPerChange,
                 cl1yPerChange: d.cl1yPerChange,
                 detailsId: company.detailsId,
-                detailedChartId: company.bseId
+                detailedChartId: company.bseId,
+                LTH: d.LTH,
+                "200DayAvg": d["200DayAvg"]
               });
             } else {
               console.warn(`🟡 No usable data for ID: ${company.summaryId}`);
@@ -383,6 +385,16 @@ export default function HomeIndia() {
       setSortOrderAsc(!sortOrderAsc);
     }
 
+    if (target === "closenessToAth") {
+      sorted = [...parsedData].sort((a, b) => {
+        return sortOrderAsc
+          ? (a.pricecurrent - a.LTH) / a.LTH - (b.pricecurrent - b.LTH) / b.LTH
+          : (b.pricecurrent - b.LTH) / b.LTH - (a.pricecurrent - a.LTH) / a.LTH;
+      });
+
+      setSortOrderAsc(!sortOrderAsc);
+    }
+
     setDataList(sorted);
 
     localStorage.setItem(
@@ -509,6 +521,12 @@ export default function HomeIndia() {
             <Button
               onClick={() => sortBy("pbRatio")}
               label="P/B Ratio"
+              size="small"
+              className="!bg-[#252525] !text-white !border-none"
+            />
+            <Button
+              onClick={() => sortBy("closenessToAth")}
+              label="From ATH"
               size="small"
               className="!bg-[#252525] !text-white !border-none"
             />
@@ -698,6 +716,37 @@ export default function HomeIndia() {
                       <div className="flex flex-col">
                         <span className="text-gray-400 text-xxs">52W High</span>
                         <span>{formatIndianCurrency(item["52H"])}</span>
+                      </div>
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td className="py-3 pt-0 w-1/3">
+                      <div className="flex flex-col">
+                        <span className="text-gray-400 text-xxs">ATH</span>
+                        <span>{formatIndianCurrency(Number(item.LTH))}</span>
+                      </div>
+                    </td>
+
+                    <td className="py-3 pt-0 w-1/3">
+                      <div className="flex flex-col">
+                        <span className="text-gray-400 text-xxs">From ATH</span>
+                        <span>
+                          {(
+                            ((item.pricecurrent - item.LTH) / item.LTH) *
+                            100
+                          ).toFixed(2)}
+                          %
+                        </span>
+                      </div>
+                    </td>
+
+                    <td className="py-3 pt-0 w-1/3">
+                      <div className="flex flex-col">
+                        <span className="text-gray-400 text-xxs">200 MA</span>
+                        <span>
+                          {formatIndianCurrency(Number(item["200DayAvg"]))}
+                        </span>
                       </div>
                     </td>
                   </tr>
