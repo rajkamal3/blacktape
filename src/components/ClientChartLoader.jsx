@@ -136,7 +136,8 @@ export default function Chart({ companyId }) {
         (company) => company.detailsId === companyId
       );
 
-      if (companySummary.detailedChartId || companyData?.bseId) {
+      // if (companySummary.detailedChartId || companyData?.bseId) {
+      if (false) {
         axios
           .get(
             `${base}/api/proxy?id=${
