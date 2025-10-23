@@ -395,6 +395,32 @@ export default function HomeIndia() {
       setSortOrderAsc(!sortOrderAsc);
     }
 
+    if (target === "closenessTo200ma") {
+      sorted = [...parsedData].sort((a, b) => {
+        const diffA =
+          ((Number(a.pricecurrent) - Number(a["200DayAvg"])) /
+            Number(a["200DayAvg"])) *
+          100;
+        const diffB =
+          ((Number(b.pricecurrent) - Number(b["200DayAvg"])) /
+            Number(b["200DayAvg"])) *
+          100;
+
+        const isAboveA = diffA >= 0 ? 1 : 0;
+        const isAboveB = diffB >= 0 ? 1 : 0;
+
+        if (isAboveA !== isAboveB) {
+          return isAboveB - isAboveA;
+        }
+
+        return sortOrderAsc
+          ? Math.abs(diffA) - Math.abs(diffB)
+          : Math.abs(diffB) - Math.abs(diffA);
+      });
+
+      setSortOrderAsc(!sortOrderAsc);
+    }
+
     setDataList(sorted);
 
     localStorage.setItem(
@@ -527,6 +553,12 @@ export default function HomeIndia() {
             <Button
               onClick={() => sortBy("closenessToAth")}
               label="From ATH"
+              size="small"
+              className="!bg-[#252525] !text-white !border-none"
+            />
+            <Button
+              onClick={() => sortBy("closenessTo200ma")}
+              label="From 200 MA"
               size="small"
               className="!bg-[#252525] !text-white !border-none"
             />
