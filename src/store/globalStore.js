@@ -9,6 +9,7 @@ export const useGlobalStore = create((set) => ({
   usDropdownActiveIndex: { name: "S&P 500 - Tier 1 (Top 100)", code: "SP500" },
   companySummary: {},
   country: "india",
+  displayRandomButtonInDetailsPage: false,
 
   setIndexGlobal: (indexGlobal) => set({ indexGlobal }),
   setUsIndexGlobal: (usIndexGlobal) => set({ usIndexGlobal }),
@@ -16,5 +17,7 @@ export const useGlobalStore = create((set) => ({
   setUsDropdownActiveIndex: (usDropdownActiveIndex) =>
     set({ usDropdownActiveIndex }),
   setCompanySummary: (companySummary) => set({ companySummary }),
-  setCountry: (country) => set({ country })
+  setCountry: (country) => set({ country }),
+  setDisplayRandomButtonInDetailsPage: (displayRandomButtonInDetailsPage) =>
+    set({ displayRandomButtonInDetailsPage })
 }));

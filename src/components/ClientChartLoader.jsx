@@ -3,6 +3,7 @@
 import { useEffect, useState, useTransition } from "react";
 import axios from "axios";
 import { Line, Bar } from "react-chartjs-2";
+import { Button } from "primereact/button";
 import {
   Chart as ChartJS,
   LineElement,
@@ -89,6 +90,9 @@ export default function Chart({ companyId }) {
 
   const companySummary = useGlobalStore((state) => state.companySummary);
   const setCompanySummary = useGlobalStore((state) => state.setCompanySummary);
+  const displayRandomButtonInDetailsPage = useGlobalStore(
+    (state) => state.displayRandomButtonInDetailsPage
+  );
 
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
@@ -573,6 +577,34 @@ export default function Chart({ companyId }) {
 
   return (
     <div className="p-4 bg-[var(--background)]">
+      {displayRandomButtonInDetailsPage && (
+        <div
+          style={{
+            position: "fixed",
+            zIndex: 999,
+            right: "10px",
+            bottom: "10px",
+            height: "60px",
+            width: "60px",
+            backgroundColor: "#d60017",
+            borderRadius: "100px",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center"
+          }}
+          onClick={() =>
+            handleCardClick(nifty500[Math.floor(Math.random() * 500)].detailsId)
+          }
+        >
+          <Button
+            icon="pi pi-step-forward"
+            text
+            style={{ color: "#ededed" }}
+            size="large"
+          />
+        </div>
+      )}
+
       <div>
         <div>
           {companyId === "NBES" ||

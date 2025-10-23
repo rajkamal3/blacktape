@@ -13,6 +13,9 @@ const Header = ({ user }) => {
 
   const country = useGlobalStore((state) => state.country);
   const setCountry = useGlobalStore((state) => state.setCountry);
+  const setDisplayRandomButton = useGlobalStore(
+    (state) => state.setDisplayRandomButtonInDetailsPage
+  );
 
   const router = useRouter();
   const pathname = usePathname();
@@ -56,6 +59,7 @@ const Header = ({ user }) => {
     //   router.back();
     // } else {
     router.push("/home");
+    setDisplayRandomButton(false);
     // }
   };
 

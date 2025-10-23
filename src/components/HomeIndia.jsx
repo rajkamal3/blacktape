@@ -67,6 +67,9 @@ export default function HomeIndia() {
   const setDropdownActiveIndex = useGlobalStore(
     (state) => state.setDropdownActiveIndex
   );
+  const setDisplayRandomButton = useGlobalStore(
+    (state) => state.setDisplayRandomButtonInDetailsPage
+  );
 
   const storageKey = dropdownActiveIndex
     ? `companies_${dropdownActiveIndex.code}`
@@ -123,6 +126,8 @@ export default function HomeIndia() {
       startTransition(() => {
         router.push(`/home/${item.detailsId}`);
       });
+
+      setDisplayRandomButton(true);
     } else {
       startTransition(() => {
         router.push(`/home/${item.detailsId}`);
