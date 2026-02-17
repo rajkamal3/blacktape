@@ -627,7 +627,7 @@ export default function Chart({ companyId }) {
       },
       layout: {
         padding: {
-          bottom: 45
+          bottom: type === "quarterly" ? 18 : 0
         }
       }
     };
