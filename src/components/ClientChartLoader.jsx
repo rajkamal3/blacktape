@@ -61,6 +61,74 @@ const crosshairLinePlugin = {
   }
 };
 
+const quarterIndicatorPlugin = {
+  id: "quarterIndicator",
+  afterDraw(chart, args, pluginOptions) {
+    if (!pluginOptions?.enabled) return;
+
+    const { ctx, chartArea, scales } = chart;
+    const xScale = scales.x;
+
+    if (!xScale) return;
+
+    const labels = chart.data.labels;
+
+    const QUARTER_COLORS = {
+      MAR: "#90b991",
+      JUN: "#98c7eb",
+      SEP: "#ffd08b",
+      DEC: "#ffa1c1"
+    };
+
+    const groups = {};
+
+    labels.forEach((label, index) => {
+      const quarter = label.split(" ")[0].toUpperCase();
+
+      if (!groups[quarter]) groups[quarter] = [];
+      groups[quarter].push(index);
+    });
+
+    ctx.save();
+    ctx.textAlign = "center";
+    ctx.textBaseline = "top";
+    ctx.font = "11px sans-serif";
+
+    const baseY = chartArea.bottom + 25;
+    const gapBetweenLines = 1; // 👈 vertical spacing
+
+    let groupIndex = 0;
+
+    Object.entries(groups).forEach(([quarter, indices]) => {
+      const firstIndex = indices[0];
+      const lastIndex = indices[indices.length - 1];
+
+      const startX = xScale.getPixelForTick(firstIndex);
+      const endX = xScale.getPixelForTick(lastIndex);
+
+      const y = baseY + groupIndex * gapBetweenLines;
+
+      ctx.strokeStyle = QUARTER_COLORS[quarter] || "#999";
+      ctx.fillStyle = QUARTER_COLORS[quarter] || "#999";
+      ctx.lineWidth = 2;
+
+      // Add horizontal padding so lines don't touch
+      const horizontalPadding = 15;
+
+      ctx.beginPath();
+      ctx.moveTo(startX - horizontalPadding, y);
+      ctx.lineTo(endX + horizontalPadding, y);
+      ctx.stroke();
+
+      ctx.fillText(quarter, (startX + endX) / 2, y + 4);
+
+      groupIndex++;
+    });
+
+    ctx.restore();
+  }
+};
+
 ChartJS.register(
   LineElement,
   CategoryScale,
@@ -72,6 +140,7 @@ ChartJS.register(
   Legend,
   Filler,
   crosshairLinePlugin,
+  quarterIndicatorPlugin,
   annotationPlugin
 );
 
@@ -433,66 +502,135 @@ export default function Chart({ companyId }) {
     ]
   };
 
+  const groupByQuarterOrder = (data) => {
+    if (!Array.isArray(data)) return [];
+
+    const QUARTER_ORDER = ["MAR", "JUN", "SEP", "DEC"];
+
+    return [...data]
+      .filter(
+        (item) =>
+          item &&
+          typeof item.displayPeriod === "string" &&
+          item.displayPeriod.trim().split(" ").length === 2
+      )
+      .sort((a, b) => {
+        const [qA, yA] = a.displayPeriod.trim().toUpperCase().split(" ");
+        const [qB, yB] = b.displayPeriod.trim().toUpperCase().split(" ");
+
+        const quarterIndexA = QUARTER_ORDER.indexOf(qA);
+        const quarterIndexB = QUARTER_ORDER.indexOf(qB);
+
+        if (quarterIndexA === -1 && quarterIndexB === -1) {
+          return Number(yA) - Number(yB);
+        }
+        if (quarterIndexA === -1) return 1;
+        if (quarterIndexB === -1) return -1;
+
+        if (quarterIndexA !== quarterIndexB) {
+          return quarterIndexA - quarterIndexB;
+        }
+
+        return Number(yA) - Number(yB);
+      });
+  };
+
+  const formatShortLabel = (displayPeriod) => {
+    if (!displayPeriod || typeof displayPeriod !== "string") return "";
+
+    const [month, year] = displayPeriod.trim().split(" ");
+
+    if (!month || !year) return "";
+
+    const shortMonth =
+      month.charAt(0).toUpperCase() + month?.slice(1).toLowerCase();
+    const shortYear = year.slice(-2);
+
+    return `${shortMonth} ${shortYear}`;
+  };
+
+  const financialsQuarterlyTransformed =
+    groupByQuarterOrder(financialsQuarterly);
+
   const financialsQuarterlyData = {
-    labels: financialsQuarterly?.map((d) => d.displayPeriod),
+    labels: financialsQuarterlyTransformed?.map((d) => d.displayPeriod),
     datasets: [
       {
         label: "Revenue",
-        data: financialsQuarterly?.map((d) => d.qIncTrev),
+        data: financialsQuarterlyTransformed?.map((d) => d.qIncTrev),
         backgroundColor: "#696969"
       },
       {
         label: "Net Income",
-        data: financialsQuarterly?.map((d) => d.qIncNinc),
+        data: financialsQuarterlyTransformed?.map((d) => d.qIncNinc),
         backgroundColor: "#cbcbcb"
       }
     ]
   };
 
-  const financialsOptions = {
-    responsive: true,
-    plugins: {
-      legend: {
-        display: false
-      },
-      tooltip: {
-        displayColors: false,
-        mode: "index",
-        intersect: false,
-        callbacks: {
-          label: function (context) {
-            const revenue =
-              context.chart.data.datasets[0].data[context.dataIndex];
-            const netProfit =
-              context.chart.data.datasets[1].data[context.dataIndex];
+  const financialsOptions = (type) => {
+    return {
+      responsive: true,
+      plugins: {
+        legend: {
+          display: false
+        },
+        tooltip: {
+          displayColors: false,
+          mode: "index",
+          intersect: false,
+          callbacks: {
+            label: function (context) {
+              const revenue =
+                context.chart.data.datasets[0].data[context.dataIndex];
+              const netProfit =
+                context.chart.data.datasets[1].data[context.dataIndex];
 
-            let percentage = 0;
-            if (revenue && netProfit) {
-              percentage = ((netProfit / revenue) * 100).toFixed(2);
+              let percentage = 0;
+              if (revenue && netProfit) {
+                percentage = ((netProfit / revenue) * 100).toFixed(2);
+              }
+
+              return context.dataset.label === "Revenue"
+                ? `Revenue: ${formatIndianCurrency(revenue)} Cr`
+                : `Net Profit: ${formatIndianCurrency(
+                    netProfit
+                  )} Cr (${percentage}% of revenue)`;
             }
-
-            return context.dataset.label === "Revenue"
-              ? `Revenue: ${formatIndianCurrency(revenue)} Cr`
-              : `Net Profit: ${formatIndianCurrency(
-                  netProfit
-                )} Cr (${percentage}% of revenue)`;
+          },
+          titleFont: { family: "Inter, sans-serif" },
+          bodyFont: { family: "Inter, sans-serif" }
+        },
+        quarterIndicator: {
+          enabled: type === "quarterly"
+        }
+      },
+      scales: {
+        x: {
+          stacked: true,
+          display: type === "quarterly",
+          ticks: {
+            callback: function (value, index) {
+              const label = this.getLabelForValue(value);
+              return formatShortLabel(label);
+            },
+            font: {
+              size: 8
+            }
           }
         },
-        titleFont: { family: "Inter, sans-serif" },
-        bodyFont: { family: "Inter, sans-serif" }
-      }
-    },
-    scales: {
-      x: {
-        stacked: true,
-        display: false
+        y: {
+          stacked: true,
+          beginAtZero: true,
+          display: false
+        }
       },
-      y: {
-        stacked: true,
-        beginAtZero: true,
-        display: false
+      layout: {
+        padding: {
+          bottom: 45
+        }
       }
-    }
+    };
   };
 
   const holdingsData = {
@@ -844,13 +982,16 @@ export default function Chart({ companyId }) {
           <div className="py-4">
             <h2 className="text-2xl font-bold mb-4">Yearly Financials</h2>
 
-            <Bar data={financialsData} options={financialsOptions} />
+            <Bar data={financialsData} options={financialsOptions("yearly")} />
           </div>
 
           <div className="py-4">
             <h2 className="text-2xl font-bold mb-4">Quarterly Financials</h2>
 
-            <Bar data={financialsQuarterlyData} options={financialsOptions} />
+            <Bar
+              data={financialsQuarterlyData}
+              options={financialsOptions("quarterly")}
+            />
           </div>
 
           <div className="py-4">
