@@ -27,6 +27,7 @@ import { nifty50 } from "@/data/nifty50";
 import { niftyNext50 } from "@/data/niftyNext50";
 import { niftyMidcap150 } from "@/data/niftyMidcap150";
 import { niftySmallcap250 } from "@/data/niftySmallcap250";
+import ChartDataLabels from "chartjs-plugin-datalabels";
 
 const crosshairLinePlugin = {
   id: "crosshairLine",
@@ -141,7 +142,8 @@ ChartJS.register(
   Filler,
   crosshairLinePlugin,
   quarterIndicatorPlugin,
-  annotationPlugin
+  annotationPlugin,
+  ChartDataLabels
 );
 
 export default function Chart({ companyId }) {
@@ -603,6 +605,54 @@ export default function Chart({ companyId }) {
         },
         quarterIndicator: {
           enabled: type === "quarterly"
+        },
+        datalabels: {
+          anchor: "end",
+          align: "end",
+          font: {
+            size: 8,
+            family: "Inter"
+          },
+          offset: (context) => {
+            const chart = context.chart;
+            const index = context.dataIndex;
+
+            const revenueMeta = chart.getDatasetMeta(0);
+            const profitMeta = chart.getDatasetMeta(1);
+
+            const revenueBar = revenueMeta.data[index];
+            const profitBar = profitMeta.data[index];
+
+            if (!revenueBar || !profitBar) return 10;
+
+            const revenueTop = revenueBar.y;
+            const profitTop = profitBar.y;
+
+            const spacing = revenueTop - profitTop;
+
+            return spacing + 4;
+          },
+          color: (context) => {
+            const data = context.dataset.data;
+            const index = context.dataIndex;
+
+            if (index === 0) return "transparent";
+
+            const diff = data[index] - data[index - 1];
+            return diff >= 0 ? "#83ff83" : "#ff7f7f";
+          },
+          formatter: (value, context) => {
+            const data = context.dataset.data;
+            const i = context.dataIndex;
+
+            if (i === 0 || context.dataset.label === "Net Income") return "";
+
+            const prev = data[i - 1];
+            const pct = ((value - prev) / prev) * 100;
+            const sign = pct > 0 ? "+" : "";
+
+            return `${sign}${pct.toFixed(2)}%`;
+          }
         }
       },
       scales: {
@@ -622,7 +672,8 @@ export default function Chart({ companyId }) {
         y: {
           stacked: true,
           beginAtZero: true,
-          display: false
+          display: false,
+          grace: "50%"
         }
       },
       layout: {
@@ -667,6 +718,7 @@ export default function Chart({ companyId }) {
   const holdingsOptions = {
     responsive: true,
     plugins: {
+      datalabels: false,
       legend: {
         display: false
       },
@@ -827,6 +879,7 @@ export default function Chart({ companyId }) {
             options={{
               responsive: true,
               plugins: {
+                datalabels: false,
                 legend: { display: false },
                 tooltip: {
                   mode: "index",
