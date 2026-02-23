@@ -615,25 +615,6 @@ export default function Chart({ companyId }) {
             size: 8,
             family: "Inter"
           },
-          // offset: (context) => {
-          // const chart = context.chart;
-          // const index = context.dataIndex;
-
-          // const revenueMeta = chart.getDatasetMeta(0);
-          // const profitMeta = chart.getDatasetMeta(1);
-
-          // const revenueBar = revenueMeta.data[index];
-          // const profitBar = profitMeta.data[index];
-
-          // if (!revenueBar || !profitBar) return 10;
-
-          // const revenueTop = revenueBar.y;
-          // const profitTop = profitBar.y;
-
-          // const spacing = revenueTop - profitTop;
-
-          // return 3;
-          // },
           color: (context) => {
             const data = context.dataset.data;
             const index = context.dataIndex;
@@ -669,7 +650,6 @@ export default function Chart({ companyId }) {
       },
       scales: {
         x: {
-          // stacked: true,
           display: true,
           ticks: {
             callback: function (value) {
@@ -685,7 +665,6 @@ export default function Chart({ companyId }) {
           }
         },
         y: {
-          // stacked: true,
           beginAtZero: true,
           display: false,
           grace: "50%"
@@ -733,7 +712,43 @@ export default function Chart({ companyId }) {
   const holdingsOptions = {
     responsive: true,
     plugins: {
-      datalabels: false,
+      datalabels: {
+        anchor: "end",
+        align: "top",
+        font: {
+          size: 7,
+          family: "Inter"
+        },
+        formatter: (value, context) => {
+          const data = context.dataset.data;
+          const label = context.dataset.label;
+          const i = context.dataIndex;
+
+          if (i === 0) return "";
+
+          const prev = data[i - 1];
+          const diff = value - prev;
+          const sign = diff >= 0 ? "+" : "";
+
+          if (label === "Promoter") {
+            return `${sign}${diff.toFixed(2)}%`;
+          } else {
+            return "";
+          }
+        },
+
+        color: (context) => {
+          const data = context.dataset.data;
+          const i = context.dataIndex;
+
+          if (i === 0) return "transparent";
+
+          const diff = data[i] - data[i - 1];
+          return diff >= 0 ? "#83ff83" : "#ff7f7f";
+        },
+        clip: false,
+        clamp: true
+      },
       legend: {
         display: false
       },
@@ -769,7 +784,8 @@ export default function Chart({ companyId }) {
       y: {
         stacked: false,
         beginAtZero: true,
-        display: false
+        display: false,
+        grace: "25%"
       }
     }
   };
