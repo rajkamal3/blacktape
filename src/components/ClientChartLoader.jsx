@@ -645,9 +645,19 @@ export default function Chart({ companyId }) {
           },
           formatter: (value, context) => {
             const data = context.dataset.data;
+            const labels = context.chart.data.labels;
             const i = context.dataIndex;
 
             if (i === 0 || context.dataset.label === "Net Income") return "";
+
+            const currentLabel = labels[i];
+            const prevLabel = labels[i - 1];
+
+            const currentQuarter = currentLabel.split(" ")[0];
+            const prevQuarter = prevLabel.split(" ")[0];
+
+            if (currentQuarter !== prevQuarter && currentQuarter !== "TTM")
+              return "";
 
             const prev = data[i - 1];
             const pct = ((value - prev) / prev) * 100;
