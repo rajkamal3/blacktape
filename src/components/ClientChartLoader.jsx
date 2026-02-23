@@ -615,25 +615,25 @@ export default function Chart({ companyId }) {
             size: 8,
             family: "Inter"
           },
-          offset: (context) => {
-            const chart = context.chart;
-            const index = context.dataIndex;
+          // offset: (context) => {
+          // const chart = context.chart;
+          // const index = context.dataIndex;
 
-            const revenueMeta = chart.getDatasetMeta(0);
-            const profitMeta = chart.getDatasetMeta(1);
+          // const revenueMeta = chart.getDatasetMeta(0);
+          // const profitMeta = chart.getDatasetMeta(1);
 
-            const revenueBar = revenueMeta.data[index];
-            const profitBar = profitMeta.data[index];
+          // const revenueBar = revenueMeta.data[index];
+          // const profitBar = profitMeta.data[index];
 
-            if (!revenueBar || !profitBar) return 10;
+          // if (!revenueBar || !profitBar) return 10;
 
-            const revenueTop = revenueBar.y;
-            const profitTop = profitBar.y;
+          // const revenueTop = revenueBar.y;
+          // const profitTop = profitBar.y;
 
-            const spacing = revenueTop - profitTop;
+          // const spacing = revenueTop - profitTop;
 
-            return spacing + 4;
-          },
+          // return 3;
+          // },
           color: (context) => {
             const data = context.dataset.data;
             const index = context.dataIndex;
@@ -669,7 +669,7 @@ export default function Chart({ companyId }) {
       },
       scales: {
         x: {
-          stacked: true,
+          // stacked: true,
           display: true,
           ticks: {
             callback: function (value) {
@@ -685,7 +685,7 @@ export default function Chart({ companyId }) {
           }
         },
         y: {
-          stacked: true,
+          // stacked: true,
           beginAtZero: true,
           display: false,
           grace: "50%"
