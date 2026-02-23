@@ -542,6 +542,8 @@ export default function Chart({ companyId }) {
 
     const [month, year] = displayPeriod.trim().split(" ");
 
+    if (month === "TTM") return "TTM";
+
     if (!month || !year) return "";
 
     const shortMonth =
@@ -658,11 +660,14 @@ export default function Chart({ companyId }) {
       scales: {
         x: {
           stacked: true,
-          display: type === "quarterly",
+          display: true,
           ticks: {
-            callback: function (value, index) {
+            callback: function (value) {
               const label = this.getLabelForValue(value);
-              return formatShortLabel(label);
+
+              return type === "quarterly"
+                ? formatShortLabel(label)
+                : formatShortLabel(label).toUpperCase();
             },
             font: {
               size: 8
