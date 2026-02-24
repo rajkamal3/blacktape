@@ -1,7 +1,9 @@
 export function findSupportLevels(data) {
   const prices = data.map((d) => d.lp);
   const volumes = data.map((d) => d.v);
-  // const timestamps = data.map((d) => new Date(d.ts));
+
+  // ✅ Current price (last candle)
+  const currentPrice = prices[prices.length - 1];
 
   // --- Step 1: Calculate ATR for adaptive tolerance ---
   function calculateATR() {
@@ -92,20 +94,23 @@ export function findSupportLevels(data) {
       else resistances++;
     });
 
-    if (supports >= resistances) {
+    // ✅ ONLY include support if below current price
+    if (supports >= resistances && avg < currentPrice) {
       supportZones.push({
         zone: avg.toFixed(2),
         bounceCount: c.count,
         confirmedResistance: resistances > 0
       });
-    } else {
+    }
+
+    if (resistances > supports) {
       resistanceZones.push({
         zone: avg.toFixed(2),
         dropCount: c.count
       });
     }
 
-    if (supports > 1 && resistances > 1) {
+    if (supports > 1 && resistances > 1 && avg < currentPrice) {
       highlightedZones.push({
         zone: avg.toFixed(2),
         supportBounceCount: supports,
