@@ -735,8 +735,6 @@ export default function Chart({ companyId }) {
           const diff = value - prev;
           const sign = diff >= 0 ? "+" : "";
 
-          console.log(diff);
-
           if (
             label === "Promoter" &&
             diff.toFixed(2) !== Number("0.00").toFixed(2)
