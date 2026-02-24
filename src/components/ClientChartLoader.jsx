@@ -730,7 +730,10 @@ export default function Chart({ companyId }) {
           const diff = value - prev;
           const sign = diff >= 0 ? "+" : "";
 
-          if (label === "Promoter") {
+          if (
+            label === "Promoter" &&
+            diff.toFixed(2) !== Number("0.00").toFixed(2)
+          ) {
             return `${sign}${diff.toFixed(2)}%`;
           } else {
             return "";
