@@ -104,13 +104,9 @@ const quarterIndicatorPlugin = {
     ctx.save();
     ctx.textAlign = "center";
     ctx.textBaseline = "top";
-
     ctx.font = "500 9px Inter, sans-serif";
 
-    const baseY = chartArea.bottom + 25;
-    const gapBetweenLines = 1;
-
-    let groupIndex = 0;
+    const y = chartArea.bottom + 25;
 
     Object.entries(groups).forEach(([quarterKey, group]) => {
       const { indices, display } = group;
@@ -120,8 +116,6 @@ const quarterIndicatorPlugin = {
 
       const startX = xScale.getPixelForTick(firstIndex);
       const endX = xScale.getPixelForTick(lastIndex);
-
-      const y = baseY + groupIndex * gapBetweenLines;
 
       ctx.strokeStyle = QUARTER_COLORS[quarterKey] || "#999";
       ctx.fillStyle = QUARTER_COLORS[quarterKey] || "#999";
@@ -135,8 +129,6 @@ const quarterIndicatorPlugin = {
       ctx.stroke();
 
       ctx.fillText(display, (startX + endX) / 2, y + 4);
-
-      groupIndex++;
     });
 
     ctx.restore();
