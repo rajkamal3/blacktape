@@ -1,10 +1,10 @@
 export function findSupportLevels(data) {
   const prices = data.map((d) => d.lp);
   const volumes = data.map((d) => d.v);
-  const timestamps = data.map((d) => new Date(d.ts));
+  // const timestamps = data.map((d) => new Date(d.ts));
 
   // --- Step 1: Calculate ATR for adaptive tolerance ---
-  function calculateATR(period = 14) {
+  function calculateATR() {
     const trs = [];
     for (let i = 1; i < prices.length; i++) {
       trs.push(Math.abs(prices[i] - prices[i - 1]));
@@ -19,7 +19,7 @@ export function findSupportLevels(data) {
   const reactions = [];
 
   for (let i = 5; i < prices.length - 5; i++) {
-    const before = prices[i - 3];
+    // const before = prices[i - 3];
     const level = prices[i];
     const after = prices[i + 3];
 
