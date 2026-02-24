@@ -75,32 +75,46 @@ const quarterIndicatorPlugin = {
     const labels = chart.data.labels;
 
     const QUARTER_COLORS = {
-      MAR: "#90b991",
-      JUN: "#98c7eb",
-      SEP: "#ffd08b",
-      DEC: "#ffa1c1"
+      MAR: "#a5a5a5",
+      JUN: "#a5a5a5",
+      SEP: "#a5a5a5",
+      DEC: "#a5a5a5"
     };
 
     const groups = {};
 
     labels.forEach((label, index) => {
-      const quarter = label.split(" ")[0].toUpperCase();
+      const rawQuarter = label.split(" ")[0];
 
-      if (!groups[quarter]) groups[quarter] = [];
-      groups[quarter].push(index);
+      const upperQuarter = rawQuarter.toUpperCase();
+      const displayQuarter =
+        rawQuarter.toLowerCase().charAt(0).toUpperCase() +
+        rawQuarter.toLowerCase().slice(1);
+
+      if (!groups[upperQuarter]) {
+        groups[upperQuarter] = {
+          indices: [],
+          display: displayQuarter
+        };
+      }
+
+      groups[upperQuarter].indices.push(index);
     });
 
     ctx.save();
     ctx.textAlign = "center";
     ctx.textBaseline = "top";
-    ctx.font = "11px sans-serif";
+
+    ctx.font = "500 9px Inter, sans-serif";
 
     const baseY = chartArea.bottom + 25;
-    const gapBetweenLines = 1; // 👈 vertical spacing
+    const gapBetweenLines = 1;
 
     let groupIndex = 0;
 
-    Object.entries(groups).forEach(([quarter, indices]) => {
+    Object.entries(groups).forEach(([quarterKey, group]) => {
+      const { indices, display } = group;
+
       const firstIndex = indices[0];
       const lastIndex = indices[indices.length - 1];
 
@@ -109,11 +123,10 @@ const quarterIndicatorPlugin = {
 
       const y = baseY + groupIndex * gapBetweenLines;
 
-      ctx.strokeStyle = QUARTER_COLORS[quarter] || "#999";
-      ctx.fillStyle = QUARTER_COLORS[quarter] || "#999";
+      ctx.strokeStyle = QUARTER_COLORS[quarterKey] || "#999";
+      ctx.fillStyle = QUARTER_COLORS[quarterKey] || "#999";
       ctx.lineWidth = 2;
 
-      // Add horizontal padding so lines don't touch
       const horizontalPadding = 15;
 
       ctx.beginPath();
@@ -121,7 +134,7 @@ const quarterIndicatorPlugin = {
       ctx.lineTo(endX + horizontalPadding, y);
       ctx.stroke();
 
-      ctx.fillText(quarter, (startX + endX) / 2, y + 4);
+      ctx.fillText(display, (startX + endX) / 2, y + 4);
 
       groupIndex++;
     });
@@ -729,6 +742,8 @@ export default function Chart({ companyId }) {
           const prev = data[i - 1];
           const diff = value - prev;
           const sign = diff >= 0 ? "+" : "";
+
+          console.log(diff);
 
           if (
             label === "Promoter" &&
