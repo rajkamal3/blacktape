@@ -782,7 +782,23 @@ export default function Chart({ companyId }) {
     scales: {
       x: {
         stacked: false,
-        display: false
+        display: true,
+        ticks: {
+          callback: function (value) {
+            const rawLabel = this.getLabelForValue(value);
+            const date = new Date(rawLabel);
+
+            const month = date.getUTCMonth();
+            const year = date.getUTCFullYear().toString();
+
+            const quarter = Math.floor(month / 3) + 1;
+
+            return `Q${quarter} ${year}`;
+          },
+          font: {
+            size: 8
+          }
+        }
       },
       y: {
         stacked: false,
