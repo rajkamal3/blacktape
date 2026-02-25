@@ -475,6 +475,8 @@ export default function Chart({ companyId }) {
 
   const prices = data.points.map((d) => d.lp);
 
+  const volumes = data.points.map((d) => d.v);
+
   const supportAnnotations = supportLevels.supportZones.map((zone, idx) => ({
     type: "line",
     yMin: parseFloat(zone.zone),
@@ -913,12 +915,14 @@ export default function Chart({ companyId }) {
           )}
         </div>
 
-        <div className="bg-white rounded-xl shadow-xl">
+        <div className="bg-white rounded-xl shadow-xl overflow-hidden">
           <Line
             data={{
               labels,
               datasets: [
+                // 🔹 Price line
                 {
+                  type: "line",
                   label: "Closing Price (₹)",
                   data: prices,
                   borderColor: "#000000",
@@ -926,8 +930,17 @@ export default function Chart({ companyId }) {
                   fill: true,
                   tension: 0.4,
                   pointRadius: 0,
-                  pointHoverRadius: 0,
-                  borderWidth: 2
+                  borderWidth: 2,
+                  yAxisID: "y"
+                },
+                // 🔹 Volume bars
+                {
+                  type: "bar",
+                  label: "Volume",
+                  data: volumes,
+                  backgroundColor: "rgba(63,63,63,0.5)",
+                  borderWidth: 0,
+                  yAxisID: "yVolume"
                 }
               ]
             }}
@@ -954,7 +967,10 @@ export default function Chart({ companyId }) {
                   callbacks: {
                     label: function (context) {
                       const price = context.formattedValue;
-                      return `₹${price}`;
+
+                      return context.dataset.label === "Closing Price (₹)"
+                        ? `₹${price}`
+                        : price;
                     }
                   }
                 },
@@ -974,6 +990,15 @@ export default function Chart({ companyId }) {
                 y: {
                   beginAtZero: false,
                   display: false
+                },
+                yVolume: {
+                  beginAtZero: true,
+                  display: false,
+                  position: "left",
+                  suggestedMax: Math.max(...volumes) * 2,
+                  grid: {
+                    drawOnChartArea: false
+                  }
                 }
               }
             }}
